@@ -17,7 +17,7 @@
 
 
 
-<title>前端CDNJS国内加速服务 | Tommas&#39;s Blog</title>
+<title>maven项目的tomcat配置 | Tommas&#39;s Blog</title>
 
 
 
@@ -204,7 +204,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">前端CDNJS国内加速服务</h1>
+            <h1 class="post-title">maven项目的tomcat配置</h1>
             
                 <div class="post-meta">
                     
@@ -213,14 +213,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 17, 2018&nbsp;&nbsp;20:30:36</a>
+                        Date: <a href="#">March 20, 2018&nbsp;&nbsp;20:30:36</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/jQuery/">jQuery</a>
+                                <a href="/categories/maven/">maven</a>
                             
                         </span>
                     
@@ -229,116 +229,110 @@
         </header>
 
         <div class="post-content">
-            <p><img src="https://s2.loli.net/2023/04/15/WI2n6gVGxZKytzA.jpg"></p>
-<p>前端 CDNJS 库及 Google Fonts、Ajax 和 Gravatar 国内加速服务</p>
+            <p><img src="https://s2.loli.net/2023/04/15/udkG4CNYZ3XaJTe.png"></p>
+<p>maven项目的tomcat配置</p>
 <span id="more"></span>
 
-<p>由于某些众所周知的原因，好多开源的 JS 库采用的国外 CDN 托管方式在国内访问速度不如人意。所以我们特意制作了这个公益项目，托管了 CDNJS 的所有开源 JS 库以及反代了 Google Fonts、Ajax 和 Gravatar，并且全部支持 http 和 https</p>
-<h2 id="1、CDNJS-开源-JS-库"><a href="#1、CDNJS-开源-JS-库" class="headerlink" title="1、CDNJS 开源 JS 库"></a>1、CDNJS 开源 JS 库</h2><p>我们采用的方法是每天定时同步 CDNJS 的 <a target="_blank" rel="noopener" href="https://github.com/cdnjs/cdnjs">Github</a></p>
-<p>所有的 JS&#x2F;CSS 库可以在这儿找到您需要的链接</p>
-<p><a target="_blank" rel="noopener" href="https://cdnjs.loli.net/ajax/libs/">https://cdnjs.loli.net/ajax/libs/</a></p>
-<p>如果您使用 <a target="_blank" rel="noopener" href="https://cdnjs.com/">cdnjs.com</a> 只需要替换 <code>cdnjs.cloudflare.com</code> 为 <code>cdnjs.loli.net</code> 即可，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="一、没有Tomcat情况"><a href="#一、没有Tomcat情况" class="headerlink" title="一、没有Tomcat情况"></a>一、没有Tomcat情况</h3><p>  <code>Run As--&gt;Maven build--&gt;tomcat:run</code>    (不支持jdk1.8+tomcat8;项目启动没问题,访问报错500;jdk1.7 可以正常访问)</p>
+<h3 id="二、war包形式"><a href="#二、war包形式" class="headerlink" title="二、war包形式"></a>二、war包形式</h3><ol>
+<li><p>使用maven导出war包</p>
+<p><code>Run As--&gt;Maven build... --&gt;package</code></p>
+<p>成功后会提示生成的war包路径。一般在项目的target目录下。 (<code>注：pom.xml的&lt;packaging/&gt;配置为war打包后的就是war包，配置为jar时打包后的就是jar包</code>)</p>
+</li>
+<li><p>将war包部署至tomcat中</p>
+</li>
+</ol>
+<p>将war放到Tomcat的webapps目录下，配置<code>conf\server.xml</code>文件<code>在&lt;Host&gt;中添加配置信息：(C:\Java\apache-tomcat-7.0.79\conf)</code></p>
+<ul>
+<li><p>① path:启动项目后访问项目的路径</p>
+</li>
+<li><p>② docBase:项目路径，可以使用绝对路径或相对路径，相对路径是相对于webapps</p>
+</li>
+<li><p>③ 你还可以在server.xml中配置你的端口号和项目名称，从而改变访问的url。</p>
+</li>
+</ul>
+<ol start="3">
+<li>启动tomcat</li>
+</ol>
+<p>注: 在部署项目的时候直接将web项目编译后的文件放在webapps也是同样的</p>
+<pre><code> JavaEE项目部署 `默认存放在webapp--&gt;WEB-INF--&gt;classes下面(如：C:\Java\apache-tomcat-7.0.79\webapps\mobile_scm\WEB-INF\classes)`
 
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+  maven项目部署 `默认存放在target下面(如：E:\MavenWorks\babasport\target)`
+</code></pre>
+<h3 id="三、Tomcat启动"><a href="#三、Tomcat启动" class="headerlink" title="三、Tomcat启动"></a>三、Tomcat启动</h3><p>项目发布 直接到webapps下</p>
+<h4 id="maven工程的tomcat热部署"><a href="#maven工程的tomcat热部署" class="headerlink" title="maven工程的tomcat热部署"></a>maven工程的tomcat热部署</h4><p>教程：tomcat热部署：webapps下的项目正在运行，直接把开发的新版本发布到正在运行的Tomcat下(不能关闭Tomcat再发布新版本</p>
+<p>   开发者本地将代码通过Git push到服务器端，服务器自动编译-打包-发布等等；也就是说发布到tomcat中后，不需要重启tomcat。</p>
+<ol>
+<li>热部署前准备：</li>
+</ol>
+<ul>
+<li><p>配置Tomcat登录的用户名和密码</p>
+<p>热部署需要用户名和密码进行远程发布，修改user配置文件一是为了管理员进入tomcat管理页面并提高其安全性，二是为了在maven设置正确的用户名；</p>
+<pre><code>`C:\Java\apache-tomcat-7.0.79\conf\tomcat-users.xml`
+</code></pre>
+</li>
+<li><p>找到tomcat-user配置文件:</p>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置Tomcat登录的用户名和密码 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">role</span> <span class="attr">rolename</span>=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">role</span> <span class="attr">rolename</span>=<span class="string">&quot;manager-script&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">role</span> <span class="attr">rolename</span>=<span class="string">&quot;admin&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">role</span> <span class="attr">rolename</span>=<span class="string">&quot;manager&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">user</span> <span class="attr">username</span>=<span class="string">&quot;tomcat&quot;</span> <span class="attr">password</span>=<span class="string">&quot;123456&quot;</span> <span class="attr">roles</span>=<span class="string">&quot;manager-gui,manager-script,admin,manager&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>CDNJS 的 API 开发文档请摸<a target="_blank" rel="noopener" href="https://cdnjs.com/api">这里</a></p>
-<h2 id="2、Google-Fonts"><a href="#2、Google-Fonts" class="headerlink" title="2、Google Fonts"></a>2、Google Fonts</h2><p>我们采用的方法是万能的 Nginx 反代 + 关键词替换</p>
-<p>使用的时候，您只需要替换 <code>fonts.googleapis.com</code> 为 <code>fonts.loli.net</code> 即可，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&#x27;https://fonts.googleapis.com/css?family=Open+Sans&#x27; rel=&#x27;stylesheet&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>重启Tomcat，访问<code>http://localhost:8080</code></p>
+<p>进入tomcat服务器根目录，点击“manager app”输入用户名和密码，成功进入管理页面，说明第一步配置成功。</p>
+<p>注：端口号改为80 可以默认不显示；访问项目应该隐藏项目名称；</p>
+</li>
+</ol>
+<h4 id="热部署"><a href="#热部署" class="headerlink" title="热部署"></a>热部署</h4><ol>
+<li><p>Maven的Server的配置    </p>
+<p>在Maven的安装路径找到<code>conf目录下的setting.xml文件(&quot;E:\software\apache-maven-3.5.0\conf&quot;)，在&lt;servers&gt;节点中添加tomcat7</code>下配置的用户信息    </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>tomcat<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">password</span>&gt;</span>password<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&#x27;https://fonts.loli.net/css?family=Open+Sans&#x27; rel=&#x27;stylesheet&#x27;&gt;</span><br></pre></td></tr></table></figure>
+<p>注：如果在pom.xml中没有配置用户名和密码，则使用setting里的配置，如果有的话，就是用pom里的配置（就近原则）配置完记得要<code>Maven--&gt;Update projiect</code>(刷新)</p>
+</li>
+<li><p>pom.xml中添加tomcat插件</p>
+</li>
+</ol>
+<ul>
+<li>① <code>可以在pom.xml中右键--&gt;Maven--&gt;Add Plugin--&gt;tomcat 自动添加插件</code></li>
+<li>② 可以手动配置插件和Tomcat的访问路径</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">finalName</span>&gt;</span>babasport<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 本地jdk版本 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 配置tomcat的访问 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 访问路径 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/manager/text<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 项目发布到根目录,覆盖ROOT，URL访问可以省略项目名称 --&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- &lt;path&gt;/&lt;/path&gt; --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">path</span>&gt;</span>/babasport<span class="tag">&lt;/<span class="name">path</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">server</span>&gt;</span>tomcat<span class="tag">&lt;/<span class="name">server</span>&gt;</span>  <span class="comment">&lt;!-- 此处的名字必须和setting.xml中配置的ID一致--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>tomcat<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>123456<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>如果需要 <a target="_blank" rel="noopener" href="https://material.io/icons/">Material icons</a> ，把</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&#x27;https://fonts.googleapis.com/icon?family=Material+Icons&#x27; rel=&#x27;stylesheet&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&#x27;https://fonts.loli.net/icon?family=Material+Icons&#x27; rel=&#x27;stylesheet&#x27;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>如果需要 <a target="_blank" rel="noopener" href="https://fonts.google.com/earlyaccess">Early Access</a>，把</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@import url(https://fonts.googleapis.com/earlyaccess/notosanskannada.css); </span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@import url(https://fonts.loli.net/earlyaccess/notosanskannada.css); </span><br></pre></td></tr></table></figure>
-
-<p>如果需要下载单个字体，您只需要把 <code>fonts.gstatic.com</code> 替换成 <code>gstatic.loli.net</code> 或 <code>themes.googleusercontent.com</code> 替换成 <code>themes.loli.net</code> 即可</p>
-<p>比如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://fonts.gstatic.com/s/opensans/v14/K88pR3goAWT7BTt32Z01mxJtnKITppOI_IvcXXDNrsc.woff2</span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://gstatic.loli.net/s/opensans/v14/K88pR3goAWT7BTt32Z01mxJtnKITppOI_IvcXXDNrsc.woff2</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://themes.googleusercontent.com/static/fonts/anonymouspro/v3/Zhfjj_gat3waL4JSju74E-V_5zh5b-_HiooIRUBwn1A.ttf</span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://themes.loli.net/static/fonts/anonymouspro/v3/Zhfjj_gat3waL4JSju74E-V_5zh5b-_HiooIRUBwn1A.ttf</span><br></pre></td></tr></table></figure>
-
-<p>Google Fonts 的 API 文档请摸<a target="_blank" rel="noopener" href="https://developers.google.com/fonts/docs/getting_started">这里</a></p>
-<h2 id="3、Google-前端公共库"><a href="#3、Google-前端公共库" class="headerlink" title="3、Google 前端公共库"></a>3、Google 前端公共库</h2><p>方法同上，直接替换 <code>ajax.googleapis.com</code> 为 <code>ajax.loli.net</code> 即可，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&#x27;text/javascript&#x27; src=&#x27;https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js&#x27;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&#x27;text/javascript&#x27; src=&#x27;https://ajax.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js&#x27;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Google 前端库 API 开发文档摸<a target="_blank" rel="noopener" href="https://developers.google.com/speed/libraries/">这儿</a></p>
-<h2 id="4、Gravatar-头像"><a href="#4、Gravatar-头像" class="headerlink" title="4、Gravatar 头像"></a>4、Gravatar 头像</h2><p>方法还是同上，直接替换 <code>*.gravatar.com</code> 为 <code>gravatar.loli.net</code> 即可，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://secure.gravatar.com/avatar/8406d089bc81b664a2610b8d214c1428</span><br></pre></td></tr></table></figure>
-
-<p>替换成</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://gravatar.loli.net/avatar/8406d089bc81b664a2610b8d214c1428</span><br></pre></td></tr></table></figure>
-
-<h2 id="5、赞助商"><a href="#5、赞助商" class="headerlink" title="5、赞助商"></a>5、赞助商</h2><p>国内外 CDN， GeoDNS、域名等基础服务均由 <a target="_blank" rel="noopener" href="https://xtom.com/">xTom</a>赞助 SSL 证书由 <a target="_blank" rel="noopener" href="https://ssl.do/">SSL.DO</a>赞助</p>
-<h2 id="6、旧域名替换"><a href="#6、旧域名替换" class="headerlink" title="6、旧域名替换"></a>6、旧域名替换</h2><p>由于更换了赞助商，并且因为最新的国内域名备案政策，旧的域名均采用 301 跳转形式</p>
-<p><code>cdn.css.net</code> 跳转到本文</p>
-<p><code>cdn.css.net/libs/</code> 和 <code>cdnjs.cat.net/ajax/libs/</code> 跳转到 <code>cdnjs.loli.net/ajax/libs/</code></p>
-<p><code>cdn.css.net/fonts/</code> 和 <code>fonts.cat.net</code> 和 <code>fonts.css.network</code> 跳转到 <code>fonts.loli.net</code></p>
-<p><code>cdn.css.net/ajax/</code> 和 <code>ajax.cat.net</code> 和 <code>ajax.css.network</code> 跳转到 <code>ajax.loli.net</code></p>
-<p><code>cdn.css.net/avatar/</code> 和 <code>gravatar.cat.net</code> 和 <code>gravatar.css.network</code> 跳转到 <code>gravatar.loli.net</code></p>
-<p>另外由于 <a target="_blank" rel="noopener" href="https://github.com/jsdelivr/jsdelivr">jsdelivr</a> 已不再提供 Github 同步，并且这货自己也有网宿的国内 CDN ，所以</p>
-<p><code>cdn.css.net/files/</code> 跳转到 <code>cdn.jsdelivr.net</code> 并且不再提供 jsdelivr 的国内加速服务</p>
-<p>所有国内加速服务的域名列表如下，您只需要修改程序里的原域名即可</p>
-<table>
-<thead>
-<tr>
-<th>原域名</th>
-<th>加速域名</th>
-<th>制作方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cdnjs.cloudflare.com</td>
-<td>cdnjs.loli.net</td>
-<td>每日同步 Github</td>
-</tr>
-<tr>
-<td>ajax.googleapis.com</td>
-<td>ajax.loli.net</td>
-<td>Nginx 反代</td>
-</tr>
-<tr>
-<td>fonts.googleapis.com</td>
-<td>fonts.loli.net</td>
-<td>Nginx 反代</td>
-</tr>
-<tr>
-<td>fonts.gstatic.com</td>
-<td>gstatic.loli.net</td>
-<td>Nginx 反代</td>
-</tr>
-<tr>
-<td>themes.googleusercontent.com</td>
-<td>themes.loli.net</td>
-<td>Nginx 反代</td>
-</tr>
-<tr>
-<td>secure.gravatar.com</td>
-<td>gravatar.loli.net</td>
-<td>Nginx 反代</td>
-</tr>
-</tbody></table>
+<ol start="3">
+<li>最后来验证一下：启动tomcat服务器，保证里面没有发布任何项目</li>
+</ol>
+<ul>
+<li><p>如果是eclipse</p>
+<p><code>直接右键项目---run as ---maven bulid...输入“tomcat7:deploy”(二次发布以后输入&quot;tomcat7:redeploy&quot;)</code></p>
+</li>
+<li><p>如果使用的是命令行</p>
+<p><code>直接输入“mvn tomcat7:redeploy”</code></p>
+</li>
+</ul>
+<p>测试通过，输入地址可以正常的访问！</p>
+<h4 id="server下设置tomcat发布位置"><a href="#server下设置tomcat发布位置" class="headerlink" title="server下设置tomcat发布位置"></a>server下设置tomcat发布位置</h4><p>maven项目发布后默认存放到target目录下(如：E:\MavenWorks\babasport\target)；开发web项目时，还需要手动复制到web服务器下(Tomcat)</p>
+<p>如果能自动部署到Web服务器，而不用每次手动把target下编译好的war包拷贝到Tomcat下就更好了。</p>
+<p>对servers设置：</p>
+<ol>
+<li>修改发布路径到webapps下</li>
+<li>修改timeout服务器启动和停止时间为300秒</li>
+<li>发布到webapps下的根目录(项目访问URL不需要填写项目名， 取消勾选自动发布!</li>
+<li>浏览器访问 <code>http://localhost:8080/</code> (省略了项目名称)</li>
+</ol>
+<p>注：如果用eclipse，<code>http://localhost:8080/项目名称</code>  也可以访问； </p>
+<pre><code>用myeclipse，只能访问`http://localhost:8080/`
+</code></pre>
+<p>注：如果不能成功发布到 &#x2F; 目录下，或许需要做以下修改(一般默认完成，不用做修改)   </p>
+<ul>
+<li>1 删除webContext的发布</li>
+<li>2 增加webapp发布到根目录下</li>
+<li>3 增加<code>Maven库(jar包)到WEB-INF/lib 下</code></li>
+</ul>
+<h3 id="四、控制台不输出log没有反应"><a href="#四、控制台不输出log没有反应" class="headerlink" title="四、控制台不输出log没有反应"></a>四、控制台不输出log没有反应</h3><p>MyEclipse中Maven build…项目控制台不输出log 没有反应</p>
+<pre><code>  一开始项目与都是可以通过maven build... 然后输入tomcat:run 跑起来的，后来忘记做了啥操作跑步起来了，控制台也不输出log了，总是一闪就过去了，后来也是试了各种方法，可能是自己换了当前项目的jdk版本，下面是解决方案
+</code></pre>
+<p>右击maven项目: <code>Build Path ---&gt; configure Build Path... ---&gt; 先选中你当前的jdk remove掉 ，然后重新添加 ----&gt; Add Library ---&gt;  选择 JRE System Library  ---&gt; 选择Alternate JRE---&gt; 然后点击installed JRES 进入界面后选择你要用的jdk版本 ---&gt; edit ---&gt; 在Default VM arguments 添加 :Dmaven.multiModuleProjectDirectory=$MAVEN_HOME</code></p>
+<p>这样就可以，希望可以解决你的问题 !</p>
 
         </div>
 
@@ -377,7 +371,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/jQuery/"># jQuery</a>
+                        <a href="/tags/maven/"># maven</a>
                     
                         
                 </span>
@@ -390,10 +384,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/post/2018032030.htm">maven项目的tomcat配置</a>
+                <a class="prev" rel="prev" href="/post/2018032030.htm">maven项目操作技巧</a>
             
             
-            <a class="next" rel="next" href="/post/2018031644.htm">代码生成Tools</a>
+            <a class="next" rel="next" href="/post/2018022144.htm">东亚教育浪费了太多生命</a>
             
         </section>
 
