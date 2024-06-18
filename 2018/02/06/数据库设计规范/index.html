@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>数据库设计规范 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数据库设计规范</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 6, 2018&nbsp;&nbsp;15:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Document/">Document</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2024/06/12/tQbTHExYzUr74oq.jpg"></p>
+<p>数据库设计规范</p>
+<span id="more"></span>
+
+<h2 id="1-基本原则"><a href="#1-基本原则" class="headerlink" title="1     基本原则"></a>1     基本原则</h2><p>Ø  产品根据业务功能的不同，划分为多个相对独立的业务子系统。对应于一个业务子系统，数据库中都应建立一个用户，该业务子系统中的数据、业务规则都在此用户下的对象中描述。如：数据库中建立MES用户，来对应制造执行系统，制造执行系统中的数据、业务逻辑都由MES用户下的对象（如表、包及存储过程等等）来描述，系统管理由APPSYS用户来管理；</p>
+<p>Ø  除两个公共用户APPS，APPVIEW外，其他用户下的所有对象，都需要在APPS中建立同义词，并对APPS授权；</p>
+<p>Ø  除两个公共用户APPS，APPVIEW外，其他用户下的所有的视图， 都需要在APPVIEW中建立对应的表； </p>
+<p>Ø  系统管理部分的表，需用设置多语言；</p>
+<h2 id="2-表及字段规范"><a href="#2-表及字段规范" class="headerlink" title="2     表及字段规范"></a>2     表及字段规范</h2><h2 id="2-1-表命名约定"><a href="#2-1-表命名约定" class="headerlink" title="2.1  表命名约定"></a>2.1  表命名约定</h2><p>数据库中以描述表中内容的英文为表名，前面以该表所属的用户+下划线作为开头，具体遵循以下规则：</p>
+<p>用户 + ‘_’+ 英文，如MDS_Route表示MDS用户下的工艺路线表，</p>
+<p>英文如果是两个单词及以上，单词之间尽量用下划线分割。如果英文有公共熟知的缩写，可以使用缩写。如MES_Control_Dept表示MES用户下的受控部门表</p>
+<h2 id="2-2-表字段约定"><a href="#2-2-表字段约定" class="headerlink" title="2.2  表字段约定"></a>2.2  表字段约定</h2><ol>
+<li>每个表中必须包含7个字段：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>字段名称及作用</th>
+<th>字段代码</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表ID，作为表主键</td>
+<td>ID</td>
+<td>Number(16,0)</td>
+</tr>
+<tr>
+<td>创建人</td>
+<td>CREATED_BY</td>
+<td>Number(16,0)</td>
+</tr>
+<tr>
+<td>创建时间</td>
+<td>CREATION_DATE</td>
+<td>Date</td>
+</tr>
+<tr>
+<td>最后修改人</td>
+<td>LAST_UPDATED_BY</td>
+<td>Number(16,0)</td>
+</tr>
+<tr>
+<td>最后修改时间</td>
+<td>LAST_UPDATE_DATE</td>
+<td>Date</td>
+</tr>
+<tr>
+<td>最后更新IP</td>
+<td>LAST_UPDATE_IP</td>
+<td>VARCHAR2(20)</td>
+</tr>
+<tr>
+<td>版本</td>
+<td>VERSION</td>
+<td>Number(16,0)</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li><p>主键字段：每个表必须以ID作为主键，通过建立UniqueKey来实现实际的主键组合。如部门表中，将部门代码建立为Unique Key</p>
+</li>
+<li><p>外键字段：系统不显式建立外键，表中的字段如果需要引用其他表的主键，尽量以其他表的表名+ ‘_ID’作为此字段名，并在注释中显式说明，如：员工表中引用部门表的主键的字段，命名为HR_Dept_ID；如果表中有两个及以上的字段需要引用同一个表的主键，需要在此规则的基础上，前面添加用途，如两个字段都引用部门表主键，制造部门命名为：Manufact_HR_Dept_ID，使用部门命名为：User_HR_Dept_ID。</p>
+</li>
+<li><p>字段注释：每个字段必须有注释，说明该字段的含义，值的来源。对于标识，状态之类的字段，必须注明其每个可能的取值，及每个取值的含义。如对于标识字段，注释需要标明：Y-是，N-否，说明此字段的取值为Y和N，含义分别为是和否。</p>
+</li>
+<li><p>字段数据类型：对于标识，状态字段，一般取值为一个字符（Varchar2(1)），如果状态较多，可以设置为2个字符（Varchar2(2)）；对于数量等字段，设置为数值（Number(20，7)）；对于代码、名称、说明、描述的字段，一般为Varchar2，字符的多少可根据需要设置。 </p>
+</li>
+<li><p>字段取值：对于涉及到是和否的标识字段，取值必须为Y&#x2F;N，但 “是否显示”字段除外，其取值为0&#x2F;1；对于状态字段，一般取值为0，1，2……,对应不同的状态。</p>
+</li>
+</ol>
+<h2 id="3-序列规范"><a href="#3-序列规范" class="headerlink" title="3     序列规范"></a>3     序列规范</h2><p>每个表都必须有一个主键序列，作为主键ID的值.</p>
+<ol>
+<li><pre><code>  命名：表名 + ‘_S’， 如：MDS_Route_S;
+</code></pre>
+</li>
+<li><pre><code>  取值：初始值，最小值，步长均为1，最大值为999999999
+</code></pre>
+</li>
+</ol>
+<p>在后来的数据库设计中，不再需要为每个表创建一个序列，用以产生主键ID。表主键的数据类型变为Varchar2(32)，用Oracle函数SYS_GUID()产生，具体方法如下：</p>
+<p>Select SYS_GUID() into v_tableId from dual;</p>
+<h2 id="4-包及存储过程规范"><a href="#4-包及存储过程规范" class="headerlink" title="4     包及存储过程规范"></a>4     包及存储过程规范</h2><p>对于业务系统的逻辑处理，需要建立包及存储过程来实现。如果多个存储过程实现同一业务，尽量封装在包中。</p>
+<ol>
+<li><p>包的命名：与表的命名规则类似，但需要以’ _P’结尾，如：MES_Route_P</p>
+</li>
+<li><p>存储过程命名规范：命名尽量表示此存储过程功能；</p>
+</li>
+<li><p>存储过程参数规范：最后两个参数必须为返回值，并遵循以下约定：</p>
+</li>
+</ol>
+<p>倒数第二个参数为Number，表示执行的结果，成功&#x2F;失败等等 ，其取值为Codecollection里的Success&#x2F;Fail&#x2F;Warn</p>
+<p>倒数第一个参数为Varchar2, 表示执行中出现的错误或警告信息</p>
+<p>传入的参数中如果需要有日期或时间，需要设置为字符串</p>
+<ol start="4">
+<li>存储过程中必须包含的处理：</li>
+</ol>
+<p>如果传入的参数中如日期或时间字符串，必须进行转换的异常处理，转换时，使用Codecollection里的Date_Format_Date&#x2F;Date_Format_Datetime来进行时间格式设置</p>
+<p>插入数据时，7个必须的字段必须赋值，其中主键使用相应的序列取值，Version设为1，涉及到人员的，使用Get_Session_Info里的Get_User_Id，涉及到时间的，使用当前系统时间，IP使用Get_Session_Info里的Get_Logon_Ip</p>
+<p>更新数据时，最后修改人，最后修改时间，最后更新IP，版本 必须更新，取值同样来源于Get_Session_Info，Version 增1</p>
+<p>异常处理：如果执行成功，返回值中Return_Int 设为Codecollection里的 Success</p>
+<p>如果捕捉到异常，需要返回Codecollection里的Fail&#x2F;Warn，并设置Return_String的内容</p>
+<p>需要读取配置文件中的设置时，使用Sys_Profile_Option_p的Get_Profile_Option_Value方法，来取得值。如：末工序的最大号</p>
+<ol start="5">
+<li>存储过程的参数、变量命名规范</li>
+</ol>
+<p><strong>传入参数</strong>：命名以 i_开头，譬如i_Sys_Function_Tl_Id，具体参照appsys用户下sys_form_p包中的存储过程Delete_Form_Tl_Id的定义，</p>
+<p>PROCEDURE<br>Delete_Form_Tl_Id(i_Sys_Form_Tl_Id VARCHAR2,<br>o_Return_Int     OUT INT,<br>o_Return_String  OUT VARCHAR2);</p>
+<p><strong>返回值</strong>：命名以o_开头，目前只支持两个返回值，o_Return_Int和o_Return_String，分别表示执行的结果及消息；</p>
+<p><strong>变量</strong>：命名以v_开头，如果变量是用来存储数据库表中某列的数值，其数据类型一般会采取tableName.columnName%TYPE的定义方式，如v_Sys_Function_IdSys_Function.Id%TYPE;</p>
+<ol start="6">
+<li>存储过程及函数的注释</li>
+</ol>
+<p>对存储过程和函数的注释主要包括功能描述、编写人、编写日期信息，一般写在包体中存储过程或函数的名称前面。如appsys用户下sys_form_p包中的存储过程Delete_Form_Tl_Id：</p>
+<p>&#x2F;***************************************************************************</p>
+<ul>
+<li><p>功能描述:级联删除form_with_tl信息</p>
+</li>
+<li><p>编写人：刘岩</p>
+</li>
+<li><p>编写日期: 2008-04-22</p>
+</li>
+</ul>
+<p> ***************************************************************************&#x2F;</p>
+<p>  PROCEDURE Delete_Form_Tl_Id(i_Sys_Form_Tl_IdVARCHAR2,</p>
+<p>​                              o_Return_Int     OUT INT,</p>
+<p>​                             o_Return_String  OUT VARCHAR2) IS</p>
+<p>​    v_Sys_Form_Id Sys_Form.Id%TYPE;</p>
+<p>  BEGIN</p>
+<p>​    SELECT Sys_Form_Id</p>
+<p>​      INTO v_Sys_Form_Id</p>
+<p>​      FROM Sys_Form_Tl</p>
+<p>​     WHERE Id &#x3D; i_Sys_Form_Tl_Id;</p>
+<p>​    Delete_Form(v_Sys_Form_Id, o_Return_Int,o_Return_String);</p>
+<p>  EXCEPTION</p>
+<p>​    WHEN OTHERS THEN</p>
+<p>​      o_Return_Int    :&#x3D; Codecollection.Fail;</p>
+<p>​      o_Return_String :&#x3D; ‘删除表单失败：’ || SQLERRM;</p>
+<p>  END Delete_Form_Tl_Id;</p>
+<h2 id="5-视图规范"><a href="#5-视图规范" class="headerlink" title="5     视图规范"></a>5     视图规范</h2><p>每个表必须建立视图，命名规范为：</p>
+<p>如果没有多语言，则视图名为：表名 + ‘_V’</p>
+<p>如果有多语言，则视图名为：表名 + ‘_VL’</p>
+<p>如果在视图的基础上再建立视图，命名规范为：视图名 +‘V’</p>
+<p>如果视图带数据权限，则视图名为：表名 + ‘_VS’</p>
+<h2 id="6-常用包及用途"><a href="#6-常用包及用途" class="headerlink" title="6     常用包及用途"></a>6     常用包及用途</h2><p>APPSYS.Codecollection:常量设置</p>
+<p>APPSYS.Sys_Profile_Option_p:读取配置文件</p>
+<p>APPSYS.Get_Session_Info:获取当前用户信息</p>
+<p>APPS.Gen_Appview：根据视图在APPVIEW中建立表</p>
+<p>APPS.Sys_Auto_Code_p：管理编码</p>
+<p>APPS.Sys_Util_p：将字符串表示的计算式格式化，计算值</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2018/02/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/">http://example.com/2018/02/06/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Document/"># Document</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2018/02/07/%E7%BB%86%E8%AF%B4%E8%BD%AF%E4%BB%B6%E4%BA%A7%E5%93%81%E5%92%8C%E4%B8%9A%E5%8A%A1%E3%80%81%E4%B8%9A%E5%8A%A1%E8%BF%87%E7%A8%8B(%E6%B5%81%E7%A8%8B)%E3%80%81%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91/">细说软件产品和业务、业务过程(流程)、业务逻辑</a>
+            
+            
+            <a class="next" rel="next" href="/2018/02/03/%E6%8A%80%E6%9C%AF%E5%8F%98%E5%8C%96%E9%82%A3%E4%B9%88%E5%BF%AB%EF%BC%8C%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E4%B8%8D%E8%A2%AB%E6%B7%98%E6%B1%B0/">技术变化那么快，如何做到不被淘汰</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

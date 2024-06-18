@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>JS特效-tab选项卡列表切换 | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Bentham&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Bentham&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JS特效-tab选项卡列表切换</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 8, 2018&nbsp;&nbsp;20:30:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/js/">js</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/15/5Ai6CL2PKJHyefW.png"><br>tab选项卡列表切换</p>
+<span id="more"></span>
+<h4 id="index-html"><a href="#index-html" class="headerlink" title="index.html"></a>index.html</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>列表切换效果代码<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;css/tab.css&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;tab&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">&quot;up&quot;</span> <span class="attr">id</span>=<span class="string">&quot;two1&quot;</span> <span class="attr">onmouseover</span>=<span class="string">&quot;setContentTab(&#x27;two&#x27;,1,4)&quot;</span>&gt;</span>热点新闻<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;block&quot;</span> <span class="attr">id</span>=<span class="string">&quot;con_two_1&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[新闻热点]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>点点妙：欢庆“十一”送祝福<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[新闻热点]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>点点妙携手移动端APP 开创棋牌游戏新模<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[新闻热点]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>看棋牌大亨如何颠覆快播江湖<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[新闻热点]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>棋牌行业：解密点点妙合作内幕 分成竟高达<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">id</span>=<span class="string">&quot;two2&quot;</span> <span class="attr">onmouseover</span>=<span class="string">&quot;setContentTab(&#x27;two&#x27;,2,4)&quot;</span>&gt;</span>合作播报<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;con_two_2&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[合作播报]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>收银妹代理棋牌游戏 成功晋级游戏女老板2<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[合作播报]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>收银妹代理棋牌游戏 成功晋级游戏女老板1<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[合作播报]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>IT精英放弃高薪只因想“玩”游戏<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[合作播报]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>“干爹”扶持，乐猴棋牌开疆拓土<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">id</span>=<span class="string">&quot;two3&quot;</span> <span class="attr">onmouseover</span>=<span class="string">&quot;setContentTab(&#x27;two&#x27;,3,4)&quot;</span>&gt;</span>行业咨询<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;con_two_3&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[行业咨询]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>收银妹代理棋牌游戏 成功晋级游戏女老板3<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[行业咨询]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>紫金阁：代理棋牌游戏如何能稳赚不亏？<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[行业咨询]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>你知道吗？“紫金阁”竟然升级做了“小三”<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[行业咨询]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>都市娱乐赚钱首选 棋牌游戏代理<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">id</span>=<span class="string">&quot;two4&quot;</span> <span class="attr">onmouseover</span>=<span class="string">&quot;setContentTab(&#x27;two&#x27;,4,4)&quot;</span>&gt;</span>运营攻略<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;con_two_4&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[运营攻略]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>加盟网络棋牌游戏的注意事项<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[运营攻略]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>奇葩：一款可以自动赚钱的棋牌游戏<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[运营攻略]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>代理棋牌游戏 紫金阁支招稳赚不亏<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_menu&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>[运营攻略]<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;tab_title&quot;</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span>&gt;</span>棋牌行业内幕：什么时候代理棋牌游戏最合适<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>2014-09-05<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">setContentTab</span>(<span class="params">name, curr, n</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> menu = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(name + i);</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> cont = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;con_&quot;</span> + name + <span class="string">&quot;_&quot;</span> + i);</span></span><br><span class="line"><span class="language-javascript">        menu.<span class="property">className</span> = i == curr ? <span class="string">&quot;up&quot;</span> : <span class="string">&quot;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span> (i == curr) &#123;</span></span><br><span class="line"><span class="language-javascript">            cont.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;block&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            cont.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;none&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="tab-css"><a href="#tab-css" class="headerlink" title="tab.css"></a>tab.css</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* CSS Document */</span></span><br><span class="line"><span class="selector-id">#tab</span> &#123; <span class="attribute">width</span>:<span class="number">412px</span>; <span class="attribute">height</span>:<span class="number">216px</span>; <span class="attribute">position</span>:relative;<span class="attribute">margin</span>:<span class="number">40px</span> auto <span class="number">0</span> auto;&#125;</span><br><span class="line"><span class="comment">/*设置容器高宽等*/</span></span><br><span class="line"><span class="selector-tag">html</span> &gt; <span class="selector-tag">body</span> <span class="selector-id">#tab</span> &#123; <span class="attribute">width</span>:<span class="number">412px</span>;&#125;</span><br><span class="line"><span class="comment">/*兼容IE6:IE6下宽度不够*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">div</span> &#123; <span class="attribute">position</span>:absolute; <span class="attribute">top</span>:<span class="number">30px</span>; <span class="attribute">left</span>:<span class="number">0</span>; <span class="attribute">width</span>:<span class="number">412px</span>; <span class="attribute">height</span>:<span class="number">186px</span>;&#125;</span><br><span class="line"><span class="comment">/*设置容器高宽等*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">div</span> &#123; <span class="attribute">display</span>:none;&#125;</span><br><span class="line"><span class="comment">/*设置容器默认隐藏:不用ID是因为下面将利用class来控制容器显示,而class优先级低于id选择器*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-class">.block</span> &#123; <span class="attribute">display</span>:block;&#125;</span><br><span class="line"><span class="comment">/*选中的容器*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">h3</span> &#123; <span class="attribute">float</span><span class="selector-pseudo">:left</span>; <span class="attribute">width</span>:<span class="number">103px</span>; <span class="attribute">height</span>:<span class="number">30px</span>; <span class="attribute">line-height</span>:<span class="number">30px</span>; <span class="attribute">margin</span>:<span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>; <span class="attribute">font-size</span>:<span class="number">12px</span>; <span class="attribute">cursor</span>:pointer; <span class="attribute">background-color</span>:<span class="number">#c5c5c5</span>; <span class="attribute">text-align</span>:center; <span class="attribute">color</span>:<span class="number">#5a5a5a</span>; <span class="attribute">font-family</span>:Microsoft YaHei;<span class="attribute">font-weight</span>:normal;&#125;</span><br><span class="line"><span class="comment">/*默认标题样式*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-class">.up</span> &#123; <span class="attribute">background</span>:<span class="number">#0292cf</span>;<span class="attribute">color</span>:<span class="number">#fff</span>;&#125;</span><br><span class="line"><span class="comment">/*选中的标题样式*/</span></span><br><span class="line"><span class="comment">/*修饰列表内容*/</span></span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">ul</span> &#123; <span class="attribute">list-style</span>:none; <span class="attribute">padding</span>:<span class="number">0</span>; <span class="attribute">height</span>:<span class="number">186px</span>; <span class="attribute">margin-top</span>:<span class="number">0px</span>;&#125;</span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">li</span> &#123; <span class="attribute">margin-left</span>:<span class="number">10px</span>; <span class="attribute">margin-right</span>:<span class="number">10px</span>; <span class="attribute">border-bottom</span>:<span class="number">1px</span> dotted <span class="number">#c6c6c6</span>; <span class="attribute">height</span>:<span class="number">22px</span>; <span class="attribute">padding-top</span>:<span class="number">23px</span>; <span class="attribute">overflow</span>:hidden; <span class="attribute">font-size</span>:<span class="number">12px</span>;&#125;</span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">li</span> <span class="selector-tag">a</span> &#123; <span class="attribute">display</span>:inline; <span class="attribute">font-size</span>:<span class="number">12px</span>; <span class="attribute">text-decoration</span>:none; <span class="attribute">text-indent</span>:<span class="number">10px</span>; <span class="attribute">margin-right</span>:<span class="number">10px</span>;&#125;</span><br><span class="line"><span class="selector-id">#tab</span> <span class="selector-tag">li</span> <span class="selector-tag">span</span>&#123; <span class="attribute">display</span>:block; <span class="attribute">float</span><span class="selector-pseudo">:right</span>; <span class="attribute">margin-right</span>:<span class="number">5px</span>; <span class="attribute">color</span>: <span class="number">#bdacb3</span>;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_title</span><span class="selector-pseudo">:link</span> &#123; <span class="attribute">color</span>: <span class="number">#5a5a5a</span>; <span class="attribute">text-decoration</span>:none;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_title</span><span class="selector-pseudo">:visited</span> &#123; <span class="attribute">color</span>:<span class="number">#5a5a5a</span>; <span class="attribute">text-decoration</span>:none;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_title</span><span class="selector-pseudo">:hover</span> &#123; <span class="attribute">color</span>:<span class="number">#5a5a5a</span>; <span class="attribute">text-decoration</span>:none;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_title</span><span class="selector-pseudo">:active</span> &#123; <span class="attribute">color</span>:<span class="number">#5a5a5a</span>; <span class="attribute">text-decoration</span>:none;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_menu</span><span class="selector-pseudo">:link</span> &#123; <span class="attribute">color</span>:<span class="number">#6464d5</span>; <span class="attribute">text-decoration</span>:none;&#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-class">.tab_menu</span><span class="selector-pseudo">:hover</span> &#123; <span class="attribute">color</span>:<span class="number">#8888e0</span>; <span class="attribute">text-decoration</span>:underline;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考: <a target="_blank" rel="noopener" href="http://www.lanrenzhijia.com/tab">http://www.lanrenzhijia.com/tab</a></p>
+<p>​          <a target="_blank" rel="noopener" href="https://www.cnblogs.com/cheryshi/p/7903918.html">https://www.cnblogs.com/cheryshi/p/7903918.html</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2018/04/08/JS%E7%89%B9%E6%95%88-tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%88%97%E8%A1%A8%E5%88%87%E6%8D%A2/">http://example.com/2018/04/08/JS%E7%89%B9%E6%95%88-tab%E9%80%89%E9%A1%B9%E5%8D%A1%E5%88%97%E8%A1%A8%E5%88%87%E6%8D%A2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/js/"># js</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/10/%E4%BA%BA%E7%94%9F%E5%A4%84%E5%A4%84%E6%98%AF%E4%BF%AE%E8%A1%8C/">人生处处是修行</a>
+            
+            
+            <a class="next" rel="next" href="/2018/04/08/web%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E5%B8%B8%E7%94%A8%E4%BB%A3%E7%A0%81%E6%95%B4%E7%90%86/">web前端开发常用代码整理</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
