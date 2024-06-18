@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>面向对象设计和编程 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">面向对象设计和编程</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 24, 2018&nbsp;&nbsp;16:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Interview/">Interview</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/XDgYZ2RMLxIl7Vd.jpg"></p>
+<p>Java面试笔记</p>
+<span id="more"></span>
+
+<h1 id="S-O-L-I-D"><a href="#S-O-L-I-D" class="headerlink" title="S.O.L.I.D"></a>S.O.L.I.D</h1><p>S.O.L.I.D 是面向对象设计和编程 (OOD&amp;OOP) 中几个重要编码原则 (Programming Priciple) 的首字母缩写。</p>
+<table>
+<thead>
+<tr>
+<th>简写</th>
+<th>全拼</th>
+<th>中文翻译</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SRP</td>
+<td>The Single Responsibility Principle</td>
+<td>单一责任原则</td>
+</tr>
+<tr>
+<td>OCP</td>
+<td>The Open Closed Principle</td>
+<td>开放封闭原则</td>
+</tr>
+<tr>
+<td>LSP</td>
+<td>The Liskov Substitution Principle</td>
+<td>里氏替换原则</td>
+</tr>
+<tr>
+<td>ISP</td>
+<td>The Interface Segregation Principle</td>
+<td>接口分离原则</td>
+</tr>
+<tr>
+<td>DIP</td>
+<td>The Dependency Inversion Principle</td>
+<td>依赖倒置原则</td>
+</tr>
+</tbody></table>
+<h2 id="1-单一责任原则"><a href="#1-单一责任原则" class="headerlink" title="1. 单一责任原则"></a>1. 单一责任原则</h2><p>当需要修改某个类的时候原因有且只有一个。换句话说就是让一个类只做一种类型责任，当这个类需要承当其他类型的责任的时候，就需要分解这个类。</p>
+<h2 id="2-开放封闭原则"><a href="#2-开放封闭原则" class="headerlink" title="2. 开放封闭原则"></a>2. 开放封闭原则</h2><p>软件实体应该是可扩展，而不可修改的。也就是说，对扩展是开放的，而对修改是封闭的。</p>
+<h2 id="3-里氏替换原则"><a href="#3-里氏替换原则" class="headerlink" title="3. 里氏替换原则"></a>3. 里氏替换原则</h2><p>当一个子类的实例应该能够替换任何其超类的实例时，它们之间才具有 is-a 关系。</p>
+<h2 id="4-接口分离原则"><a href="#4-接口分离原则" class="headerlink" title="4. 接口分离原则"></a>4. 接口分离原则</h2><p>不能强迫用户去依赖那些他们不使用的接口。换句话说，使用多个专门的接口比使用单一的总接口总要好。</p>
+<h2 id="5-依赖倒置原则"><a href="#5-依赖倒置原则" class="headerlink" title="5. 依赖倒置原则"></a>5. 依赖倒置原则</h2><ol>
+<li>高层模块不应该依赖于低层模块，二者都应该依赖于抽象</li>
+<li>抽象不应该依赖于细节，细节应该依赖于抽象</li>
+</ol>
+<h1 id="封装、继承、多态"><a href="#封装、继承、多态" class="headerlink" title="封装、继承、多态"></a>封装、继承、多态</h1><p>封装、继承、多态是面向对象的三大特性。</p>
+<h2 id="1-封装"><a href="#1-封装" class="headerlink" title="1. 封装"></a>1. 封装</h2><p>利用抽象数据类型将数据和基于数据的操作封装在一起，使其构成一个不可分割的独立实体，数据被保护在抽象数据类型的内部，尽可能地隐藏内部的细节，只保留一些对外接口使之与外部发生联系。用户是无需知道对象内部的细节，但可以通过该对象对外的提供的接口来访问该对象。</p>
+<p>封装有三大好处：</p>
+<ol>
+<li>良好的封装能够减少耦合。</li>
+<li>类内部的结构可以自由修改。</li>
+<li>可以对成员进行更精确的控制。</li>
+<li>隐藏信息，实现细节。</li>
+</ol>
+<p>以下 Person 类封装 name、gender、age 等属性，外界只能通过 get() 方法获取一个 Person 对象的 name 属性和 gender 属性，而无法获取 age 属性，但是 age 属性可以供 work() 方法使用。</p>
+<p>注意到 gender 属性使用 int 数据类型进行存储，封装使得用户注意不到这种实现细节。并且在需要修改使用的数据类型时，也可以在不影响客户端代码的情况下进行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> gender;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getGender</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> gender == <span class="number">0</span> ? <span class="string">&quot;man&quot;</span> : <span class="string">&quot;woman&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">work</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="number">18</span> &lt;= age &amp;&amp; age &lt;= <span class="number">50</span>) &#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot; is working very hard!&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(name + <span class="string">&quot; can&#x27;t work!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-继承"><a href="#2-继承" class="headerlink" title="2. 继承"></a>2. 继承</h2><p>继承实现了 <strong>is-a</strong> 关系，例如 Cat 和 Animal 就是一种 is-a 关系，因此可以将 Cat 继承自 Animal，从而获得 Animal 非 private 的属性和方法。</p>
+<p>Cat 可以当做 Animal 来使用，也就是可以使用 Animal 引用 Cat 对象，这种子类转换为父类称为 <strong>向上转型</strong>。</p>
+<p>继承应该遵循里氏替换原则：当一个子类的实例应该能够替换任何其超类的实例时，它们之间才具有 is-a 关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Animal</span> <span class="variable">animal</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cat</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-多态"><a href="#3-多态" class="headerlink" title="3. 多态"></a>3. 多态</h2><p>多态分为编译时多态和运行时多态。编译时多态主要指方法的重装，运行时多态指程序中定义的对象引用所指向的具体类型在运行期间才确定。</p>
+<p>多态有三个条件：1. 继承；2. 覆盖父类方法；3. 向上转型。</p>
+<p>下面的代码中，乐器类（Instrument）有两个子类：Wind 和 Percussion，它们都覆盖了 play() 方法，并且在 main() 方法中使用父类 Instrument 来引用 Wind 和 Percussion 对象。在 Instrument 引用调用 play() 方法时，会执行实际引用对象所在类的 play() 方法，而不是 Instrument 类的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Instrument</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">play</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Instument is playing...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Wind</span> <span class="keyword">extends</span> <span class="title class_">Instrument</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">play</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Wind is playing...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Percussion</span> <span class="keyword">extends</span> <span class="title class_">Instrument</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">play</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Percussion is playing...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Music</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;Instrument&gt; instruments = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        instruments.add(<span class="keyword">new</span> <span class="title class_">Wind</span>());</span><br><span class="line">        instruments.add(<span class="keyword">new</span> <span class="title class_">Percussion</span>());</span><br><span class="line">        <span class="keyword">for</span>(Instrument instrument : instruments) &#123;</span><br><span class="line">            instrument.play();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h1><h2 id="1-类图"><a href="#1-类图" class="headerlink" title="1. 类图"></a>1. 类图</h2><p><strong>1.1 继承相关</strong></p>
+<p>继承有两种形式 : 泛化（generalize）和实现（realize），表现为 is-a 关系。</p>
+<p>① 泛化关系 (generalization)</p>
+<p>从具体类中继承</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/29badd92-109f-4f29-abb9-9857f5973928.png"></p>
+<p>② 实现关系 (realize)</p>
+<p>从抽象类或者接口中继承</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/4b16e1d3-3a60-472c-9756-2f31b1c48abe.png"></p>
+<p><strong>1.2 整体和部分</strong></p>
+<p>① 聚合关系 (aggregation)</p>
+<p>表示整体由部分组成，但是整体和部分不是强依赖的，整体不存在了部分还是会存在。以下表示 B 由 A 组成：</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/34259bb8-ca3a-4872-8771-9e946782d9c3.png"></p>
+<p>② 组合关系 (composition)</p>
+<p>和聚合不同，组合中整体和部分是强依赖的，整体不存在了部分也不存在了。比如公司和部门，公司没了部门就不存在了。但是公司和员工就属于聚合关系了，因为公司没了员工还在。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/7dda050d-ac35-4f47-9f51-18f18ed6fa9a.png"></p>
+<p><strong>1.3 相互联系</strong></p>
+<p>① 关联关系 (association)</p>
+<p>表示不同类对象之间有关联，这是一种静态关系，与运行过程的状态无关，在最开始就可以确定。因此也可以用 1 对 1、多对 1、多对多这种关联关系来表示。比如学生和学校就是一种关联关系，一个学校可以有很多学生，但是一个学生只属于一个学校，因此这是一种多对一的关系，在运行开始之前就可以确定。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/4ccd294c-d6b2-421b-839e-d88336ff5fb7.png"></p>
+<p>② 依赖关系 (dependency)</p>
+<p>和关联关系不同的是 , 依赖关系是在运行过程中起作用的。一般依赖作为类的构造器或者方法的参数传入。双向依赖时一种不好的设计。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/47ca2614-509f-476e-98fc-50ec9f9d43c0.png"></p>
+<h2 id="2-时序图"><a href="#2-时序图" class="headerlink" title="2. 时序图"></a>2. 时序图</h2><p><strong>2.1 定义</strong></p>
+<p>时序图描述了对象之间传递消息的时间顺序，它用来表示用例的行为顺序。它的主要作用是通过对象间的交互来描述用例（注意是对象），从而寻找类的操作。</p>
+<p><strong>2.2 赤壁之战时序图</strong></p>
+<p>从虚线从上往下表示时间的推进。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/80c5aff8-fc46-4810-aeaa-215b5c60a003.png"></p>
+<p>可见，通过时序图可以知道每个类具有以下操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">publc class 刘备 &#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> 应战 ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">publc class  孔明 &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span>  拟定策略 ();</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span>  联合孙权 ();</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">void</span> 借东风火攻 ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> class 关羽 &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span>  防守荊州 ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> class 张飞 &#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span>  防守荆州前线 ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> class 孙权 &#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span>  领兵相助 ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.3 活动图、时序图之间的关系</strong></p>
+<p>活动图示从用户的角度来描述用例；</p>
+<p>时序图是从计算机的角度（对象间的交互）描述用例。</p>
+<p><strong>2.4 类图与时序图的关系</strong></p>
+<p>类图描述系统的静态结构，时序图描述系统的动态行为。</p>
+<p><strong>2.5 时序图的组成</strong></p>
+<p>① 对象</p>
+<p>有三种表现形式</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/25b8adad-2ef6-4f30-9012-c306b4e49897.png"></p>
+<p>在画图时，应该遵循以下原则：</p>
+<ol>
+<li><p>把交互频繁的对象尽可能地靠拢。</p>
+</li>
+<li><p>把初始化整个交互活动的对象（有时是一个参与者）放置在最左边。</p>
+</li>
+</ol>
+<p>② 生命线</p>
+<p>生命线从对象的创建开始到对象销毁时终止</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/b7b0eac6-e7ea-4fb6-8bfb-95fec6f235e2.png"></p>
+<p>③ 消息</p>
+<p>对象之间的交互式通过发送消息来实现的。</p>
+<p>消息有 4 种类型：</p>
+<p>1. 简单消息，不区分同步异步。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/a13b62da-0fa8-4224-a615-4cadacc08871.png"></p>
+<p>2. 同步消息，发送消息之后需要暂停活动来等待回应。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/33821037-dc40-4266-901c-e5b38e618426.png"></p>
+<p>3. 异步消息，发送消息之后不需要等待。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/dec6c6cc-1b5f-44ed-b8fd-464fcf849dac.png"></p>
+<p>4. 返回消息，可选。</p>
+<p>④ 激活</p>
+<p>生命线上的方框表示激活状态，其它时间处于休眠状态。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/Interview/6ab5de9b-1c1e-4118-b2c3-fb6c7ed7de6f.png"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>Java 编程思想</li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/shanyou/archive/2009/09/21/1570716.html"> 面向对象设计的 SOLID 原则 </a></li>
+<li><a target="_blank" rel="noopener" href="http://design-patterns.readthedocs.io/zh_CN/latest/read_uml.html#generalization"> 看懂 UML 类图和时序图 </a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/wolf-sun/p/UML-Sequence-diagram.html">UML 系列——时序图（顺序图）sequence diagram</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/jianyuerensheng/article/details/51602015"> 面向对象编程三大特性 —— 封装、继承、多态 </a></li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-theme.github.io/post/2018021644.htm">https://hexo-theme.github.io/post/2018021644.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Interview/"># Interview</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018021644.htm">计算机网络</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018022244.htm">软件工程实践的八大常识</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Tommas | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
