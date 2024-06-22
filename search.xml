@@ -1,6 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>YAML脚本学习笔记</title>
+    <url>/post/2017121234.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/16/pWn3RYiD86aGONA.png"></p>
+<p>YAML是“另一种标记语言”的外语缩写；但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。<br>它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
+<span id="more"></span>
+<p>诞生<br>YAML参考了其他多种语言，包括：XML、C语言、Python、Perl以及电子邮件格式RFC2822。<br>Clark Evans在2001年5月在首次发表了这种语言，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者。<br>命名<br>YAML是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。<br>在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言），<br>功能<br>YAML的语法和其他高阶语言类似，并且可以简单表达清单、散列表，标量等资料形态、。<br>它使用空白符号缩排和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种设定档、倾印除错内容、文件大纲（例如：许多电子邮件标题格式和YAML非常接近）。<br>尽管它比较适合用来表达阶层式（hierarchical model）的数据结构，不过也有精致的语法可以表示关联性（relational model）的资料。<br>由于YAML使用空白字符和分行来分隔资料，使的他特别适合用grep、Python、Perl、Ruby操作。<br>其让人最容易上手的特色是巧妙避开各种封闭符号，如：引号、各种括号等，这些符号在嵌套结构中会变得复杂而难以辨认。</p>
+<h1 id="YAML预研文档"><a href="#YAML预研文档" class="headerlink" title="YAML预研文档"></a>YAML预研文档</h1><h2 id="YAML概要"><a href="#YAML概要" class="headerlink" title="YAML概要"></a>YAML概要</h2><p><a href="http://yaml.org/">YAML</a>是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写，早先YAML的意思其实是：”Yet Another Markup Language”（另外一种置标语言），但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名，YAML的官方定义很简单，即<strong>一种人性化的数据格式定义语言</strong>，其主要功能用途类似于XML或JSON，YAML使用空白字符和分行来分隔数据，且巧妙避开各种封闭符号，如：引号、括号等，以避免这些符号在复杂层次结构中变得难以辨认。YAML的语法与高阶语言类似，可以很简单地表述<em>序列（java中的list）、杂凑表（java中的map）、标量（java中的基本类型等）</em>数据结构，它重点强调可阅读性。</p>
+<h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
+<blockquote>
+<p><strong>优势:</strong></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>YAML的可读性好</li>
+<li>YAML和脚本语言的交互性好</li>
+<li>YAML使用实现语言的数据类型</li>
+<li>YAML有一个一致的信息模型</li>
+<li>YAML易于实现</li>
+</ul>
+</blockquote>
+<p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
+<blockquote>
+<ul>
+<li>YAML可以基于流来处理</li>
+<li>YAML表达能力强，扩展性好</li>
+</ul>
+</blockquote>
+<p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。</p>
+<hr>
+<h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
+<h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
+<h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
+<h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
+<ul>
+<li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
+<li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
+<li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
+<li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
+<li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
+<li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
+<li>字串一般不使用引号，但必要的时候可以用引号框住</li>
+<li>使用双引号表示字串时，可用倒斜线（<kbd>&lt;/kbd>）进行特殊字符转义</li>
+<li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>></kbd>）两种方式</li>
+<li>在单一档案中，可用连续三个连字号（<kbd>---</kbd>）区分多个档案</li>
+<li>可选择性的连续三个点号（<kbd>...</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
+<li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&</kbd>）</li>
+<li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">receipt:     Oz-Ware Purchase Invoice</span><br><span class="line">date:        2007-08-06</span><br><span class="line">customer:</span><br><span class="line">    given:   Dorothy</span><br><span class="line">    family:  Gale</span><br><span class="line">items:</span><br><span class="line">    - part_no:   A4786</span><br><span class="line">      descrip:   Water Bucket (Filled)</span><br><span class="line">      price:     1.47</span><br><span class="line">      quantity:  4</span><br><span class="line">    - part_no:   E1628</span><br><span class="line">      descrip:   High Heeled &quot;Ruby&quot; Slippers </span><br><span class="line">      price:     100.27</span><br><span class="line">      quantity:  1</span><br><span class="line">bill-to:  &amp;id001</span><br><span class="line">    street: | </span><br><span class="line">            123 Tornado Alley</span><br><span class="line">            Suite 16</span><br><span class="line">    city:   East Westville</span><br><span class="line">    state:  KS</span><br><span class="line">ship-to:  *id001   </span><br><span class="line">specialDelivery:  &gt;</span><br><span class="line">    Follow the Yellow Brick</span><br><span class="line">    Road to the Emerald City.</span><br><span class="line">    Pay no attention to the </span><br><span class="line">    man behind the curtain.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
+<h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: John Smith</span><br><span class="line">age: 37</span><br><span class="line">children:</span><br><span class="line">    - name: Jimmy Smith</span><br><span class="line">      age: 15</span><br><span class="line">    - name: Jenny Smith</span><br><span class="line">      age: 12</span><br><span class="line">spouse:</span><br><span class="line">    name: Jane Smith</span><br><span class="line">    age: 25</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private int age;</span><br><span class="line">    private Person sponse;</span><br><span class="line">    private Person[] children;</span><br><span class="line">    // setXXX, getXXX方法略.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们使用java装配一个Jone：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Person john = new Person();</span><br><span class="line">john.setAge(37);</span><br><span class="line">john.setName(&quot;John Smith&quot;);</span><br><span class="line">Person sponse = new Person();</span><br><span class="line">sponse.setName(&quot;Jane Smith&quot;);</span><br><span class="line">sponse.setAge(25);</span><br><span class="line">john.setSponse(sponse);</span><br><span class="line">Person[] children = &#123;new Person(), new Person()&#125;;</span><br><span class="line">children[0].setName(&quot;Jimmy Smith&quot;);</span><br><span class="line">children[0].setAge(15);</span><br><span class="line">children[1].setName(&quot;Jenny Smith&quot;);</span><br><span class="line">children[1].setAge(12);</span><br><span class="line">john.setChildren(children);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
+<blockquote>
+<ul>
+<li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
+<li>支持YAML的所有类型</li>
+<li>支持UTF-8&#x2F;UTF-16的输入和输出</li>
+<li>提供了本地java对象的序列化和反序列化的高层API</li>
+<li>提供相对合理的错误提示信息</li>
+</ul>
+</blockquote>
+<p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DumperOptions options = new DumperOptions();</span><br><span class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);</span><br><span class="line">Yaml yaml = new Yaml(options);</span><br><span class="line">//Yaml yaml = new Yaml();</span><br><span class="line">String dump = yaml.dump(john);</span><br><span class="line">System.out.println(dump);</span><br></pre></td></tr></table></figure>
+<p>内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">!!Person</span><br><span class="line">age: 37</span><br><span class="line">children:</span><br><span class="line">- age: 15</span><br><span class="line">  children: null</span><br><span class="line">  name: Jimmy Smith</span><br><span class="line">  sponse: null</span><br><span class="line">- age: 12</span><br><span class="line">  children: null</span><br><span class="line">  name: Jenny Smith</span><br><span class="line">  sponse: null</span><br><span class="line">name: John Smith</span><br><span class="line">sponse:</span><br><span class="line">  age: 25</span><br><span class="line">  children: null</span><br><span class="line">  name: Jane Smith</span><br><span class="line">  sponse: null</span><br></pre></td></tr></table></figure>
+<p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml();</span><br><span class="line">Object load = yaml.load(new FileInputStream(new File(&quot;jhon.yaml&quot;)));</span><br><span class="line">System.out.println(load.getClass());</span><br><span class="line">System.out.println(yaml.dump(load));</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml(options);</span><br><span class="line">Person person = yaml.loadAs(inputStream, Person.class);</span><br><span class="line">System.out.println(person.getSponse().getChildren().length);</span><br></pre></td></tr></table></figure>
+<p>如果一个yaml文件中有多个文档，由<kbd>---</kbd>分割，解析如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml();</span><br><span class="line">        int counter = 0;</span><br><span class="line">        for (Object data : yaml.loadAll(input)) &#123;</span><br><span class="line">            System.out.println(data);</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>保存一个Map对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;String, Object&gt; data = new HashMap&lt;String, Object&gt;();</span><br><span class="line">        data.put(&quot;name&quot;, &quot;Silenthand Olleander&quot;);</span><br><span class="line">        data.put(&quot;race&quot;, &quot;Human&quot;);</span><br><span class="line">        data.put(&quot;traits&quot;, new String[] &#123; &quot;ONE_HAND&quot;, &quot;ONE_EYE&quot; &#125;);</span><br><span class="line">        Yaml yaml = new Yaml();</span><br><span class="line">        String output = yaml.dump(data);</span><br><span class="line">        System.out.println(output);</span><br><span class="line">    // or</span><br><span class="line">    StringWriter writer = new StringWriter();</span><br><span class="line">    yaml.dump(data, writer);</span><br><span class="line">    System.out.println(writer.toString());</span><br></pre></td></tr></table></figure>
+<p>将多个文档dump出到同一个yaml文件中去：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; docs = new LinkedList&lt;Integer&gt;();</span><br><span class="line">    for (int i = 1; i &lt; 4; i++) &#123;</span><br><span class="line">        docs.add(i);</span><br><span class="line">    &#125;</span><br><span class="line">    DumperOptions options = new DumperOptions();</span><br><span class="line">    //options.setCanonical(true);</span><br><span class="line">    options.explicitStart(true);</span><br><span class="line">    Yaml yaml = new Yaml(options);</span><br><span class="line">    System.out.println(yaml.dump(docs));</span><br><span class="line">    System.out.println(yaml.dumpAll(docs.iterator()));</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--- [1, 2, 3]</span><br><span class="line"></span><br><span class="line">--- 1</span><br><span class="line">--- 2</span><br><span class="line">--- 3</span><br></pre></td></tr></table></figure>
+<p>YAML与java类型对照表：</p>
+<table>
+<thead>
+<tr>
+<th>YAML</th>
+<th>JAVA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>!null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>!!bool</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>!!int</td>
+<td>Integer, Long, BigInteger</td>
+</tr>
+<tr>
+<td>!!float</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>!!binary</td>
+<td>String</td>
+</tr>
+<tr>
+<td>!!timestamp</td>
+<td>java.util.Date, java.sql.Date, java.sql.Timestamp</td>
+</tr>
+<tr>
+<td>!!omap, !!pairs</td>
+<td>List of Object[]</td>
+</tr>
+<tr>
+<td>!!set</td>
+<td>Set</td>
+</tr>
+<tr>
+<td>!!str</td>
+<td>String</td>
+</tr>
+<tr>
+<td>!!seq</td>
+<td>List</td>
+</tr>
+<tr>
+<td>!!map</td>
+<td>Map</td>
+</tr>
+</tbody></table>
+<p>集合的默认实现是：</p>
+<blockquote>
+<ul>
+<li>List:  ArrayList</li>
+<li>Map:  LinkedHashMap</li>
+</ul>
+</blockquote>
+<h3 id="使用JYaml实现"><a href="#使用JYaml实现" class="headerlink" title="使用JYaml实现"></a>使用JYaml实现</h3><p>JYaml（<strong>最新版本是2007年的，可以考虑放弃了</strong>），使用JYaml把Jone “Dump” 出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">File dumpfile = new File(&quot;John_dump.yaml&quot;);</span><br><span class="line">Yaml.dump(john, dumpfile);</span><br></pre></td></tr></table></figure>
+<p>下面我们看看John_dump.yaml是什么样子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--- !yaml.test.internal.Person</span><br><span class="line">age: 37</span><br><span class="line">children: !yaml.test.internal.Person[]</span><br><span class="line">  - !yaml.test.internal.Person</span><br><span class="line">    age: 15</span><br><span class="line">    name: Jimmy Smith</span><br><span class="line">  - !yaml.test.internal.Person</span><br><span class="line">    age: 12</span><br><span class="line">    name: Jenny Smith</span><br><span class="line">name: John Smith</span><br><span class="line">sponse: !yaml.test.internal.Person</span><br><span class="line">  age: 25</span><br><span class="line">  name: Jane Smith</span><br></pre></td></tr></table></figure>
+<p>其中!yaml.test.internal.Person是一些类型的信息。load的时候需要用。<br>现在用JYaml把Jone_dump.yaml load进来：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Person john2 = (Person) Yaml.loadType(dumpfile, Person.class);</span><br></pre></td></tr></table></figure>
+<p>还可以用下面的代码dump出没有类型信息的John.yaml：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml.dump(john,dumpfile, true);</span><br></pre></td></tr></table></figure>
+<p>我们再来看看JYaml对流处理的支持，为简便起见，我们只是把同一个john写10次：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> YamlEncoder enc = new YamlEncoder(new FileOutputStream(dumpfile));</span><br><span class="line"> for(int i=0; i&lt;10; i++)&#123;</span><br><span class="line">     john.setAge(37+i);</span><br><span class="line">     enc.writeObject(john);</span><br><span class="line">     enc.flush();</span><br><span class="line"> &#125;</span><br><span class="line">enc.close();</span><br></pre></td></tr></table></figure>
+<p>下面再把这十个对象一个一个读出来（注意while循环退出的方式）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">YamlDecoder dec = new YamlDecoder(new FileInputStream(dumpfile));</span><br><span class="line">int age = 37;</span><br><span class="line">while(true)&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        john = (Person) dec.readObject();</span><br><span class="line">        assertEquals(age, john.getAge());</span><br><span class="line">        age++;</span><br><span class="line">    &#125;catch(EOFException eofe)&#123;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><h4 id="多行缩进"><a href="#多行缩进" class="headerlink" title="多行缩进"></a>多行缩进</h4><p>数据结构可以用类似大纲的缩排方式呈现，结构通过缩进来表示，连续的项目通过减号“-”来表示，map结构里面的key&#x2F;value对用冒号“:”来分隔。样例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">house:</span><br><span class="line">  family:</span><br><span class="line">    name: Doe</span><br><span class="line">    parents:</span><br><span class="line">      - John</span><br><span class="line">      - Jane</span><br><span class="line">    children:</span><br><span class="line">      - Paul</span><br><span class="line">      - Mark</span><br><span class="line">      - Simone</span><br><span class="line">  address:</span><br><span class="line">    number: 34</span><br><span class="line">    street: Main Street</span><br><span class="line">    city: Nowheretown</span><br><span class="line">    zipcode: 12345</span><br></pre></td></tr></table></figure>
+
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>字串不一定要用双引号标识；</p>
+<p>在缩排中空白字符的数目并不是非常重要，只要相同阶层的元素左侧对齐就可以了（不过不能使用TAB字符）；</p>
+<p>允许在文件中加入选择性的空行，以增加可读性；</p>
+<p>在一个档案中，可同时包含多个文件，并用“——”分隔；</p>
+<p>选择性的符号“…”可以用来表示档案结尾（在利用串流的通讯中，这非常有用，可以在不关闭串流的情况下，发送结束讯号）。</p>
+<h4 id="单行缩写"><a href="#单行缩写" class="headerlink" title="单行缩写"></a>单行缩写</h4><p>YAML也有用来描述好几行相同结构的数据的缩写语法，数组用’[]’包括起来，hash用’{}’来包括。因此，上面的这个YAML能够缩写成这样:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">house:</span><br><span class="line">  family: &#123; name: Doe, parents: [John, Jane], children: [Paul, Mark, Simone] &#125;</span><br><span class="line">  address: &#123; number: 34, street: Main Street, city: Nowheretown, zipcode: 12345 &#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>xml</category>
+      </categories>
+      <tags>
+        <tag>yml</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Markdown的语法及基本命令</title>
     <url>/post/2017091622.htm</url>
     <content><![CDATA[<p>Markdown是一种可以使用普通文本编辑器编写的标记语言，通过类似HTML的标记语法，它可以使普通文本内容具有一定的格式。</p>
@@ -304,7 +484,7 @@
 <p>  Markdown 会转成：</p>
   <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;a href=&quot;&amp;#x6D;&amp;#x61;i&amp;#x6C;&amp;#x74;&amp;#x6F;:&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;</span><br><span class="line">&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;</span><br><span class="line">&amp;#109;&quot;&gt;&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;</span><br><span class="line">&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#x64;&#100;&#114;&#x65;&#115;&#x73;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#111;&#x6d;">&#97;&#x64;&#100;&#114;&#x65;&#115;&#x73;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#111;&#x6d;</a>」链接。</p>
+<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#100;&#100;&#114;&#x65;&#115;&#x73;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x63;&#111;&#109;">&#97;&#100;&#100;&#114;&#x65;&#115;&#x73;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x63;&#111;&#109;</a>」链接。</p>
 <p>  （这种作法虽然可以糊弄不少的机器人，但并不能全部挡下来，不过总比什么都不做好些。不管怎样，公开你的信箱终究会引来广告信件的。）</p>
 <h3 id="反斜杠"><a href="#反斜杠" class="headerlink" title="反斜杠"></a>反斜杠</h3><p>  Markdown 可以利用反斜杠来插入一些在语法中有其它意义的符号，例如：如果你想要用星号加在文字旁边的方式来做出强调效果（但不用 <code>&lt;em&gt;</code> 标签），你可以在星号的前面加上反斜杠：</p>
   <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">\*literal asterisks\*</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -347,186 +527,6 @@
       </categories>
       <tags>
         <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>YAML脚本学习笔记</title>
-    <url>/post/2017121234.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/16/pWn3RYiD86aGONA.png"></p>
-<p>YAML是“另一种标记语言”的外语缩写；但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。<br>它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
-<span id="more"></span>
-<p>诞生<br>YAML参考了其他多种语言，包括：XML、C语言、Python、Perl以及电子邮件格式RFC2822。<br>Clark Evans在2001年5月在首次发表了这种语言，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者。<br>命名<br>YAML是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。<br>在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言），<br>功能<br>YAML的语法和其他高阶语言类似，并且可以简单表达清单、散列表，标量等资料形态、。<br>它使用空白符号缩排和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种设定档、倾印除错内容、文件大纲（例如：许多电子邮件标题格式和YAML非常接近）。<br>尽管它比较适合用来表达阶层式（hierarchical model）的数据结构，不过也有精致的语法可以表示关联性（relational model）的资料。<br>由于YAML使用空白字符和分行来分隔资料，使的他特别适合用grep、Python、Perl、Ruby操作。<br>其让人最容易上手的特色是巧妙避开各种封闭符号，如：引号、各种括号等，这些符号在嵌套结构中会变得复杂而难以辨认。</p>
-<h1 id="YAML预研文档"><a href="#YAML预研文档" class="headerlink" title="YAML预研文档"></a>YAML预研文档</h1><h2 id="YAML概要"><a href="#YAML概要" class="headerlink" title="YAML概要"></a>YAML概要</h2><p><a href="http://yaml.org/">YAML</a>是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写，早先YAML的意思其实是：”Yet Another Markup Language”（另外一种置标语言），但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名，YAML的官方定义很简单，即<strong>一种人性化的数据格式定义语言</strong>，其主要功能用途类似于XML或JSON，YAML使用空白字符和分行来分隔数据，且巧妙避开各种封闭符号，如：引号、括号等，以避免这些符号在复杂层次结构中变得难以辨认。YAML的语法与高阶语言类似，可以很简单地表述<em>序列（java中的list）、杂凑表（java中的map）、标量（java中的基本类型等）</em>数据结构，它重点强调可阅读性。</p>
-<h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
-<blockquote>
-<p><strong>优势:</strong></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>YAML的可读性好</li>
-<li>YAML和脚本语言的交互性好</li>
-<li>YAML使用实现语言的数据类型</li>
-<li>YAML有一个一致的信息模型</li>
-<li>YAML易于实现</li>
-</ul>
-</blockquote>
-<p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
-<blockquote>
-<ul>
-<li>YAML可以基于流来处理</li>
-<li>YAML表达能力强，扩展性好</li>
-</ul>
-</blockquote>
-<p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。</p>
-<hr>
-<h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
-<h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
-<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
-<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
-<h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
-<h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
-<ul>
-<li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
-<li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
-<li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
-<li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
-<li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
-<li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
-<li>字串一般不使用引号，但必要的时候可以用引号框住</li>
-<li>使用双引号表示字串时，可用倒斜线（<kbd>&lt;/kbd>）进行特殊字符转义</li>
-<li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>></kbd>）两种方式</li>
-<li>在单一档案中，可用连续三个连字号（<kbd>---</kbd>）区分多个档案</li>
-<li>可选择性的连续三个点号（<kbd>...</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
-<li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&</kbd>）</li>
-<li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
-</ul>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">receipt:     Oz-Ware Purchase Invoice</span><br><span class="line">date:        2007-08-06</span><br><span class="line">customer:</span><br><span class="line">    given:   Dorothy</span><br><span class="line">    family:  Gale</span><br><span class="line">items:</span><br><span class="line">    - part_no:   A4786</span><br><span class="line">      descrip:   Water Bucket (Filled)</span><br><span class="line">      price:     1.47</span><br><span class="line">      quantity:  4</span><br><span class="line">    - part_no:   E1628</span><br><span class="line">      descrip:   High Heeled &quot;Ruby&quot; Slippers </span><br><span class="line">      price:     100.27</span><br><span class="line">      quantity:  1</span><br><span class="line">bill-to:  &amp;id001</span><br><span class="line">    street: | </span><br><span class="line">            123 Tornado Alley</span><br><span class="line">            Suite 16</span><br><span class="line">    city:   East Westville</span><br><span class="line">    state:  KS</span><br><span class="line">ship-to:  *id001   </span><br><span class="line">specialDelivery:  &gt;</span><br><span class="line">    Follow the Yellow Brick</span><br><span class="line">    Road to the Emerald City.</span><br><span class="line">    Pay no attention to the </span><br><span class="line">    man behind the curtain.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
-<h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: John Smith</span><br><span class="line">age: 37</span><br><span class="line">children:</span><br><span class="line">    - name: Jimmy Smith</span><br><span class="line">      age: 15</span><br><span class="line">    - name: Jenny Smith</span><br><span class="line">      age: 12</span><br><span class="line">spouse:</span><br><span class="line">    name: Jane Smith</span><br><span class="line">    age: 25</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private int age;</span><br><span class="line">    private Person sponse;</span><br><span class="line">    private Person[] children;</span><br><span class="line">    // setXXX, getXXX方法略.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在我们使用java装配一个Jone：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Person john = new Person();</span><br><span class="line">john.setAge(37);</span><br><span class="line">john.setName(&quot;John Smith&quot;);</span><br><span class="line">Person sponse = new Person();</span><br><span class="line">sponse.setName(&quot;Jane Smith&quot;);</span><br><span class="line">sponse.setAge(25);</span><br><span class="line">john.setSponse(sponse);</span><br><span class="line">Person[] children = &#123;new Person(), new Person()&#125;;</span><br><span class="line">children[0].setName(&quot;Jimmy Smith&quot;);</span><br><span class="line">children[0].setAge(15);</span><br><span class="line">children[1].setName(&quot;Jenny Smith&quot;);</span><br><span class="line">children[1].setAge(12);</span><br><span class="line">john.setChildren(children);</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
-<blockquote>
-<ul>
-<li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
-<li>支持YAML的所有类型</li>
-<li>支持UTF-8&#x2F;UTF-16的输入和输出</li>
-<li>提供了本地java对象的序列化和反序列化的高层API</li>
-<li>提供相对合理的错误提示信息</li>
-</ul>
-</blockquote>
-<p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DumperOptions options = new DumperOptions();</span><br><span class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);</span><br><span class="line">Yaml yaml = new Yaml(options);</span><br><span class="line">//Yaml yaml = new Yaml();</span><br><span class="line">String dump = yaml.dump(john);</span><br><span class="line">System.out.println(dump);</span><br></pre></td></tr></table></figure>
-<p>内容如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">!!Person</span><br><span class="line">age: 37</span><br><span class="line">children:</span><br><span class="line">- age: 15</span><br><span class="line">  children: null</span><br><span class="line">  name: Jimmy Smith</span><br><span class="line">  sponse: null</span><br><span class="line">- age: 12</span><br><span class="line">  children: null</span><br><span class="line">  name: Jenny Smith</span><br><span class="line">  sponse: null</span><br><span class="line">name: John Smith</span><br><span class="line">sponse:</span><br><span class="line">  age: 25</span><br><span class="line">  children: null</span><br><span class="line">  name: Jane Smith</span><br><span class="line">  sponse: null</span><br></pre></td></tr></table></figure>
-<p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml();</span><br><span class="line">Object load = yaml.load(new FileInputStream(new File(&quot;jhon.yaml&quot;)));</span><br><span class="line">System.out.println(load.getClass());</span><br><span class="line">System.out.println(yaml.dump(load));</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml(options);</span><br><span class="line">Person person = yaml.loadAs(inputStream, Person.class);</span><br><span class="line">System.out.println(person.getSponse().getChildren().length);</span><br></pre></td></tr></table></figure>
-<p>如果一个yaml文件中有多个文档，由<kbd>---</kbd>分割，解析如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml yaml = new Yaml();</span><br><span class="line">        int counter = 0;</span><br><span class="line">        for (Object data : yaml.loadAll(input)) &#123;</span><br><span class="line">            System.out.println(data);</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-<p>保存一个Map对象：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Map&lt;String, Object&gt; data = new HashMap&lt;String, Object&gt;();</span><br><span class="line">        data.put(&quot;name&quot;, &quot;Silenthand Olleander&quot;);</span><br><span class="line">        data.put(&quot;race&quot;, &quot;Human&quot;);</span><br><span class="line">        data.put(&quot;traits&quot;, new String[] &#123; &quot;ONE_HAND&quot;, &quot;ONE_EYE&quot; &#125;);</span><br><span class="line">        Yaml yaml = new Yaml();</span><br><span class="line">        String output = yaml.dump(data);</span><br><span class="line">        System.out.println(output);</span><br><span class="line">    // or</span><br><span class="line">    StringWriter writer = new StringWriter();</span><br><span class="line">    yaml.dump(data, writer);</span><br><span class="line">    System.out.println(writer.toString());</span><br></pre></td></tr></table></figure>
-<p>将多个文档dump出到同一个yaml文件中去：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; docs = new LinkedList&lt;Integer&gt;();</span><br><span class="line">    for (int i = 1; i &lt; 4; i++) &#123;</span><br><span class="line">        docs.add(i);</span><br><span class="line">    &#125;</span><br><span class="line">    DumperOptions options = new DumperOptions();</span><br><span class="line">    //options.setCanonical(true);</span><br><span class="line">    options.explicitStart(true);</span><br><span class="line">    Yaml yaml = new Yaml(options);</span><br><span class="line">    System.out.println(yaml.dump(docs));</span><br><span class="line">    System.out.println(yaml.dumpAll(docs.iterator()));</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--- [1, 2, 3]</span><br><span class="line"></span><br><span class="line">--- 1</span><br><span class="line">--- 2</span><br><span class="line">--- 3</span><br></pre></td></tr></table></figure>
-<p>YAML与java类型对照表：</p>
-<table>
-<thead>
-<tr>
-<th>YAML</th>
-<th>JAVA</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>!null</td>
-<td>null</td>
-</tr>
-<tr>
-<td>!!bool</td>
-<td>Boolean</td>
-</tr>
-<tr>
-<td>!!int</td>
-<td>Integer, Long, BigInteger</td>
-</tr>
-<tr>
-<td>!!float</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>!!binary</td>
-<td>String</td>
-</tr>
-<tr>
-<td>!!timestamp</td>
-<td>java.util.Date, java.sql.Date, java.sql.Timestamp</td>
-</tr>
-<tr>
-<td>!!omap, !!pairs</td>
-<td>List of Object[]</td>
-</tr>
-<tr>
-<td>!!set</td>
-<td>Set</td>
-</tr>
-<tr>
-<td>!!str</td>
-<td>String</td>
-</tr>
-<tr>
-<td>!!seq</td>
-<td>List</td>
-</tr>
-<tr>
-<td>!!map</td>
-<td>Map</td>
-</tr>
-</tbody></table>
-<p>集合的默认实现是：</p>
-<blockquote>
-<ul>
-<li>List:  ArrayList</li>
-<li>Map:  LinkedHashMap</li>
-</ul>
-</blockquote>
-<h3 id="使用JYaml实现"><a href="#使用JYaml实现" class="headerlink" title="使用JYaml实现"></a>使用JYaml实现</h3><p>JYaml（<strong>最新版本是2007年的，可以考虑放弃了</strong>），使用JYaml把Jone “Dump” 出来：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">File dumpfile = new File(&quot;John_dump.yaml&quot;);</span><br><span class="line">Yaml.dump(john, dumpfile);</span><br></pre></td></tr></table></figure>
-<p>下面我们看看John_dump.yaml是什么样子：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">--- !yaml.test.internal.Person</span><br><span class="line">age: 37</span><br><span class="line">children: !yaml.test.internal.Person[]</span><br><span class="line">  - !yaml.test.internal.Person</span><br><span class="line">    age: 15</span><br><span class="line">    name: Jimmy Smith</span><br><span class="line">  - !yaml.test.internal.Person</span><br><span class="line">    age: 12</span><br><span class="line">    name: Jenny Smith</span><br><span class="line">name: John Smith</span><br><span class="line">sponse: !yaml.test.internal.Person</span><br><span class="line">  age: 25</span><br><span class="line">  name: Jane Smith</span><br></pre></td></tr></table></figure>
-<p>其中!yaml.test.internal.Person是一些类型的信息。load的时候需要用。<br>现在用JYaml把Jone_dump.yaml load进来：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Person john2 = (Person) Yaml.loadType(dumpfile, Person.class);</span><br></pre></td></tr></table></figure>
-<p>还可以用下面的代码dump出没有类型信息的John.yaml：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Yaml.dump(john,dumpfile, true);</span><br></pre></td></tr></table></figure>
-<p>我们再来看看JYaml对流处理的支持，为简便起见，我们只是把同一个john写10次：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> YamlEncoder enc = new YamlEncoder(new FileOutputStream(dumpfile));</span><br><span class="line"> for(int i=0; i&lt;10; i++)&#123;</span><br><span class="line">     john.setAge(37+i);</span><br><span class="line">     enc.writeObject(john);</span><br><span class="line">     enc.flush();</span><br><span class="line"> &#125;</span><br><span class="line">enc.close();</span><br></pre></td></tr></table></figure>
-<p>下面再把这十个对象一个一个读出来（注意while循环退出的方式）：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">YamlDecoder dec = new YamlDecoder(new FileInputStream(dumpfile));</span><br><span class="line">int age = 37;</span><br><span class="line">while(true)&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        john = (Person) dec.readObject();</span><br><span class="line">        assertEquals(age, john.getAge());</span><br><span class="line">        age++;</span><br><span class="line">    &#125;catch(EOFException eofe)&#123;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><h4 id="多行缩进"><a href="#多行缩进" class="headerlink" title="多行缩进"></a>多行缩进</h4><p>数据结构可以用类似大纲的缩排方式呈现，结构通过缩进来表示，连续的项目通过减号“-”来表示，map结构里面的key&#x2F;value对用冒号“:”来分隔。样例如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">house:</span><br><span class="line">  family:</span><br><span class="line">    name: Doe</span><br><span class="line">    parents:</span><br><span class="line">      - John</span><br><span class="line">      - Jane</span><br><span class="line">    children:</span><br><span class="line">      - Paul</span><br><span class="line">      - Mark</span><br><span class="line">      - Simone</span><br><span class="line">  address:</span><br><span class="line">    number: 34</span><br><span class="line">    street: Main Street</span><br><span class="line">    city: Nowheretown</span><br><span class="line">    zipcode: 12345</span><br></pre></td></tr></table></figure>
-
-<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>字串不一定要用双引号标识；</p>
-<p>在缩排中空白字符的数目并不是非常重要，只要相同阶层的元素左侧对齐就可以了（不过不能使用TAB字符）；</p>
-<p>允许在文件中加入选择性的空行，以增加可读性；</p>
-<p>在一个档案中，可同时包含多个文件，并用“——”分隔；</p>
-<p>选择性的符号“…”可以用来表示档案结尾（在利用串流的通讯中，这非常有用，可以在不关闭串流的情况下，发送结束讯号）。</p>
-<h4 id="单行缩写"><a href="#单行缩写" class="headerlink" title="单行缩写"></a>单行缩写</h4><p>YAML也有用来描述好几行相同结构的数据的缩写语法，数组用’[]’包括起来，hash用’{}’来包括。因此，上面的这个YAML能够缩写成这样:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">house:</span><br><span class="line">  family: &#123; name: Doe, parents: [John, Jane], children: [Paul, Mark, Simone] &#125;</span><br><span class="line">  address: &#123; number: 34, street: Main Street, city: Nowheretown, zipcode: 12345 &#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>xml</category>
-      </categories>
-      <tags>
-        <tag>yml</tag>
       </tags>
   </entry>
   <entry>
@@ -2787,6 +2787,38 @@
       </tags>
   </entry>
   <entry>
+    <title>希望你是一个优秀的人</title>
+    <url>/post/2024051936.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2024/05/04/83wln1fsUzWG2Zi.jpg" alt="img"></p>
+<p><strong>孩子, 我首先希望你自始至终都是一个理想主义者。</strong></p>
+<p>你可以是农民，可以是工程师，可以是演员，可以是流浪汉，但你必须是个理想主义者。<br>当你童年，我们讲英雄的故事给你听，并不是要你一定成为英雄，而是希望具有纯正的品格；当你少年，我们让你接触诗歌、绘画、音乐，是为了让你的心灵填满高尚的情趣。 <strong>这些高尚的情趣会支撑你的一生，使你在最严酷的冬天也不会忘记玫瑰的芳香。</strong>理想会使人出众。</p>
+<span id="more"></span>
+<p><img src="https://s2.loli.net/2024/05/04/8SkCzDF2icyIAE3.jpg" alt="img"></p>
+<p>孩子，不要为自己的外形担。理想纯洁你的气质，而最美貌的女人也会因为庸俗而令人生厌。通向理想的道路往往不尽人意，而你亦会为此受尽磨难。 但是，孩子，你尽管去争取，理想主义者的结局悲壮而决不可怜。</p>
+<p>在那貌似坎坷的人生中，你会结识到许多智者和君子，你会见到许多旁人无法遇到的风景和奇迹。<strong>选择平庸虽稳妥,但绝无色彩。</strong></p>
+<p>不要为蝇头小利放弃自己的理想，不要为某种潮流而放弃自己的信念。<strong>物质世界的外表太过复杂，你要懂得如何去拒绝虚荣的诱惑。</strong>理想不是实惠的东西，它往往无法带给你尘世的享受。因此你必须习惯无人欣赏你，学会精神享受，学会与他人不同。</p>
+<p><img src="https://s2.loli.net/2024/05/04/uxrzNfdmcAyUSZF.jpg" alt="img"></p>
+<p><strong>其次，孩子，我希望你是一个踏实的人。</strong>人生太过短促，而虚的东西又太多，你很容易眼花缭乱，最终一事无成。</p>
+<p>如果你是一个美貌的女孩子，年轻的时候会有许多男性宠你，<strong>你得到的东西过于容易，这会使你流于浅薄和虚浮</strong>；如果你是一个极聪明的男孩，又会以为自己能够成就许多大事而流于轻佻。</p>
+<p>记住，每个人的能力有限，我们活在世上做好一件事足矣。写好一本书，做好一个主妇。不要轻视平凡的人，不要投机取巧，不要攻击自己做不到的事。你长大后会知道，<strong>做好一件事太难，但绝不要放弃。</strong></p>
+<p><img src="https://s2.loli.net/2024/05/04/CdyF5poeXhASqJm.jpg" alt="img"></p>
+<p><strong>你要懂得和珍惜感情。</strong>不管男人女人，不管墙内墙外，相交一场实在不容易。交友的过程会有误会和摩擦，但你想一想，偌大世界，能有缘结伴而行的又有几人？你要明白朋友终会离去，生活中能有人伴你在身边，听你倾谈，倾谈给你听，你就应该感激。</p>
+<p>要爱自己和爱他人，要懂自己和懂他人。你的心要如溪水般柔软，你的眼波，要象春天般妩媚。你要会流泪，会孤身一人坐在黑暗中听伤感的音乐。</p>
+<p><strong>你要懂得欣赏悲剧,悲剧能丰富你的心灵。</strong></p>
+<p>希望你不要媚俗。 你是个独立的人, 无人能抹杀你的独立性, 除非你向世俗 妥协。要学会欣赏真,要在重重面具之下看到真。</p>
+<p><img src="https://s2.loli.net/2024/05/04/quQ5rYCGBUE641M.jpg" alt="img"></p>
+<p>世上圆滑标准的人很多，但出类拔萃的人极少。 而往往出类拔萃又隐藏在卑琐狂荡之下。在形式上,我们无法与既定的世俗争斗，而在内心，我们都是自己的国王。 如果你的脸上出现谄媚的笑容, 我将羞愧的掩脸而去。 <strong>世俗许多东西虽耀眼却无价值</strong>，不要把自己置于大众的天平上，你会因此无所适从，人云亦云。在具体的做人上，我希望你不要打断别人的谈话，不要娇气十足。你每天至少拿出两小时来读书，不要想着别人为你做些什么，而要想着怎么去帮助他人。借他人的东西要还,不要随便接受别人的恩惠，要记住，别人的东西，再好也是别人的，自己的东西，再差也是自己的。</p>
+<p>还有一件事，虽然做起来很难，但相当重要，这就是要有勇气正视自己的缺点。你会一年年的长大，你渐渐会遇到比你强，比你优秀的人，你会发现自己身上有许多你所厌恶的缺点。这会使你沮丧和自卑。你一定要正视它,不要躲避，要一点一点的加以改正。<strong>战胜自己比征服他人还要艰巨和有意义。</strong></p>
+<p><strong>不管世界潮流如何变化，但人的优秀品质却是永恒的：正直，勇敢，独立。我希望你是一个优秀的人！</strong></p>
+]]></content>
+      <categories>
+        <category>Think</category>
+      </categories>
+      <tags>
+        <tag>Think</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>岂不怀归</title>
     <url>/post/2024011355.htm</url>
     <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/fitYaZOL7uxsW3r.jpg"></p>
@@ -3491,38 +3523,6 @@
       </tags>
   </entry>
   <entry>
-    <title>希望你是一个优秀的人</title>
-    <url>/post/2024051936.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2024/05/04/83wln1fsUzWG2Zi.jpg" alt="img"></p>
-<p><strong>孩子, 我首先希望你自始至终都是一个理想主义者。</strong></p>
-<p>你可以是农民，可以是工程师，可以是演员，可以是流浪汉，但你必须是个理想主义者。<br>当你童年，我们讲英雄的故事给你听，并不是要你一定成为英雄，而是希望具有纯正的品格；当你少年，我们让你接触诗歌、绘画、音乐，是为了让你的心灵填满高尚的情趣。 <strong>这些高尚的情趣会支撑你的一生，使你在最严酷的冬天也不会忘记玫瑰的芳香。</strong>理想会使人出众。</p>
-<span id="more"></span>
-<p><img src="https://s2.loli.net/2024/05/04/8SkCzDF2icyIAE3.jpg" alt="img"></p>
-<p>孩子，不要为自己的外形担。理想纯洁你的气质，而最美貌的女人也会因为庸俗而令人生厌。通向理想的道路往往不尽人意，而你亦会为此受尽磨难。 但是，孩子，你尽管去争取，理想主义者的结局悲壮而决不可怜。</p>
-<p>在那貌似坎坷的人生中，你会结识到许多智者和君子，你会见到许多旁人无法遇到的风景和奇迹。<strong>选择平庸虽稳妥,但绝无色彩。</strong></p>
-<p>不要为蝇头小利放弃自己的理想，不要为某种潮流而放弃自己的信念。<strong>物质世界的外表太过复杂，你要懂得如何去拒绝虚荣的诱惑。</strong>理想不是实惠的东西，它往往无法带给你尘世的享受。因此你必须习惯无人欣赏你，学会精神享受，学会与他人不同。</p>
-<p><img src="https://s2.loli.net/2024/05/04/uxrzNfdmcAyUSZF.jpg" alt="img"></p>
-<p><strong>其次，孩子，我希望你是一个踏实的人。</strong>人生太过短促，而虚的东西又太多，你很容易眼花缭乱，最终一事无成。</p>
-<p>如果你是一个美貌的女孩子，年轻的时候会有许多男性宠你，<strong>你得到的东西过于容易，这会使你流于浅薄和虚浮</strong>；如果你是一个极聪明的男孩，又会以为自己能够成就许多大事而流于轻佻。</p>
-<p>记住，每个人的能力有限，我们活在世上做好一件事足矣。写好一本书，做好一个主妇。不要轻视平凡的人，不要投机取巧，不要攻击自己做不到的事。你长大后会知道，<strong>做好一件事太难，但绝不要放弃。</strong></p>
-<p><img src="https://s2.loli.net/2024/05/04/CdyF5poeXhASqJm.jpg" alt="img"></p>
-<p><strong>你要懂得和珍惜感情。</strong>不管男人女人，不管墙内墙外，相交一场实在不容易。交友的过程会有误会和摩擦，但你想一想，偌大世界，能有缘结伴而行的又有几人？你要明白朋友终会离去，生活中能有人伴你在身边，听你倾谈，倾谈给你听，你就应该感激。</p>
-<p>要爱自己和爱他人，要懂自己和懂他人。你的心要如溪水般柔软，你的眼波，要象春天般妩媚。你要会流泪，会孤身一人坐在黑暗中听伤感的音乐。</p>
-<p><strong>你要懂得欣赏悲剧,悲剧能丰富你的心灵。</strong></p>
-<p>希望你不要媚俗。 你是个独立的人, 无人能抹杀你的独立性, 除非你向世俗 妥协。要学会欣赏真,要在重重面具之下看到真。</p>
-<p><img src="https://s2.loli.net/2024/05/04/quQ5rYCGBUE641M.jpg" alt="img"></p>
-<p>世上圆滑标准的人很多，但出类拔萃的人极少。 而往往出类拔萃又隐藏在卑琐狂荡之下。在形式上,我们无法与既定的世俗争斗，而在内心，我们都是自己的国王。 如果你的脸上出现谄媚的笑容, 我将羞愧的掩脸而去。 <strong>世俗许多东西虽耀眼却无价值</strong>，不要把自己置于大众的天平上，你会因此无所适从，人云亦云。在具体的做人上，我希望你不要打断别人的谈话，不要娇气十足。你每天至少拿出两小时来读书，不要想着别人为你做些什么，而要想着怎么去帮助他人。借他人的东西要还,不要随便接受别人的恩惠，要记住，别人的东西，再好也是别人的，自己的东西，再差也是自己的。</p>
-<p>还有一件事，虽然做起来很难，但相当重要，这就是要有勇气正视自己的缺点。你会一年年的长大，你渐渐会遇到比你强，比你优秀的人，你会发现自己身上有许多你所厌恶的缺点。这会使你沮丧和自卑。你一定要正视它,不要躲避，要一点一点的加以改正。<strong>战胜自己比征服他人还要艰巨和有意义。</strong></p>
-<p><strong>不管世界潮流如何变化，但人的优秀品质却是永恒的：正直，勇敢，独立。我希望你是一个优秀的人！</strong></p>
-]]></content>
-      <categories>
-        <category>Think</category>
-      </categories>
-      <tags>
-        <tag>Think</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>性爱</title>
     <url>/post/2024051455.htm</url>
     <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/RqvHUg5ZYtyXCc2.jpg"></p>
@@ -3652,6 +3652,94 @@
 <p>　　每年的院里的梅李熟了，总摘一些留给我，托人往城里带，没人进城，她一直给我留着，“平爱吃酸果子”，她这话要唠叨好长时间，梅李就留到彻底腐烂了才肯倒去。她在妹妹家学练了气功，我去看她，未说几句话就叫我到小房去，一定要让我喝一个瓶子里的凉水，不喝不行，问这是怎么啦，她才说是气功师给她的信息水，治百病的，“你要喝的，你一喝肝病或许就好了！”我喝了半杯，她就又取苹果橘子让我吃，说是信息果。</p>
 <p>　　我成不成为什么专家名人，母亲一向是不大理会的，她既不晓得我工作的荣耀，我工作上的烦恼和苦闷也就不给她说。一部《废都》，国之内外怎样风雨不止，我受怎样的赞誉和攻击，母亲未说过一句话，当知道我已孤单一人，又病得入了院，她悲伤得落泪，她要到城里来看我，弟妹不让她来，不领好，她气得在家里骂这个骂那个，后来冒着风雪来了，她的眼睛已患了严重的疾病，却哭着说：“我娃这是什么命啊？！”</p>
 <p>　　我告诉母亲，我的命并不苦的，什么委屈和劫难我都可以受得，少年时期我上山砍柴，挑百十斤的柴担在山岭道上行走，因为路窄，不到固定的歇息处是不能放下柴担的，肩膀再疼腿再酸也不能放下柴担的，从那时起我就练出了一股韧劲的。而现在最苦的是我不能亲自伺候母亲！父亲去世了，作为长子，我是应该为这个家操心，使母亲在晚年活得幸福，但现在既不能照料母亲，反倒让母亲还为儿子牵肠挂肚，我这做的是什么儿子呢？把母亲送出医院，看着她上车要回去了，我还是掏出身上仅有的钱给她，我说，钱是不能代替了孝顺的，但我如今只能这样啊！母亲懂得了我的心，她把钱收了，紧紧地握在手里，再一次整整我的衣领，摸摸我的脸，说我的胡子长了，用热毛巾捂捂，好好刮刮，才上了车。眼看着车越走越远，最后看不见了，我回到病房，躺在床上开始打吊针，我的眼泪默默地流下来。</p>
+]]></content>
+      <categories>
+        <category>Think</category>
+      </categories>
+      <tags>
+        <tag>Think</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>狗日的中年</title>
+    <url>/post/2024040000.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/28/1tSzOcilNfkyTvR.jpg" alt="R-C"></p>
+<p>文&#x2F;姜文</p>
+<p> 第一次进入社会工作，我19岁，在一个机械厂做体力活，每天像毛驴一样重复着围磨般的工作，那时候纠结我的最大人生困惑就是吃炒饭省钱还是吃炒面省钱。我的房东是个40岁左右的男人，每天四平八稳的睡到自然醒来，踱着方步把我们几个出租房检查一遍，接着就在大把富足的时间里打盹，喝茶，看天。更要命的，这狗日的居然早点就吃炖肉，香味像狗舌头一样撩涮着我的味觉。那时候，做梦都在盼望着我的40岁什么能到来，我也可以这样踱着方步在时光里浸润，那是一个多么向往年龄啊。</p>
+<span id="more"></span>
+
+<p>想不到一奔子就挖到中年，才发现中年碎了一地的烟火，中年是个卖笑的年龄，既要讨得老人的欢心，也要做好儿女的榜样，还要时刻关注老婆的脸色，不停迎合上司的心思。中年为了生计，脸面，房子车子票子不停周旋，后来就发现激情对中年人是一种浪费，梦想对于中年是一个牌坊，守得住忠烈，还要做得好婊子。</p>
+<p>中年是一场斗争，人斗不过命，命斗不过时间。多少当时觉得无法过去的坎儿，过上几年突然就风轻云淡了。我没见过一个人把另一个人恨一辈子的，更可怕的是忘记和不在乎，最后都败给了时间，再娇惯的贾宝玉也会遁入空门，再厉害的如来也敌不过妖精的不在乎，万能基督耶稣最后还是让十字架来安抚信徒，观。</p>
+<p>禅宗讲，一花一世界，一叶一如来。什么年龄做什么事情，不能硬干，60岁的刘晓庆硬是要和30岁的范冰冰比美，不是找死，就是割肉。邓丽君之所以成为传说，就是和他同台的机会都不给你留过，才叫江湖。齐秦、罗大佑生生的把自己沦落成乡间交流会上的马戏团台柱子，得捯饬上一天才能唤醒曾经的故事，和时间死磕，败的只有传奇。与其逆流而上，不如随波逐流，这是对生命的敬畏。</p>
+<p>中年是一道清茶。在觥筹之后，人散夜阑之时，一半妥协，一半坚守，两边都让一小步。妥协就成了从容，坚守就成了雅致。从容多了，就会豁达温存的体会一下怨恨之间的不舍以及市井里不精致却扎实亲切的活法。茶要慢品，多一些留白，多一些转身的空间，无声的流泪，抿嘴浅笑，都是一种风景。每段时光都是最好的经过，每个女人都有最美的时光。</p>
+<p>中年可以深刻，但千万不要尖刻，看得开，千万别点破。那种咋咋呼呼的人，心中无比自卑才会如此丈八，我见过一种人，全世界没有他能上眼的人和事，语言的巨人，行动的矮子。丈量不见自己的人，他会用尖酸刻薄来过滤生活，终日郁郁寡欢，把日子过的跟太监似的，怎么能体会生活的跌宕起伏，潮涨潮落。一位医生朋友讲了一个笑话，说一日，有患者就诊，患者说，他半生讲究养身养生，没有一点不良爱好，百思不得其解，怎么老是百病缠身？后医生停顿了一会问：你抽烟不？不会。你喝酒不?不会。那你上嫖不？么有。后医生十分沉痛的说了一句：死个哇。看好有甚意义了？医生朋友说，这个世界，医生只能看病，绝对不能救命。这种把生活过的尖刻的人，除了送他奔死的节奏，再不知道如何安慰对待自己这么苛刻的人。</p>
+<p>中年是一种满足。下雨有伞，炙热有阴凉，有二两小烧，一碟花生，接受寡妇暗送的秋波，指使光棍挑水，和讨吃子比富，跟一群闲人打五毛钱的麻将，是一种满足。打开微信朋友圈，一看王石邀你去爬山潘石屹请你喝茶，最近有点闲时间登登珠穆朗玛，租豪华游轮领着章子怡、巩俐去夏威夷晒太阳；喝上年份的红酒开始摇杯挂壁，开始收藏12个流失的兽头，有了自己的服装设计等等，也是一种满足。满足是快乐的密码，天天猴急猴急的攀比，除了让你失落失望失魂落魄别无他法。整天还沉浸在谁谁谁怎么就比我混得好？想当初他……这人充其量不是中年，是40岁以上而已。</p>
+<p>中年是独处时候的沉默，是热闹时候的不正经，中年不是演讲中的”扬手是春，落手是秋”的轻描淡写，中年是生活场上的”扬手是打的，落手是掏钱”干净利索，在这一扬一落之间，把很多的细节都留给了自己。</p>
+<p>中年是狗日的现实。当我们终于可以腰缠万贯时间的时候，才知道中年并不是我看到的表象，狗日的中年不仅消融掉我浓密的长发，也弄丢了我蓬勃的激情和梦想，有些时候，一觉醒来尽然忘记了很多重要的记忆。更要命的是孤独开始富得流油，忧伤也异常亢奋，唯一不变的是毛哥对我的冷若冰霜，也没有几间出租房让我每天检查。现在明白，人生的境界不是天天幸福，而是天天不烦。有一些思念和牵挂可以入梦，梦会绵长，有一些爱好可以入心，生活就会充实，有一两个人懂你的沉默黑夜就不会漫长，有一两个圈子可以分享，时间就会缓慢，没有爱好，时间就会无聊，没有兴趣，生活就会无味。人生不是竞走，用最快的速度到达终点，而忽略了一路的风景和喝彩，这不是中年。</p>
+<p>中年不是摇滚，持续的愤怒和亢奋不会快乐，我见过一个斗士，每见一次，斗士都是一副忧国忧民的样子，这个社会仿佛没有一件让他可以称心的事情，鲁迅一般。人生活在极端，总会倾斜，特别是一个女人，忘记柔软等于慢性变态。中年也不是民谣，清新到忘记年龄，单纯到忽略世事，都是要不得的，不能跟生命较劲，弄好了就是刘晓庆，弄不好就成了刘胡兰。中年更不是学院派的民族唱法，千人一面，千人一声。登不上大雅的舞台，又不屑于乡野僻壤的原生态，活得活得就忘记了来路。中年更要懂得敬畏，敬畏生命，敬畏生活，敬畏阅历，敬畏年龄。中年应该有两种事应该尽量少干，一是用自己的嘴干扰别人的人生，二是靠别人的脑子思考自己的人生。</p>
+]]></content>
+      <categories>
+        <category>idea</category>
+      </categories>
+      <tags>
+        <tag>idea</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>独处是一种能力</title>
+    <url>/post/2024031224.htm</url>
+    <content><![CDATA[<p>人们往往把交往看作一种能力，却忽略了独处也是一种能力，并且在一定意义上是比交往更为重要的一种能力。反过来说，不擅交际固然是一种遗憾，不耐孤独也未尝不是一种很严重的缺陷。</p>
+<p>独处也是一种能力，并非任何人任何时候都可具备的。具备这种能力并不意味着不再感到寂寞，而在于安于寂寞并使之具有生产力。人在寂寞中有三种状态。一是惶惶不安，茫无头绪，百事无心，一心逃出寂寞。二是渐渐习惯于寂寞，安下心来，建立起生活的条理，用读书、写作或别的事务来驱逐寂寞。三是寂寞本身成为一片诗意的土壤，一种创造的契机，诱发出关于存在、生命、自我的深邃思考和体验。</p>
+<p>独处是人生中的美好时刻和美好体验，虽则有些寂寞，寂寞中却又有一种充实。独处是灵魂生长的必要空间，在独处时，我们从别人和事务中抽身出来，回到了自己。这时候，我们独自面对自己和上帝，开始了与自己的心灵以及与宇宙中的神秘力量的对话。一切严格意义上的灵魂生活都是在独处时展开的。和别人一起谈古说今，引经据典，那是闲聊和讨论；唯有自己沉浸于古往今来大师们的杰作之时，才会有真正的心灵感悟。和别人一起游山玩水，那只是旅游；唯有自己独自面对苍茫的群山和大海之时，才会真正感受到与大自然的沟通。</p>
+<p>从心理学的观点看，人之需要独处，是为了进行内在的整合。所谓整合，就是把新的经验放到内在记忆中的某个恰当位置上。唯有经过这一整合的过程，外来的印象才能被自我所消化，自我也才能成为一个既独立又生长着的系统。所以，有无独处的能力，关系到一个人能否真正形成一个相对自足的内心世界，而这又会进而影响到他与外部世界的关系。</p>
+<p>怎么判断一个人究竟有没有他的“自我”呢？有一个可靠的检验方法，就是看他能不能独处。当你自己一个人呆着时，你是感到百无聊赖，难以忍受呢，还是感到一种宁静、充实和满足？</p>
+<p>对于独处的爱好与一个人的性格完全无关，爱好独处的人同样可能是一个性格活泼、喜欢朋友的人，只是无论他怎么乐于与别人交往，独处始终是他生活中的必需。在他看来，一种缺乏交往的生活当然是一种缺陷，一种缺乏独处的生活则简直是一种灾难了。</p>
+<p>世上没有一个人能够忍受绝对的孤独。但是，绝对不能忍受孤独的人却是一个灵魂空虚的人。世上正有这样的一些人，他们最怕的就是独处，让他们和自己呆一会儿，对于他们简直是一种酷刑。只要闲了下来，他们就必须找个地方去消遣。他们的日子表面上过得十分热闹，实际上他们的内心极其空虚。他们所做的一切都是为了想方设法避免面对面看见自己。对此我只能有一个解释，就是连他们自己也感觉到了自己的贫乏，和这样贫乏的自己呆在一起是顶没有意思的，再无聊的消遣也比这有趣得多。这样做的结果是他们变得越来越贫乏，越来越没有了自己，形成了一个恶性循环</p>
+]]></content>
+      <categories>
+        <category>Famous</category>
+      </categories>
+      <tags>
+        <tag>Famous</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>穷</title>
+    <url>/post/2018021341.htm</url>
+    <content><![CDATA[<p>和穷挣扎一生，无论胜利或失败，都是惨。能不和穷挣扎，或于挣扎之余还有点闲工夫做些别的事，那人是有福了。</p>
+<p>人生下来就是穷的，除了带来一口奶之外，赤条条的，一无所有，谁手里也没有握着两个钱。</p>
+<p>再稍稍长大一点，家世渐渐显露，有的是金枝玉叶，有的是“杂和面口袋”。但是就大体而论，还是泥巴里打滚袖口上抹鼻涕的居多。</p>
+<p>儿童玩具本是少得可怜，而大概其中总还免不了一具“扑满”，瓦做的，像是陶器时代的出品，大的小的挂绿釉的都有，间或也有形如保险箱，有铁制的。</p>
+<p>这种玩具的用意就是警告孩子们，有钱要积蓄起来，免得在饥荒的时候受穷，穷的阴影在这时候就已罩住了我们！</p>
+<p>好容易过年赚来几块压岁钱，都被骗弄丢在里面了，丢进去就后悔，想从缝里倒出来是万难，用小刀拨也是枉然。积蓄是稍微有一点，穷还是穷。</p>
+<p>而且事实证明，凡是积在扑满里的钱，除了自己早早下手摔破的以外，大概后来就不知怎样就没有了，很少能在日后发生什么救苦救难的功效。</p>
+<p>等到再稍稍长大一点，用钱的欲望更大，看见什么都要流涎，手里偏偏是空空如也，那时候真想大闹一场。</p>
+<p>就是富家子也是一样，尽管是绮襦纨绔，他还是恨继承开始太晚。这时候他最感觉穷，虽然他还没认识穷。</p>
+<p>人在成年之后，开始面对着糊口问题，不但糊自己的口，还要糊附属人员的口，如果脸皮欠厚心地欠薄。再加上祖上是“忠厚传家诗书继世”的话，他这一生就休想能离开穷的掌握，人的一生，就是和穷挣扎的历史。</p>
+<p>和穷挣扎一生，无论胜利或失败，都是惨。能不和穷挣扎，或于挣扎之余还有点闲工夫做些别的事，那人是有福了。</p>
+<p>所谓穷，也是比较而言。有人天天喊穷，不是今天透支，就是明天举债，数目大得都惊人，然后指着身上衣服的一块补丁或是皮鞋上的一条小小裂缝做为他穷的铁证。这是寓阔于穷，文章中的反衬法。</p>
+<p>也有人量入为出，温饱无虞，可是又担心他的孩子将来自费留学的经费没有着落，于是于自我麻醉中陷入于穷的心理状态。</p>
+<p>若是西装裤的后方越磨越薄，由薄而破，由破而织，由织而补上一大块布，细针密缝，老远的看上去像是一个圆圆的箭靶，（说也奇怪，人穷是先从裤子破起！）那么，这个人可是真有些近于穷了。</p>
+<p>但是也不然，穷无止境。</p>
+<p>“大雪纷纷落，我往柴火垛，看你们穷人怎么过！”穷人眼里还有更穷的人。</p>
+<p>穷也有好处。在优裕环境里生活着的人，外加的装饰与铺排太多，可以把他的本来面目掩没无遗，不但别人认不清他真的面目，往往对他发生误会（多半往好的方面误会）就是自己也容易忘记自己是谁。</p>
+<p>穷人则不然，他的褴褛的衣裳等于是开着许多窗户，可以令人窥见他的内容，他的荜门蓬户，尽管是穷气冒三尺，却容易令人发见里面有一个人。</p>
+<p>人越穷，越靠近他本身的成色，其中毫无夹带藏掖。</p>
+<p>人穷还可落个清闲，既少“车马驻江千”，更不会有人来求谋事，讣闻请笺都不会常常上门，他的时间是他自己的。</p>
+<p>穷人的心是赤裸的，和别的穷人之间没有隔阂，所以穷人才最慷慨。</p>
+<p>金错囊中所余无几，买房置地都不够，反正是吃不饱饿不死，落得来个爽快，求片刻的快意。</p>
+<p>此之谓“穷大手”。我们看见过富家弟兄析产的时候把一张八仙桌子劈开成两半，不曾看见两个穷人抢食半盂残羹剩饭。</p>
+<p>穷时受人白眼是件常事，狗不也是专爱对着鹑衣百结的人汪汪吗？</p>
+<p>人穷则颈易缩，肩易耸，头易垂，须发许是特别长得快，擦着墙边逡巡而过，不是贼也像是贼。以这种姿态出现，到处受窘。</p>
+<p>所以人穷则往往自然的有一种抵抗力出现，是名曰：酸。穷一经酸化，便不复是怕见人的东西。</p>
+<p>别看我衣履不整，我本来不以衣履见长！人和衣服架子本来是应该有分别的。</p>
+<p>别看我囊中羞涩，我有所不取；别看我落魄无聊，我有所不为，这样一想，一股浩然之气火辣辣地从丹田升起，腰板自然挺直，胸膛自然凸出，裴褒啸傲，无往不宜。</p>
+<p>在别人的眼里，他是一块茅厕砖——臭而且硬，可是，人穷而不志短者以此，布衣之士而可以傲王侯者亦以此，所以穷酸亦不可厚非，他不得不如此。穷若没有酸支持着，它不能持久。</p>
+<p>扬雄有逐贫之赋，韩愈有送穷之文，理直气壮的要与贫穷绝缘，反倒被穷鬼说服，改容谢过肃之上座，这也是酸极一种变化。</p>
+<p>贫而能逐，穷而能送，何乐而不为？逐也逐不掉，送也送不走，只好硬着头皮甘与穷鬼为伍。</p>
+<p>穷不是罪过，但也究竟不是美德，值不得夸耀，更不足以傲人。</p>
+<p>典型的穷人该是颜回，一箪食，一瓢饮，在陋巷，不改其乐。不改其乐当然是很好，箪食瓢饮究竟不大好，营养不足，所以颜回活到三十二岁短命死矣。</p>
+<p>孔子所说：“饭疏食饮水，曲肱而枕之，乐亦在其中矣。”譬喻则可，当真如此就嫌其不大卫生。</p>
 ]]></content>
       <categories>
         <category>Think</category>
@@ -5724,94 +5812,6 @@
       </categories>
       <tags>
         <tag>novel</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>狗日的中年</title>
-    <url>/post/2024040000.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/28/1tSzOcilNfkyTvR.jpg" alt="R-C"></p>
-<p>文&#x2F;姜文</p>
-<p> 第一次进入社会工作，我19岁，在一个机械厂做体力活，每天像毛驴一样重复着围磨般的工作，那时候纠结我的最大人生困惑就是吃炒饭省钱还是吃炒面省钱。我的房东是个40岁左右的男人，每天四平八稳的睡到自然醒来，踱着方步把我们几个出租房检查一遍，接着就在大把富足的时间里打盹，喝茶，看天。更要命的，这狗日的居然早点就吃炖肉，香味像狗舌头一样撩涮着我的味觉。那时候，做梦都在盼望着我的40岁什么能到来，我也可以这样踱着方步在时光里浸润，那是一个多么向往年龄啊。</p>
-<span id="more"></span>
-
-<p>想不到一奔子就挖到中年，才发现中年碎了一地的烟火，中年是个卖笑的年龄，既要讨得老人的欢心，也要做好儿女的榜样，还要时刻关注老婆的脸色，不停迎合上司的心思。中年为了生计，脸面，房子车子票子不停周旋，后来就发现激情对中年人是一种浪费，梦想对于中年是一个牌坊，守得住忠烈，还要做得好婊子。</p>
-<p>中年是一场斗争，人斗不过命，命斗不过时间。多少当时觉得无法过去的坎儿，过上几年突然就风轻云淡了。我没见过一个人把另一个人恨一辈子的，更可怕的是忘记和不在乎，最后都败给了时间，再娇惯的贾宝玉也会遁入空门，再厉害的如来也敌不过妖精的不在乎，万能基督耶稣最后还是让十字架来安抚信徒，观。</p>
-<p>禅宗讲，一花一世界，一叶一如来。什么年龄做什么事情，不能硬干，60岁的刘晓庆硬是要和30岁的范冰冰比美，不是找死，就是割肉。邓丽君之所以成为传说，就是和他同台的机会都不给你留过，才叫江湖。齐秦、罗大佑生生的把自己沦落成乡间交流会上的马戏团台柱子，得捯饬上一天才能唤醒曾经的故事，和时间死磕，败的只有传奇。与其逆流而上，不如随波逐流，这是对生命的敬畏。</p>
-<p>中年是一道清茶。在觥筹之后，人散夜阑之时，一半妥协，一半坚守，两边都让一小步。妥协就成了从容，坚守就成了雅致。从容多了，就会豁达温存的体会一下怨恨之间的不舍以及市井里不精致却扎实亲切的活法。茶要慢品，多一些留白，多一些转身的空间，无声的流泪，抿嘴浅笑，都是一种风景。每段时光都是最好的经过，每个女人都有最美的时光。</p>
-<p>中年可以深刻，但千万不要尖刻，看得开，千万别点破。那种咋咋呼呼的人，心中无比自卑才会如此丈八，我见过一种人，全世界没有他能上眼的人和事，语言的巨人，行动的矮子。丈量不见自己的人，他会用尖酸刻薄来过滤生活，终日郁郁寡欢，把日子过的跟太监似的，怎么能体会生活的跌宕起伏，潮涨潮落。一位医生朋友讲了一个笑话，说一日，有患者就诊，患者说，他半生讲究养身养生，没有一点不良爱好，百思不得其解，怎么老是百病缠身？后医生停顿了一会问：你抽烟不？不会。你喝酒不?不会。那你上嫖不？么有。后医生十分沉痛的说了一句：死个哇。看好有甚意义了？医生朋友说，这个世界，医生只能看病，绝对不能救命。这种把生活过的尖刻的人，除了送他奔死的节奏，再不知道如何安慰对待自己这么苛刻的人。</p>
-<p>中年是一种满足。下雨有伞，炙热有阴凉，有二两小烧，一碟花生，接受寡妇暗送的秋波，指使光棍挑水，和讨吃子比富，跟一群闲人打五毛钱的麻将，是一种满足。打开微信朋友圈，一看王石邀你去爬山潘石屹请你喝茶，最近有点闲时间登登珠穆朗玛，租豪华游轮领着章子怡、巩俐去夏威夷晒太阳；喝上年份的红酒开始摇杯挂壁，开始收藏12个流失的兽头，有了自己的服装设计等等，也是一种满足。满足是快乐的密码，天天猴急猴急的攀比，除了让你失落失望失魂落魄别无他法。整天还沉浸在谁谁谁怎么就比我混得好？想当初他……这人充其量不是中年，是40岁以上而已。</p>
-<p>中年是独处时候的沉默，是热闹时候的不正经，中年不是演讲中的”扬手是春，落手是秋”的轻描淡写，中年是生活场上的”扬手是打的，落手是掏钱”干净利索，在这一扬一落之间，把很多的细节都留给了自己。</p>
-<p>中年是狗日的现实。当我们终于可以腰缠万贯时间的时候，才知道中年并不是我看到的表象，狗日的中年不仅消融掉我浓密的长发，也弄丢了我蓬勃的激情和梦想，有些时候，一觉醒来尽然忘记了很多重要的记忆。更要命的是孤独开始富得流油，忧伤也异常亢奋，唯一不变的是毛哥对我的冷若冰霜，也没有几间出租房让我每天检查。现在明白，人生的境界不是天天幸福，而是天天不烦。有一些思念和牵挂可以入梦，梦会绵长，有一些爱好可以入心，生活就会充实，有一两个人懂你的沉默黑夜就不会漫长，有一两个圈子可以分享，时间就会缓慢，没有爱好，时间就会无聊，没有兴趣，生活就会无味。人生不是竞走，用最快的速度到达终点，而忽略了一路的风景和喝彩，这不是中年。</p>
-<p>中年不是摇滚，持续的愤怒和亢奋不会快乐，我见过一个斗士，每见一次，斗士都是一副忧国忧民的样子，这个社会仿佛没有一件让他可以称心的事情，鲁迅一般。人生活在极端，总会倾斜，特别是一个女人，忘记柔软等于慢性变态。中年也不是民谣，清新到忘记年龄，单纯到忽略世事，都是要不得的，不能跟生命较劲，弄好了就是刘晓庆，弄不好就成了刘胡兰。中年更不是学院派的民族唱法，千人一面，千人一声。登不上大雅的舞台，又不屑于乡野僻壤的原生态，活得活得就忘记了来路。中年更要懂得敬畏，敬畏生命，敬畏生活，敬畏阅历，敬畏年龄。中年应该有两种事应该尽量少干，一是用自己的嘴干扰别人的人生，二是靠别人的脑子思考自己的人生。</p>
-]]></content>
-      <categories>
-        <category>idea</category>
-      </categories>
-      <tags>
-        <tag>idea</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>独处是一种能力</title>
-    <url>/post/2024031224.htm</url>
-    <content><![CDATA[<p>人们往往把交往看作一种能力，却忽略了独处也是一种能力，并且在一定意义上是比交往更为重要的一种能力。反过来说，不擅交际固然是一种遗憾，不耐孤独也未尝不是一种很严重的缺陷。</p>
-<p>独处也是一种能力，并非任何人任何时候都可具备的。具备这种能力并不意味着不再感到寂寞，而在于安于寂寞并使之具有生产力。人在寂寞中有三种状态。一是惶惶不安，茫无头绪，百事无心，一心逃出寂寞。二是渐渐习惯于寂寞，安下心来，建立起生活的条理，用读书、写作或别的事务来驱逐寂寞。三是寂寞本身成为一片诗意的土壤，一种创造的契机，诱发出关于存在、生命、自我的深邃思考和体验。</p>
-<p>独处是人生中的美好时刻和美好体验，虽则有些寂寞，寂寞中却又有一种充实。独处是灵魂生长的必要空间，在独处时，我们从别人和事务中抽身出来，回到了自己。这时候，我们独自面对自己和上帝，开始了与自己的心灵以及与宇宙中的神秘力量的对话。一切严格意义上的灵魂生活都是在独处时展开的。和别人一起谈古说今，引经据典，那是闲聊和讨论；唯有自己沉浸于古往今来大师们的杰作之时，才会有真正的心灵感悟。和别人一起游山玩水，那只是旅游；唯有自己独自面对苍茫的群山和大海之时，才会真正感受到与大自然的沟通。</p>
-<p>从心理学的观点看，人之需要独处，是为了进行内在的整合。所谓整合，就是把新的经验放到内在记忆中的某个恰当位置上。唯有经过这一整合的过程，外来的印象才能被自我所消化，自我也才能成为一个既独立又生长着的系统。所以，有无独处的能力，关系到一个人能否真正形成一个相对自足的内心世界，而这又会进而影响到他与外部世界的关系。</p>
-<p>怎么判断一个人究竟有没有他的“自我”呢？有一个可靠的检验方法，就是看他能不能独处。当你自己一个人呆着时，你是感到百无聊赖，难以忍受呢，还是感到一种宁静、充实和满足？</p>
-<p>对于独处的爱好与一个人的性格完全无关，爱好独处的人同样可能是一个性格活泼、喜欢朋友的人，只是无论他怎么乐于与别人交往，独处始终是他生活中的必需。在他看来，一种缺乏交往的生活当然是一种缺陷，一种缺乏独处的生活则简直是一种灾难了。</p>
-<p>世上没有一个人能够忍受绝对的孤独。但是，绝对不能忍受孤独的人却是一个灵魂空虚的人。世上正有这样的一些人，他们最怕的就是独处，让他们和自己呆一会儿，对于他们简直是一种酷刑。只要闲了下来，他们就必须找个地方去消遣。他们的日子表面上过得十分热闹，实际上他们的内心极其空虚。他们所做的一切都是为了想方设法避免面对面看见自己。对此我只能有一个解释，就是连他们自己也感觉到了自己的贫乏，和这样贫乏的自己呆在一起是顶没有意思的，再无聊的消遣也比这有趣得多。这样做的结果是他们变得越来越贫乏，越来越没有了自己，形成了一个恶性循环</p>
-]]></content>
-      <categories>
-        <category>Famous</category>
-      </categories>
-      <tags>
-        <tag>Famous</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>穷</title>
-    <url>/post/2018021341.htm</url>
-    <content><![CDATA[<p>和穷挣扎一生，无论胜利或失败，都是惨。能不和穷挣扎，或于挣扎之余还有点闲工夫做些别的事，那人是有福了。</p>
-<p>人生下来就是穷的，除了带来一口奶之外，赤条条的，一无所有，谁手里也没有握着两个钱。</p>
-<p>再稍稍长大一点，家世渐渐显露，有的是金枝玉叶，有的是“杂和面口袋”。但是就大体而论，还是泥巴里打滚袖口上抹鼻涕的居多。</p>
-<p>儿童玩具本是少得可怜，而大概其中总还免不了一具“扑满”，瓦做的，像是陶器时代的出品，大的小的挂绿釉的都有，间或也有形如保险箱，有铁制的。</p>
-<p>这种玩具的用意就是警告孩子们，有钱要积蓄起来，免得在饥荒的时候受穷，穷的阴影在这时候就已罩住了我们！</p>
-<p>好容易过年赚来几块压岁钱，都被骗弄丢在里面了，丢进去就后悔，想从缝里倒出来是万难，用小刀拨也是枉然。积蓄是稍微有一点，穷还是穷。</p>
-<p>而且事实证明，凡是积在扑满里的钱，除了自己早早下手摔破的以外，大概后来就不知怎样就没有了，很少能在日后发生什么救苦救难的功效。</p>
-<p>等到再稍稍长大一点，用钱的欲望更大，看见什么都要流涎，手里偏偏是空空如也，那时候真想大闹一场。</p>
-<p>就是富家子也是一样，尽管是绮襦纨绔，他还是恨继承开始太晚。这时候他最感觉穷，虽然他还没认识穷。</p>
-<p>人在成年之后，开始面对着糊口问题，不但糊自己的口，还要糊附属人员的口，如果脸皮欠厚心地欠薄。再加上祖上是“忠厚传家诗书继世”的话，他这一生就休想能离开穷的掌握，人的一生，就是和穷挣扎的历史。</p>
-<p>和穷挣扎一生，无论胜利或失败，都是惨。能不和穷挣扎，或于挣扎之余还有点闲工夫做些别的事，那人是有福了。</p>
-<p>所谓穷，也是比较而言。有人天天喊穷，不是今天透支，就是明天举债，数目大得都惊人，然后指着身上衣服的一块补丁或是皮鞋上的一条小小裂缝做为他穷的铁证。这是寓阔于穷，文章中的反衬法。</p>
-<p>也有人量入为出，温饱无虞，可是又担心他的孩子将来自费留学的经费没有着落，于是于自我麻醉中陷入于穷的心理状态。</p>
-<p>若是西装裤的后方越磨越薄，由薄而破，由破而织，由织而补上一大块布，细针密缝，老远的看上去像是一个圆圆的箭靶，（说也奇怪，人穷是先从裤子破起！）那么，这个人可是真有些近于穷了。</p>
-<p>但是也不然，穷无止境。</p>
-<p>“大雪纷纷落，我往柴火垛，看你们穷人怎么过！”穷人眼里还有更穷的人。</p>
-<p>穷也有好处。在优裕环境里生活着的人，外加的装饰与铺排太多，可以把他的本来面目掩没无遗，不但别人认不清他真的面目，往往对他发生误会（多半往好的方面误会）就是自己也容易忘记自己是谁。</p>
-<p>穷人则不然，他的褴褛的衣裳等于是开着许多窗户，可以令人窥见他的内容，他的荜门蓬户，尽管是穷气冒三尺，却容易令人发见里面有一个人。</p>
-<p>人越穷，越靠近他本身的成色，其中毫无夹带藏掖。</p>
-<p>人穷还可落个清闲，既少“车马驻江千”，更不会有人来求谋事，讣闻请笺都不会常常上门，他的时间是他自己的。</p>
-<p>穷人的心是赤裸的，和别的穷人之间没有隔阂，所以穷人才最慷慨。</p>
-<p>金错囊中所余无几，买房置地都不够，反正是吃不饱饿不死，落得来个爽快，求片刻的快意。</p>
-<p>此之谓“穷大手”。我们看见过富家弟兄析产的时候把一张八仙桌子劈开成两半，不曾看见两个穷人抢食半盂残羹剩饭。</p>
-<p>穷时受人白眼是件常事，狗不也是专爱对着鹑衣百结的人汪汪吗？</p>
-<p>人穷则颈易缩，肩易耸，头易垂，须发许是特别长得快，擦着墙边逡巡而过，不是贼也像是贼。以这种姿态出现，到处受窘。</p>
-<p>所以人穷则往往自然的有一种抵抗力出现，是名曰：酸。穷一经酸化，便不复是怕见人的东西。</p>
-<p>别看我衣履不整，我本来不以衣履见长！人和衣服架子本来是应该有分别的。</p>
-<p>别看我囊中羞涩，我有所不取；别看我落魄无聊，我有所不为，这样一想，一股浩然之气火辣辣地从丹田升起，腰板自然挺直，胸膛自然凸出，裴褒啸傲，无往不宜。</p>
-<p>在别人的眼里，他是一块茅厕砖——臭而且硬，可是，人穷而不志短者以此，布衣之士而可以傲王侯者亦以此，所以穷酸亦不可厚非，他不得不如此。穷若没有酸支持着，它不能持久。</p>
-<p>扬雄有逐贫之赋，韩愈有送穷之文，理直气壮的要与贫穷绝缘，反倒被穷鬼说服，改容谢过肃之上座，这也是酸极一种变化。</p>
-<p>贫而能逐，穷而能送，何乐而不为？逐也逐不掉，送也送不走，只好硬着头皮甘与穷鬼为伍。</p>
-<p>穷不是罪过，但也究竟不是美德，值不得夸耀，更不足以傲人。</p>
-<p>典型的穷人该是颜回，一箪食，一瓢饮，在陋巷，不改其乐。不改其乐当然是很好，箪食瓢饮究竟不大好，营养不足，所以颜回活到三十二岁短命死矣。</p>
-<p>孔子所说：“饭疏食饮水，曲肱而枕之，乐亦在其中矣。”譬喻则可，当真如此就嫌其不大卫生。</p>
-]]></content>
-      <categories>
-        <category>Think</category>
-      </categories>
-      <tags>
-        <tag>Think</tag>
       </tags>
   </entry>
   <entry>
