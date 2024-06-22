@@ -47,9 +47,6 @@
         
     
 
-<!-- 搜索的部分 -->
-
-
 
 <meta name="generator" content="Hexo 7.2.0"></head>
 
@@ -77,11 +74,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
-            
             <div class="menu navbar-right">
-                
-                
-
                 
                     <a class="menu-item" href="/archives">Posts</a>
                 
@@ -104,12 +97,7 @@
                 <div>
                     <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
                 </div>
-                <div class="navbar-mobile-right">
-                
-                
-
-                 <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
-               </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
             </div>
             <div class="menu" id="mobile-menu">
                 
@@ -139,7 +127,6 @@
         }
     }
 </script>
-
             <div class="main">
                 <div class="container">
     
@@ -539,7 +526,7 @@
 <p>  Markdown 会转成：</p>
   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;&amp;#x6D;&amp;#x61;i&amp;#x6C;&amp;#x74;&amp;#x6F;:&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;</span><br><span class="line">&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;</span><br><span class="line">&amp;#109;&quot;&gt;&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;</span><br><span class="line">&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#100;&#x64;&#x72;&#x65;&#115;&#115;&#64;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">&#97;&#100;&#x64;&#x72;&#x65;&#115;&#115;&#64;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a>」链接。</p>
+<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#100;&#100;&#114;&#101;&#115;&#x73;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#100;&#100;&#114;&#101;&#115;&#x73;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>」链接。</p>
 <p>  （这种作法虽然可以糊弄不少的机器人，但并不能全部挡下来，不过总比什么都不做好些。不管怎样，公开你的信箱终究会引来广告信件的。）</p>
 <h3 id="反斜杠"><a href="#反斜杠" class="headerlink" title="反斜杠"></a>反斜杠</h3><p>  Markdown 可以利用反斜杠来插入一些在语法中有其它意义的符号，例如：如果你想要用星号加在文字旁边的方式来做出强调效果（但不用 <code>&lt;em&gt;</code> 标签），你可以在星号的前面加上反斜杠：</p>
   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\*literal asterisks\*</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -634,35 +621,12 @@
             </div>
             <footer id="footer" class="footer">
     <div class="copyright">
-       <span>© Tommas  2024 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs/oexs-rep/tree/main/source/_posts" target="_blank">Chic</a></span>
-      
+       <!--  <span>© Tommas | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs" target="_blank">Chic</a></span>  -->
+             <span>© Tommas </span>
     </div>
 </footer>
 
     </div>
-     <!-- 搜索功能 -->
-<!-- Chic/layout.ejs -->
-<div id="u-search">
-    <div class="modal">
-        <div class="modal-header">
-            <div class="container">
-                <form id="u-search-modal-form" class="u-search-modal-form">
-                    <button type="submit" class="form-submit-btn">
-                        <img src="/" class="search-btn-img" />
-                    </button>
-                    <input placeholder="搜索内容..." class="form-input" id="modal-form-input">
-                </form>
-                <a class="modal-close">x</a>
-            </div>
-            <div class="search-loading">
-                <div class="search-loading-bar"></div>
-            </div>
-        </div>
-        <div class="modal-body">
-        </div>
-    </div>
-    <div class="modal-overlay"></div>
-</div>
 </body>
 
 </html>
