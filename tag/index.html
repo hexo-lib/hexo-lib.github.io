@@ -51,6 +51,19 @@
 <meta name="generator" content="Hexo 7.2.0"></head>
 
 <body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
     <script>
         // this function is used to check current theme before page loaded.
         (() => {
@@ -140,9 +153,9 @@
                 
                     <a href="/tags/markdown/">markdown<small>(1)</small></a>
                 
-                    <a href="/tags/yml/">yml<small>(1)</small></a>
-                
                     <a href="/tags/idea/">idea<small>(3)</small></a>
+                
+                    <a href="/tags/yml/">yml<small>(1)</small></a>
                 
                     <a href="/tags/Famous/">Famous<small>(7)</small></a>
                 
