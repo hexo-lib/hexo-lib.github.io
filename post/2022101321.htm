@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>成为一个快乐的人 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">成为一个快乐的人</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 21, 2022&nbsp;&nbsp;13:21:43</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/idea/">idea</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>本文旨在探讨如何成为一个快乐的人，通过分析快乐的定义、影响因素以及实践方法，为追求快乐生活的人们提供指导和启示。 研究发现，金钱、财富、丰裕和成功，都不能等于幸福，也都不能代替幸福。快乐的性格不是与生俱来的本能，而是需要学习和练习的。快乐与内心的平和、积极的生活态度、良好的人际关系以及有意义的生活目标等因素密切相关。通过培养这些品质，我们可以逐步迈向快乐的人生。</p>
+</blockquote>
+<p><img src="https://s2.loli.net/2024/06/24/sAGxLaD94wy7Frp.jpg"></p>
+<h3 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h3><p>快乐是每个人都渴望拥有的生活状态，然而，在现实生活中，很多人却感到焦虑、压抑和失落。教育专家胡敏在《幸福的方法》一书中写道：“我们缺乏的不是幸福，而是发现幸福的双眼，体验幸福的内心与走向幸福的方向”。</p>
+<p>为了解决这个问题，我们需要深入了解快乐的本质，并探索实现快乐的途径。本文从几个方面探讨如何成为一个快乐的人，帮助大家找到通往快乐生活的道路。不尽之处，还请各位专家斧正。</p>
+<h3 id="二、快乐的定义"><a href="#二、快乐的定义" class="headerlink" title="二、快乐的定义"></a>二、快乐的定义</h3><p>首先，我们需要明确快乐的定义。快乐是一种内心状态，表现为积极的情绪、对生活的热爱和满足感。它并非外在物质的堆砌，而是源于内心的平和与喜悦。快乐的人通常能够积极应对生活中的挑战，享受生活带来的美好时光。</p>
+<h3 id="三、快乐的影响因素"><a href="#三、快乐的影响因素" class="headerlink" title="三、快乐的影响因素"></a>三、快乐的影响因素</h3><ul>
+<li><ol>
+<li>内心的平和</li>
+</ol>
+</li>
+</ul>
+<p>内心的平和是实现快乐的关键。当我们学会放下烦恼、拥抱当下时，内心自然会充满宁静和喜悦。正念、冥想、瑜伽等方法可以帮助我们培养内心的平和，从而更好地感受生活的美好。</p>
+<ul>
+<li><ol start="2">
+<li>积极的生活态度</li>
+</ol>
+</li>
+</ul>
+<p>积极的生活态度对快乐具有重要影响。乐观的人往往能够在面对困境时保持信心，从而更容易找到解决问题的方法。为了培养积极的生活态度，我们可以多关注生活中的积极面，学会感恩和欣赏生活中的点滴美好。</p>
+<ul>
+<li><ol start="3">
+<li>良好的人际关系</li>
+</ol>
+</li>
+</ul>
+<p>良好的人际关系也是实现快乐的重要因素。与他人建立深厚的友谊、亲情和爱情关系，可以让我们在生活中获得更多的支持和关爱。为了维护良好的人际关系，我们需要学会沟通、理解和包容他人，尊重彼此的差异，共同成长。</p>
+<ul>
+<li><ol start="4">
+<li>有意义的生活目标</li>
+</ol>
+</li>
+</ul>
+<p>拥有有意义的生活目标可以让我们更有动力去追求快乐。当我们为自己设定了明确的目标，并在实现过程中不断取得进展时，我们会感到更加充实和满足。为了实现有意义的生活目标，我们可以思考自己的价值观、兴趣爱好和人生使命，从而找到真正适合自己的道路。</p>
+<h3 id="四、实践方法"><a href="#四、实践方法" class="headerlink" title="四、实践方法"></a>四、实践方法</h3><ul>
+<li><ol>
+<li>反思与自省</li>
+</ol>
+</li>
+</ul>
+<p>要成为一个快乐的人，我们需要经常反思自己的行为和思想。通过自省，我们可以发现自己的不足之处，从而及时进行调整和改进。同时，反思还可以帮助我们更好地理解自己的需求和愿望，为追求快乐生活提供有力支持。</p>
+<ul>
+<li><ol start="2">
+<li>培养积极习惯</li>
+</ol>
+</li>
+</ul>
+<p>积极习惯是实现快乐生活的基础。我们可以从日常生活中的小事做起，例如保持规律的作息、健康的饮食、适度的运动等。此外，还可以尝试培养一些有益的爱好，如阅读、绘画、音乐等，这些活动不仅可以丰富我们的生活，还能提升我们的心灵境界。</p>
+<ul>
+<li><ol start="3">
+<li>寻求支持</li>
+</ol>
+</li>
+</ul>
+<p>在追求快乐的过程中，我们需要学会寻求他人的支持和帮助。与家人、朋友、导师等人保持良好的沟通，分享自己的喜怒哀乐，听取他们的建议和意见，可以帮助我们更好地应对生活中的挑战和困境。</p>
+<ul>
+<li><ol start="4">
+<li>持续学习与成长</li>
+</ol>
+</li>
+</ul>
+<p>快乐是一个持续追求的过程，我们需要不断地学习和成长。通过阅读、参加培训课程、与他人交流等方式，我们可以不断丰富自己的知识和技能，提高自己的综合素质。同时，我们还要学会保持一颗谦逊的心，勇于承认自己的不足，并努力改进和提升。</p>
+<h3 id="五、结论"><a href="#五、结论" class="headerlink" title="五、结论"></a>五、结论</h3><p>成为一个快乐的人并非易事，但只要我们用心去探索和实践，就一定能够找到通往快乐的道路。通过培养内心的平和、积极的生活态度、良好的人际关系以及有意义的生活目标等因素，我们可以逐步迈向快乐的人生。在这个过程中，我们需要不断地反思与自省、培养积极习惯、寻求支持以及持续学习与成长。只有这样，我们才能真正地实现内心的快乐与满足。</p>
+<p>现实生活告诉我们，生活就像天气一样，有阳光明媚，也有阴雨连绵，甚至狂风大作、冰天雪地等极端情况。人生不如意事常八九，起起伏伏的坎坷人生每个人都会经历到，但是面对她的态度不同，会对我们的情绪和身心健康，带来不同的结果。</p>
+<h3 id="六、面对困境的策略"><a href="#六、面对困境的策略" class="headerlink" title="六、面对困境的策略"></a>六、面对困境的策略</h3><p>生活中的困境和挫折是不可避免的，快乐与痛苦、顺境与逆境，都是生活的组成部分。如何面对这些挑战，却决定了我们的情绪状态和生活质量。为了成为一个快乐的人，我们需要学会如何应对困境。</p>
+<ul>
+<li><ol>
+<li>接受现实</li>
+</ol>
+</li>
+</ul>
+<p>首先，我们需要学会接受现实。生活中的很多事情是我们无法改变的，要学会无条件的接纳，接受这些事实并适应它们，可以让我们避免无谓的挣扎和痛苦。当我们接受现实时，我们可以更好地集中精力去改变那些我们可以改变的事情。</p>
+<ul>
+<li><ol start="2">
+<li>寻找支持</li>
+</ol>
+</li>
+</ul>
+<p>其次，我们需要寻找支持。当我们遇到困难时，与他人分享我们的感受和问题，寻求他们的建议和支持，可以让我们感到不再孤单，也更有力量去面对困难。这些支持者可以是我们的家人、朋友、同事或者专业的心理咨询师。</p>
+<ul>
+<li><ol start="3">
+<li>保持乐观</li>
+</ol>
+</li>
+</ul>
+<p>同时，我们还需要保持乐观。尽管面对困境，但我们仍然需要相信，未来有可能变得更好。这种乐观的态度可以帮助我们保持积极的心态，从而更有可能找到解决问题的方法。</p>
+<ul>
+<li><ol start="4">
+<li>寻求解决方案</li>
+</ol>
+</li>
+</ul>
+<p>最后，我们需要积极寻求解决方案。一旦我们接受了现实，找到了支持，并保持了乐观的态度，我们就可以开始思考如何解决我们的问题。这个过程可能需要我们进行创新思考，尝试新的方法，甚至接受一些挑战，但只要我们坚持下去，就一定能够找到解决问题的方法。</p>
+<h3 id="七、持续的快乐维护"><a href="#七、持续的快乐维护" class="headerlink" title="七、持续的快乐维护"></a>七、持续的快乐维护</h3><p>快乐不是一个一次性的目标，而是一种持续的状态。为了长期保持快乐，我们需要学会维护我们的快乐状态。</p>
+<ul>
+<li><ol>
+<li>珍惜当下</li>
+</ol>
+</li>
+</ul>
+<p>首先，我们需要学会珍惜当下。生活中的每一刻都是宝贵的，无论是快乐还是困难的时刻。通过欣赏和感激我们的生活，我们可以更好地享受每一个瞬间，从而保持我们的快乐状态。</p>
+<ul>
+<li><ol start="2">
+<li>保持积极的生活态度</li>
+</ol>
+</li>
+</ul>
+<p>其次，我们需要保持积极的生活态度。这意味着我们需要对生活保持热情，对未来充满希望，对挑战保持勇气。只有当我们积极面对生活时，我们才能从中找到快乐。</p>
+<ul>
+<li><ol start="3">
+<li>不断学习和成长</li>
+</ol>
+</li>
+</ul>
+<p>此外，我们还需要不断学习和成长。通过不断地提升自己，我们可以发现新的兴趣爱好，实现新的目标，从而保持我们的快乐状态。同时，学习也可以帮助我们更好地理解自己和世界，从而更好地应对生活中的挑战。</p>
+<p>以我个人为例，去年已退休，可我并没有赋闲在家，每周的工作、学习，安排的满满的：如每天学习心理学知识、上老年大学、陪孙子上下学、骑行、游泳锻炼身体等，让自己的身心充实而丰盈。</p>
+<p>因为在20岁、30岁、40岁和50岁每个人生转段期，都让我体会到酸甜苦辣咸五味杂陈的味道和有时一地鸡毛的无序和无奈。可喜的是，在这些关键档口，都是不断地学习、和家人、朋友的陪伴支持等，让我度过一个个难关，从中还体会了一把惊涛骇浪般的兴奋。</p>
+<ul>
+<li><ol start="4">
+<li>照顾好自己的身心健康</li>
+</ol>
+</li>
+</ul>
+<p>最后，我们需要照顾好自己的身心健康。健康的身体是快乐生活的基础，因此，我们需要保持良好的饮食习惯、适量的运动以及充足的睡眠。同时，我们还需要关注自己的心理健康，通过心理咨询、冥想、瑜伽、打太极等方式来维护我们的内心平和。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>成为一个快乐的人需要我们不断地探索和实践。通过培养内心的平和、积极的生活态度、良好的人际关系以及有意义的生活目标等因素，我们可以逐步迈向快乐的人生。同时，面对困境时，我们需要学会接受现实、寻找支持、保持乐观并寻求解决方案。</p>
+<p>最后，为了长期保持快乐状态，我们需要珍惜当下、保持积极的生活态度、不断学习和成长并照顾好自己的身心健康。只有这样，我们才能真正地实现内心的快乐与满足。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-lib.github.io/post/2022101321.htm">https://hexo-lib.github.io/post/2022101321.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/idea/"># idea</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2022112104.htm">焦虑</a>
+            
+            
+            <a class="next" rel="next" href="/post/2022082111.htm">勇攀珠峰的背后</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© Tommas 2024 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs/oexs-rep/tree/main/source/_posts" target="_blank">Chic</a></span> 
+        
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
