@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>你为什么活得那么累 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">你为什么活得那么累</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 15, 2022&nbsp;&nbsp;23:00:47</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/idea/">idea</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>当今社会，不管男人还是女人，当官的还是老百姓，有钱的还是没钱的，朋友一见面都会抱怨几句，“活得累”几乎成了这个时代的“口头禅”。</p>
+</blockquote>
+<p>有人将中国人太累的原因归结为以下几种：<strong>太看重位子，总想着票子，倒腾着房子，放不下架子，撕不开面子，眷顾着孩子。</strong>人们的“累”真是由这些原因造成的吗?累的背后还有怎样的社会根源、文化根源？</p>
+<p><img src="https://s2.loli.net/2024/06/24/mTOM7IcFpn8jGuS.jpg"></p>
+<p>你过得开心吗？是否常遇到特别堵心的事？你遇到过被欺骗、被冒犯、被欺负的情况吗？总的来说，你对自己的生活状况满意吗？你总体的幸福感又如何？当你认真地回答这些问题时，你已经可以大体上评价你的生活质量，并知道自己是不是跟很多人一样，活得很累。</p>
+<p><strong>中国人活得尤其累，不只是传说或人们日常的感受，更是不争的事实。</strong>根据幸福研究的权威专家、美国密歇根大学社会学教授英格尔哈特最新发布的研究结果，在52个国家进行的持续性调查（平均为17年）中，幸福指数在40个国家中有所增长，只在12个国家中出现了下降。</p>
+<p>总体平均，认为自己“很幸福”的人增加了近7个百分点，但是，<strong>中国台湾和大陆却占据了在此期间幸福感百分数下降最为严重的两个位置，期间中国人的生活满意度也排在负增长的倒数第6位。</strong></p>
+<p>《人民论坛》2010年12月（上）发布的对6235人的调查结果表明，自认为属于弱势群体的网友为73.5%，党政干部、知识分子和白领员工自认为弱势的比例也高达45.1%、55.4%和57.8%。</p>
+<p>笔者2010年12月29日对相关网站调查截取的即时结果为，在2648名参与调查的网友中，90%的选择了认为自己是弱势群体，其中弱势感很强烈和比较强烈的占到84%。</p>
+<p>为什么中国人活这么累？为什么世界多数国家幸福指数增长，而中国反而反向降低且程度进入最底的行列？英格尔哈特教授试图用发展和自由与幸福的联系来分析幸福的强度和变化趋势，但显然难以解释：</p>
+<p><strong>为什么中国人在社会经济和物质生活财富积累大踏步进步，个人选择空间明显扩大而制约相对减少的情况下，幸福感却反而明显下降了。</strong></p>
+<p><img src="https://s2.loli.net/2024/06/24/eAfNZWcDoUQE2bd.jpg"></p>
+<p><strong>活得累的社会根源</strong></p>
+<p><strong>人要想活得从容，需要两个条件，一个是活出自己的价值，一个是能够获得安全感。能够很好地解决这两个问题的，才会成为真正的“幸福者”。</strong></p>
+<p>遗憾的是，在中国现实的社会与文化条件下，要想很好地实现自我价值，其实非常困难，这就正好解释了为什么只有很小比例的人有机会成为“幸福者”。中国人实现自我价值和获得安全感的困难到底在哪里呢？</p>
+<p>人能否感觉到自我价值决定于两方面要素，第一方面的要素是核心和关键，即一个社会作为外部环境怎样判定一个人的价值，这种判定倾向发挥着引导人们怎样评判自我价值的作用。</p>
+<p>长期的封建传统和独特的中国文明史，使中国社会养成了深厚的权威主义价值倾向。也就是说，现实社会倾向于用种种直接或间接、外显或潜隐的方式，从一个人所占据的地位和拥有的资源来判定其价值，而缺乏一般性的文明、平等、尊重、平权和尊严的概念。</p>
+<p>近年来，虽然中央政府在政治、经济、文化等方面制定了一系列政策，采取了一系列措施，为弱势群体提供了有力的制度性支持。但是与强势群体相比，弱势群体的利益诉求还不能得到诸多保障。</p>
+<p><strong>由于这种价值取向的存在，人们从自我意识诞生起，就存在着强烈的需要自我被承认的焦虑感，这种焦虑感驱使人们不断寻找和建立一个又一个可以显示自我价值的标志，特别是具有社会公认价值的金钱和官衔，并不断进行各种社会比较，以期建立自己的相对优势，得到社会环境的价值承认。</strong></p>
+<p><strong>这种从社会权威主义环境价值取向衍生出来的价值追求倾向，又派生出来了简单功利导向的金钱至上主义价值观，即一切都必须还原到金钱，金钱成为了通用价值尺度，一切价值和荣誉，都必须由金钱的强度来衡量。</strong></p>
+<p><strong>为此，金钱成为了压倒一切的追求。本来，追求金钱是人的本性的一部分，但金钱主义使人的这一本性掩盖了本来与之平行的另外一种“人之初，性本善”的本性。</strong></p>
+<p>从中国社会市场经济实施以来频发的环境污染、广泛的食品毒化事件和医疗系统之种种超出想象力的怪象看，很容易发现，<strong>一个社会本该自然存在的人与人之间作为同类的善意，已经广泛而深刻地被金钱追求所击垮。其他同类，褪变成了赚钱的工具。“己所不欲，勿施于人”的祖训，早已被对金钱的欲望所淹没。</strong></p>
+<p>一个社会消除权威主义的最好良方，是取消特权和制约权力，让社会尊重的不再是权力和位置，而是人人都有可能通过自身努力达成的成就和事业。社会在实际运作之中呈现出多重的使人们自我价值得以实现的价值导向，权威主义才能逐步弱化和退出影响的主导地位。</p>
+<p><strong>安全感是一种不用自我警惕和随时准备实施自我保护的放松状态。</strong>当你过马路时汽车给你让道，司机还示意请你先行的时候，你体会的是安全感。而司机看到你要过马路拼命鸣笛和加速，你体会的则是不安全感。平时低头不见抬头见的邻里随时可以委托责任，你体会的是安全感，而你的随身提包或电脑一离开视野就可能被盗，你则体会不安全感。</p>
+<p><strong>每个人都可以从不安全感的提醒中体会到压力和担忧，你的生活伴有长期的和广泛的不安全感时，会随时处于一种防卫状态，心力也不断耗费，活得很累，是这种状态的自然结果。</strong></p>
+<p><img src="https://s2.loli.net/2024/06/24/q5iGELTdpznbC1U.jpg"></p>
+<p><strong>活得累的文化根源</strong></p>
+<p>活得比较累，与其说是外在生活压力过大所致，毋宁说是我们中国人的生活习惯追求使然。再追求，再累，也要更上一层楼。正所谓“没有最好，只有更好”。看来，中国人具有一种不完全自觉地置身于现实生活压力当中的习惯。</p>
+<p>也就是说，中国人的生命旅程似乎注定要面对永远也翻越不完的崇山峻岭，永远也克服不完的艰难险阻。<strong>所以，我们中国人感到活得比较累，不是一时的“累”，而是日积月累的“累”，是一种难以为继的“累”，是一种习惯性的“累”……</strong></p>
+<p><strong>如果我们被权威主义和简单功利主义所诱导，总试图用达成某种经济和地位的方式来确立自己的价值和建立自己的幸福，甚至为此不择手段。那么我们会发现，即便我们达成了我们渴望的成就，一次性的满足之后依然是失落，我们依然无法建立自己所渴求的稳定自信。</strong></p>
+<p><strong>不顾一切成功实现升官发财的人会猛然发现，升官发财远不是人生的全部，只是让我们变换了参照环境，自我的命运，仍然在前途的不确定中风雨飘摇。</strong></p>
+<p>重要的一点，中国人无信仰，欲望无止境，内心浮躁，没有基本共同的价值观念。心中无信仰，精神无依托，内心常常充满困惑，不敢肯定自己，为人言所累。</p>
+<p><strong>大多数人都蹑手蹑脚，战战兢兢，每走一步，说一句话，都要担心别人对自己的评价。或者做的不说，说的不做，努力假装自己很正统，很高尚，常常被迫去做自己不愿意作的事，为面子、为名声，往往也不为自己，更不为他人。</strong></p>
+<p>人生的结果是由历史、文化、环境、社会和自我多方面因素造就的，不以人的意志为转移。无论我们想得到什么，也无论我们的欲望有多强烈，我们最终得到的，不是我们想得到的，而是我们应该得到的。</p>
+<p>个人对自己命运能够做的，是建构让自己的愿望成为现实的被社会公理支持的逻辑，增加让愿望成为事实的理由。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-lib.github.io/post/2022012300.htm">https://hexo-lib.github.io/post/2022012300.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/idea/"># idea</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2022021125.htm">许三多蜕变</a>
+            
+            
+            <a class="next" rel="next" href="/post/2021051815.htm">穿越无人区</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© Tommas 2024 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs/oexs-rep/tree/main/source/_posts" target="_blank">Chic</a></span> 
+        
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
