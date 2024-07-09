@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Hugo学习笔记 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Hugo学习笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 10, 2024&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="什么是-Hugo"><a href="#什么是-Hugo" class="headerlink" title="什么是 Hugo"></a>什么是 Hugo</h2><p>Hugo 是一个用 Go 编写的快速静态网站生成器，具有极快的构建速度（每个页面小于1毫秒），拥有大量现成主题，在开发过程中通过 liveload 即时渲染更改，可以托管在任何平台，是一个理想的建站工具。</p>
+<h2 id="静态网站生成器"><a href="#静态网站生成器" class="headerlink" title="静态网站生成器"></a>静态网站生成器</h2><p>网站生成器的目的是将内容转换为 HTML 文件，大多数网站生成器是动态的，这意味着每次用户请求页面时 HTTP 服务器都会运行生成器以创建新的 HTML 文件。动态站点生成器会将 HTML 文件缓存下来，以提高页面的加载速度。而 Hugo 更进一步，将 HTML 文件直接在计算机上渲染。在将文件复制到托管 HTTP 服务器的计算机之前可以在本地查看这些文件。因为 HTML 文件不是动态生成的，所以 Hugo 是一个静态网站生成器。</p>
+<h1 id="快速建站"><a href="#快速建站" class="headerlink" title="快速建站"></a>快速建站</h1><h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="在-Windows-上安装"><a href="#在-Windows-上安装" class="headerlink" title="在 Windows 上安装"></a>在 Windows 上安装</h3><p>最简单的方法是直接下载 <a target="_blank" rel="noopener" href="https://github.com/gohugoio/hugo/releases">最新版本的 hugo</a> 安装</p>
+<p><em>请安装 extended 版本，可以对 scss 文件进行编译，否则在之后使用模板时会出现问题</em></p>
+<p><em>注意：要把 hugo 的路径添加到环境变量 Path 中！</em></p>
+<p>我自己在下载安装扩展版本的时候有点问题，最后重新用 <a target="_blank" rel="noopener" href="https://gohugo.io/getting-started/installing/#chocolatey-windows">Chocolatey</a> 安装成功，非常方便。其它系统的安装过程可以看 <a target="_blank" rel="noopener" href="https://gohugo.io/getting-started/installing/">官网文档</a>。</p>
+<h3 id="新建网站"><a href="#新建网站" class="headerlink" title="新建网站"></a>新建网站</h3><p><code>hugo version</code> 检查安装是否成功</p>
+<p><code>hugo new site [sitename]</code> 创建一个新的网站</p>
+<p><code>hugo server</code> 开启 Hugo 服务器，可以在本地预览调试网站</p>
+<h3 id="结构目录"><a href="#结构目录" class="headerlink" title="结构目录"></a>结构目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── archetypes </span><br><span class="line">├── config.toml</span><br><span class="line">├── content</span><br><span class="line">├── data</span><br><span class="line">├── layouts</span><br><span class="line">├── static</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>archetypes 文件夹：存放 front matter（前置数据）</li>
+<li>content 文件夹：存放网页的主要内容 Markdown 文件</li>
+<li>layouts 文件夹：存放 HTML 模板</li>
+<li>themes 文件夹：存放现有的主题模板</li>
+<li>config.toml 文件：全局配置文件</li>
+<li>data 文件夹：存放数据文件，通常是 json&#x2F;yaml&#x2F;toml 文件</li>
+<li>static 文件夹：存放静态文件，会被直接复制到 public 目录下</li>
+</ul>
+<h3 id="使用现有-Hugo-主题"><a href="#使用现有-Hugo-主题" class="headerlink" title="使用现有 Hugo 主题"></a>使用现有 Hugo 主题</h3><ol>
+<li>在 <a target="_blank" rel="noopener" href="https://themes.gohugo.io/">Hugo 官网</a> 或者 GitHub 上寻找合适的 Hugo 主题</li>
+<li>进入 <code>themes</code> 文件夹，<code>git clone</code> 想要使用的主题</li>
+<li>在配置文件中添加主题：<code>theme = &quot;themename&quot;</code></li>
+</ol>
+<h3 id="站点部署"><a href="#站点部署" class="headerlink" title="站点部署"></a>站点部署</h3><p>利用 Hugo 搭建的网站可以托管在任何地方，包括 Netlify、Heroku、GoDaddy、DreamHost、GitHub Pages、GitLab Pages、Surge、Aerobatic、Firebase、Google Cloud Storage、Amazon S3、Rackspace、Azure 和 CloudFront，并且可以很好地与 CDN 配合使用。无需依赖数据库或 runtime 即可运行。</p>
+<h4 id="部署到-GitHub-Pages"><a href="#部署到-GitHub-Pages" class="headerlink" title="部署到 GitHub Pages"></a>部署到 GitHub Pages</h4><ol>
+<li>进入本地代码根目录，执行 <code>hugo</code> 生成 <code>public</code> 文件夹</li>
+<li>在 GitHub 上创建一个新仓库，起名为 <code>github_id.github.io</code> （例如 yuanyi-au.github.io ），将本地 <code>public</code> 文件夹与此仓库关联，push 到远程仓库中</li>
+<li>在 GitHub 仓库设置中找到 GitHub Pages，可以看到网站地址 <code>github_id.github.io</code>，就能进行访问了</li>
+</ol>
+<p>注意：<code>public</code> 文件夹的内容需要每次在项目根目录执行 <code>hugo</code> 命令后才会更新，然后 push 到远程仓库中由 GitHub Pages 部署</p>
+<h4 id="部署到-Netlify"><a href="#部署到-Netlify" class="headerlink" title="部署到 Netlify"></a>部署到 Netlify</h4><ol>
+<li><p>安装 <a target="_blank" rel="noopener" href="https://github.com/apps/netlify">Netlify </a>，授权 GitHub 账号</p>
+</li>
+<li><p>New site from Git</p>
+<p>选择平台 - 选择仓库 - 选择分支 - 基本设置（<a target="_blank" rel="noopener" href="https://docs.netlify.com/configure-builds/common-configurations/">Build command &amp; Publish directory</a>） - deploy site，部署成功就可以访问了</p>
+</li>
+</ol>
+<h1 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h1><p>如果需要对现有主题进行布局方面的修改，甚至自己创建一个新的主题，就不得不对 Hugo 的工作原理有一定了解。同一些其他的静态网站生成器（如 Jekyll ）一样，Hugo 将网站的内容和逻辑分离开来，方便更好地管理网站内容。在这里简单介绍一下 Hugo 中的内容、模板、页面三个部分以及它们之间的联系。</p>
+<h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><p>Hugo 会将 content 文件夹里的 Markdown 文档转换为页面，content 文件夹的目录结构对应着网站目录结构（会生成 section tree）。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">└── content</span><br><span class="line">    ├── _index.md          //  https://example.com/</span><br><span class="line">    ├── about.md           //  https://example.com/about/</span><br><span class="line">    ├── posts               </span><br><span class="line">    |   ├── _index.md      //  https://example.com/posts/         </span><br><span class="line">    |   ├── firstpost.md   //  https://example.com/posts/firstpost/</span><br></pre></td></tr></table></figure>
+
+<p>如果通过命令行 <code>hugo new xxx</code> 创建内容页面，Hugo 会按照 archetypes 中的设置自动创建 title、date 等 front matter。如果是在文件目录下直接创建的内容页面则需要自己在文档开头手动添加 front matter，用 “+++” 或者“—”分隔。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title = &quot;Hugo Website&quot;</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h2><p>Hugo 将模板存放在两个地方：themes 和 layouts 文件夹。layouts 中的模板优先级高于 themes，如果需要修改现有模板，在 layouts 文件夹中依照 themes 文件夹的目录层级结构编写新的模板即可覆盖。</p>
+<h3 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h3><p>首先推荐一篇特别简洁实用的文章： <a target="_blank" rel="noopener" href="https://www.regisphilibert.com/blog/2018/02/hugo-the-scope-the-context-and-the-dot/">Hugo, the scope, the context and the dot</a>，看完这篇后基本就可以从零开始写出一个简单的模板。</p>
+<p>Hugo 使用 Go 语言的 <a target="_blank" rel="noopener" href="https://pkg.go.dev/html/template">html&#x2F;template 库</a> 作为模版引擎， 模板的标签为 <code>&#123;&#123;&#125;&#125;</code> , <code>&#123;&#123;&#125;&#125;</code> 中包含的内容叫“动作”(action)，动作分为两种类型：数据求值与控制结构。</p>
+<p>模板是通过将它们应用于数据结构来执行的。模板中的注释引用数据结构的元素来控制执行并导出要显示的值。模板的执行会遍历结构并设置光标， 由句点 “.” 表示，并称为“点”，随着执行的进行到结构中当前位置的值。</p>
+<ul>
+<li><p>基础语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//点</span><br><span class="line">&#123;&#123;.&#125;&#125;</span><br><span class="line">代表传递给模板的数据，表示当前模板的上下文，可以是 Go 语言中的任何类型，比如字符串、数组、结构体等</span><br><span class="line"></span><br><span class="line">//注释</span><br><span class="line">&#123;&#123;/* comment */&#125;&#125;</span><br><span class="line"></span><br><span class="line">//空格</span><br><span class="line">&#123;&#123;- pipeline -&#125;&#125; // 清除 pipeline 前后的空格</span><br><span class="line">&#123;&#123;- pipeline &#125;&#125; // 清除 pipeline 前面的空格</span><br><span class="line"></span><br><span class="line">//变量赋值</span><br><span class="line">&#123;&#123;$变量名 := &quot;值&quot;&#125;&#125;</span><br><span class="line"></span><br><span class="line">//条件判断</span><br><span class="line">&#123;&#123;if pipeline&#125;&#125; T1 &#123;&#123;else&#125;&#125; T0 &#123;&#123;end&#125;&#125;</span><br><span class="line">如果不为空则输出T1，否则输出T0</span><br><span class="line">&#123;&#123;if pipeline&#125;&#125; T1 &#123;&#123;else if pipeline&#125;&#125; T0 &#123;&#123;end&#125;&#125;</span><br><span class="line"></span><br><span class="line">//循环语句</span><br><span class="line">&#123;&#123;range pipeline&#125;&#125; T1 &#123;&#123;end&#125;&#125;</span><br><span class="line">pipeline 的值必须是数组，切片，map，channel，设置 点. 为数组，切片遍历 map 的值，输出T1</span><br><span class="line"></span><br><span class="line">//with 重设点.的值</span><br><span class="line">&#123;&#123;with pipeline&#125;&#125; T1 &#123;&#123;else&#125;&#125; T0 &#123;&#123;end&#125;&#125;</span><br><span class="line">如果 pipeline 的值为空， 点. 的值不受影响,输出T1，否则 点. 的值设置成 pipeline 的值，输出T0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义子模板：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//define</span><br><span class="line">&#123;&#123;define &quot;name&quot;&#125;&#125; T1 &#123;&#123;end&#125;&#125;</span><br><span class="line">定义一个特定名称的模板</span><br><span class="line"></span><br><span class="line">//template</span><br><span class="line">&#123;&#123;template &quot;name&quot;&#125;&#125;</span><br><span class="line">引入指定名称的模板，不传入任何数据.</span><br><span class="line"></span><br><span class="line">&#123;&#123;template &quot;name&quot; pipeline&#125;&#125;</span><br><span class="line">引入指定名称的模板，设置模板上下文 点. 的值为 pipeline 的值</span><br><span class="line"></span><br><span class="line">//block</span><br><span class="line">&#123;&#123;block &quot;name&quot; pipeline&#125;&#125; T1 &#123;&#123;end&#125;&#125;</span><br><span class="line">定义特定名称的模板，并在当前位置引入该名称的模板，模板的上下文 点. 的值为 pipline 的值，如果该名称的模板未实现(不存在)，则输出T1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="模板类型"><a href="#模板类型" class="headerlink" title="模板类型"></a>模板类型</h3><h4 id="基本模板类型"><a href="#基本模板类型" class="headerlink" title="基本模板类型"></a>基本模板类型</h4><ul>
+<li>single template：用于渲染单个页面（Leaf Bundle）的内容</li>
+<li>list template：用于渲染具有子页面的页面（Branch Bundle）的内容</li>
+<li>partial template：能够被其他模版引用，可以理解为模版级别的组件，例如 header、footer 等</li>
+</ul>
+<h4 id="Partial-与-Shortcode-的区别"><a href="#Partial-与-Shortcode-的区别" class="headerlink" title="Partial 与 Shortcode 的区别"></a>Partial 与 Shortcode 的区别</h4><p>一般来说，需要经常复用的局部组件使用 Partial，因为 Partial 可以被任何模板引用，而 Shortcode 只能被 content 引用。</p>
+<p>引用方式：</p>
+<ul>
+<li>Partial： <code>&#123;&#123; partial "<PATH>/<PARTIAL>.html" . &#125;&#125;</code></li>
+<li>Shortcode： <code>&#123;&#123;% shortcodename parameters %&#125;&#125;</code></li>
+</ul>
+<p>以及两者的参数传入也略有不同，可以参见 <a target="_blank" rel="noopener" href="https://gohugo.io/templates/partials/#variable-scoping">官方文档</a> 中的相关内容。</p>
+<h2 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h2><p>内容 + 模板 &#x3D; 页面</p>
+<h3 id="页面捆绑（Page-Bundles）"><a href="#页面捆绑（Page-Bundles）" class="headerlink" title="页面捆绑（Page Bundles）"></a>页面捆绑（Page Bundles）</h3><ul>
+<li>Leaf Bundle：无子页面</li>
+<li>Branch Bundle：有子页面</li>
+</ul>
+<h3 id="页面和模板的对应关系"><a href="#页面和模板的对应关系" class="headerlink" title="页面和模板的对应关系"></a>页面和模板的对应关系</h3><p>页面和模板的对应关系是根据页面的一系列属性决定的，包括: Kind、Output Format、Language、Layout、Type、Section，其中kind、layout、type、section 用的比较多。</p>
+<ul>
+<li>kind：用于确定页面的类型，单页面使用 single.html 为默认模板页，列表页使用 list.html 为默认模板页，值不能被修改</li>
+<li>section：用于确定 section tree 下面的文章的模板，section tree 的结构是由 content 目录结构生成的，不能被修改，content 目录下的一级目录自动成为 root section，二级及以下的目录需要在目录下添加 _index.md 文件才能成为 section tree 的一部分，如果页面不在 section tree 下 section 的值为空</li>
+<li>type：可以在 front matter 中设置，用户指定模板的类型. 默认情况下 type 的值等于 section 或 page（section为空的时候）的值</li>
+<li>layout：可以在 front matter 中设置，指定具体的模板名称</li>
+</ul>
+<p>Hugo 按照从上到下的顺序依次查找模板并应用（特定页面模板 - 某一类页面的模板 - 全站模板）</p>
+<h1 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h1><h2 id="Markdown-代码块中的-Shortcodes-被解析"><a href="#Markdown-代码块中的-Shortcodes-被解析" class="headerlink" title="Markdown 代码块中的 Shortcodes 被解析"></a>Markdown 代码块中的 Shortcodes 被解析</h2><p>这个问题很有趣，是在写这篇博客过程中遇到的。</p>
+<ul>
+<li><p>问题描述：</p>
+<p>当我在写模板引用方式的时候，我是这样写的：</p>
+<p><img src="https://gitee.com/onxs/bog/raw/i/img/hugo-called.png" alt="img"></p>
+<p>执行 <code>hugo</code> 或者 <code>hugo server</code> 时报错：</p>
+<p><code>failed to extract shortcode: template for shortcode &quot;shortcodename&quot; not found</code></p>
+</li>
+<li><p>问题解决：</p>
+<p>在 Hugo 社区里得到的答复：</p>
+<p><img src="https://gitee.com/onxs/bog/raw/i/img/hugo-shortcodes.png" alt="img"></p>
+</li>
+</ul>
+<h2 id="Public-文件夹渲染出错"><a href="#Public-文件夹渲染出错" class="headerlink" title="Public 文件夹渲染出错"></a>Public 文件夹渲染出错</h2><ul>
+<li><p>问题描述：</p>
+<p><code>hugo server</code> 在本地运行时没有问题，但部署上线后打开网页发现渲染缺失 css 和 js 文件</p>
+</li>
+<li><p>问题解决：</p>
+<p>问题出在 Hugo 本身处理 URL 的方式上，可以参见 <a target="_blank" rel="noopener" href="https://github.com/matcornic/hugo-theme-learn/issues/125">issue</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">baseURL = &quot;//example.org&quot;</span><br><span class="line">relativeURLs = true</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法没有解决我的问题，后来试了两种方法可行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">`# baseURL = &quot;example.org&quot;`</span><br><span class="line"></span><br><span class="line">`baseURL = &quot;\&quot;`</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="找不到新增的页面"><a href="#找不到新增的页面" class="headerlink" title="找不到新增的页面"></a>找不到新增的页面</h2><ul>
+<li><p>问题描述：</p>
+<p>增加的内容在 index 页面有链接，但点开却找不到页面</p>
+</li>
+<li><p>问题解决：</p>
+<p>使用 <code>hugo -t theme_name</code> 代替 <code>hugo</code> 命令进行编译</p>
+</li>
+</ul>
+<h2 id="图片加载问题"><a href="#图片加载问题" class="headerlink" title="图片加载问题"></a>图片加载问题</h2><ul>
+<li><p>问题描述：</p>
+<p>Markdown 文档里的本地图片无法显示</p>
+</li>
+<li><p>解决方法：</p>
+<p>目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">├── content</span><br><span class="line">  └── posts </span><br><span class="line">    ├── cat.md</span><br><span class="line">    ├── dog.md</span><br><span class="line">    └── images</span><br><span class="line">      ├── cat.png</span><br><span class="line">      └── dog.png</span><br></pre></td></tr></table></figure>
+
+<p>图片链接： <code>![dog](../images/dog.png)</code></p>
+<p>我用这个方法能成功加载出图片，但好像有些人不行，可以看看 Hugo 社区里的讨论 <a target="_blank" rel="noopener" href="https://discourse.gohugo.io/t/replace-image-reference-link/35314">Replace Image Reference link</a></p>
+</li>
+</ul>
+<h2 id="最后修改时间"><a href="#最后修改时间" class="headerlink" title="最后修改时间"></a>最后修改时间</h2><p>可以通过两种方式记录 Last Modified 时间</p>
+<ul>
+<li><p>在文档开头加上时间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">date: 1990-01-01T00:00:00+00:00</span><br><span class="line">lastmod: 1995-04-04T00:00:00+00:00</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 config.toml 内设置使用 Git 记录</p>
+<p><code>enableGitInfo = true</code></p>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://gohugo.io/">HUGO</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/gohugoio/hugoDocs/files/1242701/static-site-generators.pdf">“Static Site Generators”, O’Reilly</a></p>
+<p><a target="_blank" rel="noopener" href="https://discourse.gohugo.io/t/how-does-hugo-work/11037/8">How does Hugo work?</a></p>
+<p><a target="_blank" rel="noopener" href="https://discourse.gohugo.io/t/could-shortcodes-and-partials-be-unified/1348">Could shortcodes and partials be unified?</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.regisphilibert.com/blog/2018/02/hugo-the-scope-the-context-and-the-dot/">Hugo, the scope, the context and the dot</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jakewiesler.com/blog/hugo-directory-structure">Hugo’s Directory Structure Explained</a></p>
+<p><a target="_blank" rel="noopener" href="https://hugo.aiaide.com/">Reset hugo中文帮助文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000016078760">Hugo-框架学习</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=qtIqKaDlqXo&list=PLLAZ4kZ9dFpOnyRlyS-liKL5ReHDcj4G3">Hugo - Static Site Generator | Tutorial</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=LIFvgrRxdt4&t=247s">Creating a Blog with Hugo and Github in 10 minutes</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=wcMqrb3v2SM&list=LLm-KB0VAVChbSZPeDA_WqSg">Creating your own Hugo Theme!</a></p>
+<p><a target="_blank" rel="noopener" href="https://retrolog.io/blog/creating-a-hugo-theme-from-scratch/">Creating a Hugo Theme From Scratch</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-lib.github.io/post/2024070000.htm">https://hexo-lib.github.io/post/2024070000.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/hugo/">🏷️ hugo</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/post/2024061725.htm">活着</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
