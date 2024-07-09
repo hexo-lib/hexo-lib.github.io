@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>性爱 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">性爱</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 25, 2024&nbsp;&nbsp;14:55:12</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Famous/">Famous</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2024/06/21/RqvHUg5ZYtyXCc2.jpg"></p>
+<h4 id="一-女人和自然"><a href="#一-女人和自然" class="headerlink" title="一 女人和自然"></a>一 女人和自然</h4><p>一个男人真正需要的只是自然和女人。其余的一切，诸如功名之类，都是奢侈品。</p>
+<p>当我独自面对自然或面对女人时，世界隐去了。当我和女人一起面对自然时，有时女人隐去，有时自然隐去，有时两者都似隐非隐，朦胧一片。</p>
+<span id="more"></span>
+
+<p>女人也是自然。</p>
+<p>文明已经把我们同自然隔离开来，幸亏我们还有女人，女人是我们与自然之间的最后纽带。</p>
+<p>男人抽象而明晰，女人具体而混沌。</p>
+<p>所谓形而上的冲动总是骚扰男人，他苦苦寻求着生命的家园。女人并不寻求，因为她从不离开家园，她就是生命、土地、花、草、河流、炊烟。</p>
+<p>男人是被逻辑的引线放逐的风筝，他在风中飘摇，向天空奋飞，直到精疲力竭，逻辑的引线断了，终于坠落在地面，回到女人的怀抱。</p>
+<p>男人一旦和女人一起生活便自以为已经了解女人了。他忘记了一个真理：我们最熟悉的事物，往往是我们最不了解的。</p>
+<p>也许，对待女人的最恰当态度是，承认我们不了解女人，永远保持第一回接触女人时的那种新鲜和神秘的感觉。难道两性差异不是大自然的一个永恒奇迹吗?对此不再感到惊喜，并不表明了解增深，而只表明感觉已被习惯磨钝。</p>
+<p>我确信，两性间的愉悦要保持在一个满意的程度，对彼此身心差异的那种惊喜之感是不可缺少的条件。</p>
+<h4 id="二-爱和喜欢"><a href="#二-爱和喜欢" class="headerlink" title="二 爱和喜欢"></a>二 爱和喜欢</h4><p>“我爱你。”</p>
+<p>“不，你只是喜欢我罢了。”她或他哀怨地说。</p>
+<p>“爱我吗?”</p>
+<p>“我喜欢你。”她或他略带歉疚地回答。</p>
+<p>在所有的近义词里，”爱”和”喜欢”似乎被掂量得最多，其间的差别被最郑重其事地看待。这时候男人和女人都成了最一丝不苟的语言学家。</p>
+<p>也许没有比”爱”更抽象、更笼统、更歧义、更不可通约的概念了。应该用奥卡姆的剃刀把这个词也剃掉。不许说”爱”，要说就说一些比较具体的词眼，例如”想念”、”需要”、”尊重”、”怜悯”等等。这样，事情会简明得多。</p>
+<p>怎么，你非说不可?好吧，既然剃不掉，它就属于你。你在爱。</p>
+<p>爱就是对被爱者怀着一些莫须有的哀怜，做一些不必要的事情：怕她(他)冻着饿着，担心她遇到意外，好好地突然想到她有朝一日死了怎么办，轻轻地抚摸她好像她是病人又是易损的瓷器。爱就是做被爱者的保护人的冲动，尽管在旁人看来这种保护毫无必要。</p>
+<h4 id="三-风骚和魅力"><a href="#三-风骚和魅力" class="headerlink" title="三 风骚和魅力"></a>三 风骚和魅力</h4><p>风骚，放荡，性感，这些近义词之间有着细微的差别。</p>
+<p>“性感”译自西文sexappeal，一位朋友说，应该译作汉语中的”骚”，其含义正相同。怕未必，只要想想有的女人虽骚却并不性感，就可明白。</p>
+<p>“性感”是对一个女人的性魅力的肯定评价，”风骚”则用来描述一个女人在性引诱方面的主动态度。风骚也不无魅力。喜同男性交往的女子，或是风骚的，或是智慧的。你知道什么是尤物吗?就是那种既风骚又智慧的女子。</p>
+<p>放荡和贞洁各有各的魅力，但更有魅力的是二者的混合：荡妇的贞洁，或贞女的放荡。</p>
+<p>调情之妙，在于情似有似无，若真若假，在有无真假之间。太有太真，认真地爱了起来，或全无全假，一点儿不动情，都不会有调情的兴致。调情是双方认可的意淫，以戏谑的方式表白了也宣泄了对于对方的爱慕或情欲。</p>
+<p>昆德拉的定义是颇为准确的：调情是并不兑现的性交许诺。</p>
+<p>一个真正有魅力的女人，她的魅力不但能征服男人，而且也能征服女人。因为她身上既有性的魅力，又有人的魅力。</p>
+<p>好的女人是性的魅力与人的魅力的统一。好的爱情是性的吸引与人的吸引的统一。好的婚姻是性的和谐与人的和谐的统一。</p>
+<p>性的诱惑足以使人颠倒一时，人的魅力方能使人长久倾心。</p>
+<p>大艺术家兼有包容性和驾驭力，他既能包容广阔的题材和多样的风格，又能驾驭自己的巨大才能。</p>
+<p>好女人也如此。她一方面能包容人生丰富的际遇和体验，其中包括男人们的爱和友谊，另一方面又能驾驭自己的感情，不流于轻浮，不会在情欲的汪洋上覆舟。</p>
+<h4 id="四-嫉妒和宽容"><a href="#四-嫉妒和宽容" class="headerlink" title="四 嫉妒和宽容"></a>四 嫉妒和宽容</h4><p>性爱的排他性，所欲排除的只是别的同性对手，而不是别的异性对象。它的根据不在性本能中，而在嫉妒本能中。事情够清楚的：自己的所爱再有魅力，也不会把其他所有异性的魅力都排除掉。在不同异性对象身上，性的魅力并不互相排斥。所以，专一的性爱仅是各方为了照顾自己的嫉妒心理而自觉地或被迫地向对方的嫉妒心理作出的让步，是一种基于嫉妒本能的理智选择。</p>
+<p>可是，什么是嫉妒呢?嫉妒无非是虚荣心的受伤。</p>
+<p>虚荣心的伤害是最大的，也是最小的，全看你在乎的程度。</p>
+<p>在性爱中，嫉妒和宽容各有其存在的理由。如果你真心爱一个异性，当他(她)与别人发生性爱关系时，你不可能不嫉妒。如果你是一个通晓人类天性的智者，你又不会不对他(她)宽容。这是带着嫉妒的宽容，和带着宽容的嫉妒。二者互相约束，使得你的嫉妒成为一种有尊严的嫉妒，你的宽容也成为一种有尊严的宽容。相反，在此种情境中一味嫉妒，毫不宽容，或者一味宽容，毫不嫉妒，则都是失了尊严的表现。</p>
+<p>好的爱情有韧性，拉得开，但又扯不断。</p>
+<p>相爱者互不束缚对方，是他们对爱情有信心的表现。谁也不限制谁，到头来仍然是谁也离不开谁，这才是真爱。</p>
+<h4 id="五-弹性和灵性"><a href="#五-弹性和灵性" class="headerlink" title="五 弹性和灵性"></a>五 弹性和灵性</h4><p>我所欣赏的女人，有弹性，有灵性。</p>
+<p>弹性是性格的张力。有弹性的女人，性格柔韧，伸缩自如。她善于妥协，也善于在妥协中巧妙地坚持。她不固执己见，但在不固执中自有一种主见。</p>
+<p>都说男性的优点是力，女性的优点是美。其实，力也是好女人的优点。区别只在于，男性的力往往表现为刚强，女性的力往往表现为柔韧。弹性就是女性的力，是化作温柔的力量。</p>
+<p>弹性的反面是僵硬或软弱。和僵硬的女人相处，累。和软弱的女人相处，也累。相反，有弹性的女人既温柔，又洒脱，使人感到双倍的轻松。</p>
+<p>如果说爱是一门艺术，那么，弹性便是善于爱的女子固有的艺术气质。</p>
+<p>灵性是心灵的理解力。有灵性的女人天生慧质，善解人意，善悟事物的真谛。她极其单纯，在单纯中却有一种惊人的深刻。</p>
+<p>如果说男性的智慧偏于理性，那么，灵性就是女性的智慧，它是和肉体相融合的精神，未受污染的直觉，尚未蜕化为理性的感性，</p>
+<p>灵性的反面是浅薄或复杂。和浅薄的女人相处，乏味。和复杂的女人相处，也乏味。有灵性的女人则以她的那种单纯的深刻使我们感到双倍的韵味。</p>
+<p>所谓复杂的女人，既包括心灵复杂，工于利益的算计，也包括头脑复杂，热衷于抽象的推理。在我看来，两者都是缺乏灵性的表现。</p>
+<p>有灵性的女子最宜于做天才的朋友，她既能给天才以温馨的理解，又能纠正男性智慧的偏颇。在幸运天才的生涯中，往往有这类女子的影子。未受这类女子滋润的天才，则每每因孤独和偏执而趋于狂暴。</p>
+<p>其实，弹性和灵性是不可分的。灵性其内，弹性其外。心灵有理解力，接人待物才会宽容灵活。相反，僵硬固执之辈，天性必愚钝。</p>
+<p>灵性与弹性的结合，表明真正的女性智慧也具一种大器，而非琐屑的小聪明。智慧的女子一定有大家风度。</p>
+<p>弹性和灵性又是我所赞赏的两性关系的品格。</p>
+<p>好的两性关系有弹性，彼此既非僵硬地占有，也非软弱地依附。相爱的人给予对方的最好礼物是自由。两个自由人之间的爱，拥有必要的张力。这种爱牢固，但不板结;缠绵，但不粘滞。没有缝隙的爱太可怕了，爱情在其中失去了自由呼吸的空间，迟早要窒息，</p>
+<p>好的两性关系当然也有灵性，双方不但获得官能的满足，而且获得心灵的愉悦。现代生活的匆忙是性爱的大敌，它省略细节，缩减过程，把两性关系简化为短促的发泄。两性的肉体接触更随便了，彼此在精神上却更陌生了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-lib.github.io/post/2024051455.htm">https://hexo-lib.github.io/post/2024051455.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Famous/">🏷️ Famous</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2024062215.htm">好好说话，是一生的修养</a>
+            
+            
+            <a class="next" rel="next" href="/post/2024050813.htm">未来可期</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs/oexs-rep/tree/main/source/_posts" target="_blank">Chic</a> |   
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span class="site-uv">
+ UV
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>&
+
+
+<span class="site-pv">
+ PV
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+  
+</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

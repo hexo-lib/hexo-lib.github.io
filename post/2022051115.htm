@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>许三多精神 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">许三多精神</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 25, 2022&nbsp;&nbsp;11:15:12</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/idea/">idea</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>《士兵突击》描绘了中国现代军人的生活和精神风貌，通过主人公许三多的成长历程，展现了坚韧、不屈和对理想的追求。小说以军队改革与发展为背景，展现了许三多在军队中的挑战与成长，激励人们勇敢面对困境，实现自我超越。</p>
+</blockquote>
+<p>《士兵突击》是一部描绘中国现代军人生活和精神风貌的杰出小说，由兰晓龙执笔，不仅是一部文学作品，也通过同名电视剧的形式广为人知。它以独特的视角，展现了主人公许三多从一个农村青年成长为优秀军人的传奇历程，其中蕴含的坚韧、不屈和对理想的追求，深深触动着每一位读者的心。</p>
+<p><img src="https://s2.loli.net/2024/06/23/sPm2yRb9TOrQLNA.jpg"></p>
+<span id="more"></span>
+
+<h4 id="时代的呼唤与个体的响应"><a href="#时代的呼唤与个体的响应" class="headerlink" title="时代的呼唤与个体的响应"></a>时代的呼唤与个体的响应</h4><p>《士兵突击》的背景设定在改革开放后，中国军队现代化建设的关键时期。这个时期，国家对军队提出了更高的要求，不仅在装备上进行升级，更是在人才培养和精神建设上下足功夫。许三多的故事，就是在这样的大背景下展开的，他的成长史，也是军队改革与发展的一个缩影。</p>
+<p><img src="https://s2.loli.net/2024/06/23/lRBSvHd1wUtejx6.jpg"></p>
+<h4 id="征兵：命运的转折点"><a href="#征兵：命运的转折点" class="headerlink" title="征兵：命运的转折点"></a>征兵：命运的转折点</h4><p>故事从一片贫瘠的土地展开，许三多，一个出身于中国北方农村的普通青年，他的世界似乎一开始就注定了局限与平凡。父亲的轻视、乡邻的嘲笑，让许三多从小就背负着自卑的重担。然而，正是这样一位看似平庸的少年，却在一次偶然的征兵机会中，踏上了改变命运的征程。入伍前的许三多，面对即将到来的未知，内心交织着恐惧与希望，这一情节触动了无数同样出身平凡、心怀梦想的读者。</p>
+<p><img src="https://s2.loli.net/2024/06/23/lqUrIpvG52fBSjn.png"></p>
+<h4 id="入伍：初尝军旅的苦涩与甜蜜"><a href="#入伍：初尝军旅的苦涩与甜蜜" class="headerlink" title="入伍：初尝军旅的苦涩与甜蜜"></a>入伍：初尝军旅的苦涩与甜蜜</h4><p>许三多进入军营后，面临的首先是适应问题。他木讷、笨拙，不善言辞，这让他在新兵连中显得格格不入，遭受了不少嘲笑和误解。然而，正是在这些最初的挫折中，许三多的坚韧和不屈初露端倪。他用不懈的努力回应着周围人的质疑，逐渐赢得了一些尊重。这一段经历，让人感受到成长的不易，同时也激励着每一个处于困境中的人，勇敢面对挑战。</p>
+<p><img src="https://s2.loli.net/2024/06/23/xNCIFo7JYg1PXeb.png"></p>
+<h4 id="钢七连：铁血精神的熔炉"><a href="#钢七连：铁血精神的熔炉" class="headerlink" title="钢七连：铁血精神的熔炉"></a>钢七连：铁血精神的熔炉</h4><p>调入钢七连，对许三多来说，是真正的试炼场。钢七连以其严格的纪律、崇高的荣誉感和“不抛弃、不放弃”的连队精神，成为了许三多精神世界重塑的熔炉。在这里，他遇到了影响他一生的班长史今，史今的耐心指导和无私帮助，让许三多从一个“龟儿子”逐渐成长为一名合格的军人。腹部绕杠的壮举，不仅是身体上的突破，更是精神上的觉醒，象征着许三多内心深处的潜能被彻底激发。</p>
+<p><img src="https://s2.loli.net/2024/06/23/xEQM4uzX2Lmj3Kv.png"></p>
+<h4 id="草原：孤独与自我超越的舞台"><a href="#草原：孤独与自我超越的舞台" class="headerlink" title="草原：孤独与自我超越的舞台"></a>草原：孤独与自我超越的舞台</h4><p>被派往草原五班，看似是对许三多的一种“流放”，实则是他人生中另一重要转折。在那片远离繁华、孤独寂寞的草原上，许三多用行动诠释了何为“有意义的事”。他独自修路，不仅是对抗孤独和环境的胜利，更是对自我价值的肯定。这一情节，深刻体现了一个人即使在最不起眼的地方，也能发光发热，实现自我超越。</p>
+<p><img src="https://s2.loli.net/2024/06/23/I3NlM7Fombyfchs.png"></p>
+<h4 id="调回钢七连：荣耀归来与精神传承"><a href="#调回钢七连：荣耀归来与精神传承" class="headerlink" title="调回钢七连：荣耀归来与精神传承"></a>调回钢七连：荣耀归来与精神传承</h4><p>重返钢七连，许三多已非昨日阿蒙。他带回了在草原上的坚韧和独立，成为连队中不可或缺的一员。这一段，不仅是他个人能力的展示，更是钢七连精神在他身上传承的见证。许三多的成长，激励着周围的战友，也让读者看到，每个人都有潜力成为更好的自己。</p>
+<p><img src="https://s2.loli.net/2024/06/23/YT8uh3gczy24fwM.png"></p>
+<h4 id="成为优秀尖兵：挑战极限，成就辉煌"><a href="#成为优秀尖兵：挑战极限，成就辉煌" class="headerlink" title="成为优秀尖兵：挑战极限，成就辉煌"></a>成为优秀尖兵：挑战极限，成就辉煌</h4><p>在钢七连的历练下，许三多逐渐成长为一名优秀尖兵。他所展现出的不仅仅是军事技能上的精湛，更重要的是那份在困难面前永不言败的精神。他参与各种任务，屡建奇功，每一次的成功都是对他坚持和努力的最好回报。许三多的故事，让人相信，只要有恒心，就没有克服不了的困难。</p>
+<p><img src="https://s2.loli.net/2024/06/23/QPdKWBLDx3wVzYh.jpg"></p>
+<h4 id="钢七连解散：离别与重生"><a href="#钢七连解散：离别与重生" class="headerlink" title="钢七连解散：离别与重生"></a>钢七连解散：离别与重生</h4><p>钢七连的解散，是小说中最为沉重的一幕。这一情节，不仅让读者感受到军人对集体的深厚情感，也反映了军队改革中的阵痛。尽管解散令人伤感，但正如书中所展现的，钢七连的精神不会因此消失，它会像种子一样，散播到每一个曾是钢七连成员的心中，激励他们在新的岗位上继续发光发热。</p>
+<p><img src="https://s2.loli.net/2024/06/23/qOImgjsWTkzbJA7.png"></p>
+<h4 id="参加老A选拔：终极挑战与自我证明"><a href="#参加老A选拔：终极挑战与自我证明" class="headerlink" title="参加老A选拔：终极挑战与自我证明"></a>参加老A选拔：终极挑战与自我证明</h4><p>参加老A选拔，是许三多军旅生涯的又一高峰。这次选拔，是对体能、智力和心理素质的极限考验。许三多在这一过程中，不仅要面对生理的极限，还要克服内心的恐惧和不确定。他与成才的重逢，以及两人在选拔中的不同表现，深刻探讨了友情、忠诚与个人价值的主题。许三多最终脱颖而出，不仅是对他个人能力的认可，也是对钢七连精神的最高致敬。</p>
+<p><img src="https://s2.loli.net/2024/06/23/H9SC6xepilB4rED.png"></p>
+<h4 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h4><p>《士兵突击》不仅是一部军事小说，更是一部关于成长、自我发现和超越的小说。它通过许三多的军旅生涯，向我们展示了即使是最不起眼的石头，经过风雨的洗礼，也能绽放出璀璨的光芒。许三多的故事，是每个人的镜子，让我们看到，只要坚持不懈，勇于挑战自我，每个人都能成为自己生命中的英雄。这部作品，用它朴实无华的语言，讲述了最真挚的情感，激发了人们对理想和信念的共鸣，是一曲献给所有追梦人的赞歌。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://hexo-lib.github.io/post/2022051115.htm">https://hexo-lib.github.io/post/2022051115.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/idea/">🏷️ idea</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2022082111.htm">勇攀珠峰的背后</a>
+            
+            
+            <a class="next" rel="next" href="/post/2022051823.htm">我的家乡</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/onxs/oexs-rep/tree/main/source/_posts" target="_blank">Chic</a> |   
+ <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<span class="site-uv">
+ UV
+ <i class="busuanzi-value" id="busuanzi_value_site_uv"></i>
+</span>&
+
+
+<span class="site-pv">
+ PV
+ <i class="busuanzi-value" id="busuanzi_value_site_pv"></i>
+</span>
+
+  
+</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
