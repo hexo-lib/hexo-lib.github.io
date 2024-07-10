@@ -1410,10 +1410,10 @@ header label {
   clear: both;
 }
 .card {
-  width: 35%;
+  width: 45%;
   font-size: 1rem;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.5em;
   transition-duration: 0.15s;
   margin-bottom: 1rem;
   display: flex;
