@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>XSS跨站脚本攻击漏洞修复 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">XSS跨站脚本攻击漏洞修复</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 30, 2017&nbsp;&nbsp;16:34:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/bug/">bug</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/XDgYZ2RMLxIl7Vd.jpg"></p>
+<p>​	跨站脚本攻击(Cross Site Scripting)，为了不和层叠样式表(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写为XSS。恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。<br>​	XSS攻击分成两类，一类是来自内部的攻击，主要指的是利用程序自身的漏洞，构造跨站语句，如:dvbbs的showerror.asp存在的跨站漏洞。另一类则是来自外部的攻击，主要指的自己构造XSS跨站漏洞网页或者寻找非目标机以外的有跨站漏洞的网页。如当我们要渗透一个站点，我们自己构造一个有跨站漏洞的网页，然后构造跨站语句，通过结合其它技术，如社会工程学等，欺骗目标服务器的管理员打开。<br>XSS分为：存储型和反射型<br>​	存储型XSS：存储型XSS，持久化，代码是存储在服务器中的，如在个人信息或发表文章等地方，加入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，用户访问该页面的时候触发代码执行。这种XSS比较危险，容易造成蠕虫，盗窃cookie（虽然还有种DOM型XSS，但是也还是包括在存储型XSS内）。<br>​	反射型XSS：非持久化，需要欺骗用户自己去点击链接才能触发XSS代码（服务器中没有这样的页面和内容），一般容易出现在搜索页面。</p>
+<span id="more"></span>
+
+<h5 id="web-xml里面加入XssFilter"><a href="#web-xml里面加入XssFilter" class="headerlink" title="web.xml里面加入XssFilter"></a>web.xml里面加入XssFilter</h5><filter>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">	&lt;filter-name&gt;XssFilter&lt;/filter-name&gt;</span><br><span class="line">	&lt;filter-class&gt;com.jeecms.common.web.XssFilter&lt;/filter-class&gt;</span><br><span class="line">	&lt;init-param&gt;</span><br><span class="line">		&lt;param-name&gt;SplitChar&lt;/param-name&gt;</span><br><span class="line">		&lt;param-value&gt;@&lt;/param-value&gt;</span><br><span class="line">	&lt;/init-param&gt;</span><br><span class="line">	&lt;init-param&gt;</span><br><span class="line">		&lt;param-name&gt;FilterChar&lt;/param-name&gt;</span><br><span class="line">		&lt;param-value&gt;<span class="string">&#x27;@&quot;@\@#@:@%@&gt;&lt;/param-value&gt;</span></span><br><span class="line"><span class="string">	&lt;/init-param&gt;</span></span><br><span class="line"><span class="string">	&lt;init-param&gt;</span></span><br><span class="line"><span class="string">		&lt;param-name&gt;ReplaceChar&lt;/param-name&gt;</span></span><br><span class="line"><span class="string">		&lt;param-value&gt;\&#x27;@\&quot;@＼@＃@：@％@＞&lt;/param-value&gt;</span></span><br><span class="line"><span class="string">	&lt;/init-param&gt;</span></span><br><span class="line"><span class="string">&lt;/filter&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;processTime&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;processTime&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jspx&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jspx&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jspx&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;processTime&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jhtml&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jhtml&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jhtml&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;processTime&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.htm&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;processTime&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;osivFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;/&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;XssFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.jspx&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;XssFilter&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;/jeeadmin/jeecms/login.do&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br><span class="line"><span class="string">&lt;filter-mapping&gt;</span></span><br><span class="line"><span class="string">	&lt;filter-name&gt;encoding&lt;/filter-name&gt;</span></span><br><span class="line"><span class="string">	&lt;url-pattern&gt;*.*&lt;/url-pattern&gt;</span></span><br><span class="line"><span class="string">&lt;/filter-mapping&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="XssFilter类源码"><a href="#XssFilter类源码" class="headerlink" title="XssFilter类源码"></a>XssFilter类源码</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XssFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> String filterChar;</span><br><span class="line">	<span class="keyword">private</span> String replaceChar;</span><br><span class="line">	<span class="keyword">private</span> String splitChar;</span><br><span class="line">	<span class="type">FilterConfig</span> <span class="variable">filterConfig</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">		<span class="built_in">this</span>.filterChar=filterConfig.getInitParameter(<span class="string">&quot;FilterChar&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.replaceChar=filterConfig.getInitParameter(<span class="string">&quot;ReplaceChar&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.splitChar=filterConfig.getInitParameter(<span class="string">&quot;SplitChar&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.filterConfig = filterConfig;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.filterConfig = <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span><br><span class="line"><span class="params">	FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">		chain.doFilter(<span class="keyword">new</span> <span class="title class_">XssHttpServletRequestWrapper</span>((HttpServletRequest) request,filterChar,replaceChar,splitChar), response);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="XssFilter实现方法"><a href="#XssFilter实现方法" class="headerlink" title="XssFilter实现方法"></a>XssFilter实现方法</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.jeecms.common.web.Constants.UTF8;</span><br><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"><span class="keyword">import</span> java.net.URLDecoder;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequestWrapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang.StringUtils;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Tom</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XssHttpServletRequestWrapper</span> <span class="keyword">extends</span> <span class="title class_">HttpServletRequestWrapper</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> String[]filterChars;</span><br><span class="line">	<span class="keyword">private</span> String[]replaceChars;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">XssHttpServletRequestWrapper</span><span class="params">(HttpServletRequest request,String filterChar,String replaceChar,String splitChar)</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>(request);</span><br><span class="line">		<span class="keyword">if</span>(filterChar!=<span class="literal">null</span>&amp;&amp;filterChar.length()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">			filterChars=filterChar.split(splitChar);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(replaceChar!=<span class="literal">null</span>&amp;&amp;replaceChar.length()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">			replaceChars=replaceChar.split(splitChar);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getQueryString</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="built_in">super</span>.getQueryString();</span><br><span class="line">		<span class="keyword">if</span> (value != <span class="literal">null</span>) &#123;</span><br><span class="line">			value = xssEncode(value);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 覆盖getParameter方法，将参数名和参数值都做xss过滤。&lt;br/&gt;</span></span><br><span class="line"><span class="comment">	 * 如果需要获得原始的值，则通过super.getParameterValues(name)来获取&lt;br/&gt;</span></span><br><span class="line"><span class="comment">	 * getParameterNames,getParameterValues和getParameterMap也可能需要覆盖</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getParameter</span><span class="params">(String name)</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="built_in">super</span>.getParameter(xssEncode(name));</span><br><span class="line">		<span class="keyword">if</span> (value != <span class="literal">null</span>) &#123;</span><br><span class="line">			value = xssEncode(value);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> String[] getParameterValues(String name) &#123;</span><br><span class="line">		String[]parameters=<span class="built_in">super</span>.getParameterValues(name);</span><br><span class="line">		<span class="keyword">if</span> (parameters==<span class="literal">null</span>||parameters.length == <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; parameters.length; i++) &#123;</span><br><span class="line">			parameters[i] = xssEncode(parameters[i]);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> parameters;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 覆盖getHeader方法，将参数名和参数值都做xss过滤。&lt;br/&gt;</span></span><br><span class="line"><span class="comment">	 * 如果需要获得原始的值，则通过super.getHeaders(name)来获取&lt;br/&gt; getHeaderNames 也可能需要覆盖</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getHeader</span><span class="params">(String name)</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="built_in">super</span>.getHeader(xssEncode(name));</span><br><span class="line">		<span class="keyword">if</span> (value != <span class="literal">null</span>) &#123;</span><br><span class="line">			value = xssEncode(value);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 将容易引起xss漏洞的半角字符直接替换成全角字符</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> s</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span>  String <span class="title function_">xssEncode</span><span class="params">(String s)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (s == <span class="literal">null</span> || s.equals(<span class="string">&quot;&quot;</span>)) &#123;</span><br><span class="line">			<span class="keyword">return</span> s;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//%作为特殊解码字符，get方式提交的汉字+%会解码不了</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			s = URLDecoder.decode(s, UTF8);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; filterChars.length; i++) &#123;</span><br><span class="line">			<span class="keyword">if</span>(s.contains(filterChars[i]))&#123;</span><br><span class="line">				s=s.replace(filterChars[i], replaceChars[i]);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> s;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="相关资料：XSS漏洞解析：https-www-secpulse-com-archives-48976-html"><a href="#相关资料：XSS漏洞解析：https-www-secpulse-com-archives-48976-html" class="headerlink" title="相关资料：XSS漏洞解析：https://www.secpulse.com/archives/48976.html"></a>相关资料：XSS漏洞解析：<a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/48976.html">https://www.secpulse.com/archives/48976.html</a></h5>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017111634.htm">https://m.is-local.org/post/2017111634.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/xss/">🏷️ xss</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017111714.htm">hexo高级教程SEO优化</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017111430.htm">Lucene的Field域和索引维护</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

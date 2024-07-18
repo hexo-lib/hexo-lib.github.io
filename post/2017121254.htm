@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>三目运算详解 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">三目运算详解</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 5, 2017&nbsp;&nbsp;12:54:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/backend/">backend</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/XDgYZ2RMLxIl7Vd.jpg"></p>
+<p>三目运算符，又称条件运算符，指的是计算机语言的重要组成部分。它是唯一有3个操作数的运算符，所以有时又称为三元运算符。一般来说，三目运算符的结合性是右结合的。</p>
+<p>对于条件表达式b ? x : y，先计算条件b，然后进行判断。如果b的值为true，计算x的值，运算结果为x的值；否则，计算y的值，运算结果为y的值。一个条件表达式绝不会既计算x，又计算y。条件运算符是右结合的，也就是说，从右向左分组计算。例如，a ? b : c ? d : e将按a ? b : (c ? d : e)执行。[1]<a href=""> </a></p>
+<p>&lt;表达式1&gt; ? &lt;表达式2&gt; : &lt;表达式3&gt;; “?”运算符的含义是：先求表达式1的值，如果为真，则执行表达式2，并返回表达式2的结果；如果表达式1的值为假，则执行表达式3，并返回表达式3的结果。</p>
+<p>可以理解为<strong>条件 ? 结果1 : 结果2</strong> 里面的？号是格式要求。也可以理解为是不是条件成立，条件成立为结果1否则为结果2。</p>
+<p>注意：在C语言中，结果1 和 结果2的类型必须一致。</p>
+<p>a ? b : c简单理解方式为:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(a) &#123;</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> c; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<p>对于有些选择分支结构,可以使用简单的条件运算符来代替. 如:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(a&lt;b)</span><br><span class="line">    min=a;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    min=b;</span><br></pre></td></tr></table></figure>
+
+
+<p>可以用下面的条件运算符来处理</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">min=(a&lt;b)?a:b;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其中”(a&lt;b)?a:b”是一个”条件表达式”,它是这样执行的:　　如果a&lt;b为真,则表达式取a值,否则取b值.</strong></p>
+<p>条件运算符由两个符号组成”?”和”:”,要求有3个操作对象,所以也叫它三目运算符,它是C语言中唯一的三目运算符.</p>
+<p>　　它的一般形式为:</p>
+<p><strong>表达式1?表达式2:表达式3;</strong></p>
+<p><strong>以下是关于条件运算符的几点说明:</strong></p>
+<ul>
+<li>通常情况下,表达式1是关系表达式或逻辑表达式,用于描述条件表达式中的条件,表达式2和表达式3可以是常量,变量或表达式.例如:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(x==y)?<span class="string">&#x27;Y&#x27;</span>:<span class="string">&#x27;N&#x27;</span></span><br><span class="line">(d=b*b-<span class="number">4</span>*a*c)&gt;=<span class="number">0</span>?sqrt(d):sqrt(-d)</span><br><span class="line">ch=(ch&gt;=<span class="string">&#x27;A&#x27;</span>&amp;&amp;ch&lt;=<span class="string">&#x27;Z&#x27;</span>)?(ch+<span class="number">32</span>):ch</span><br></pre></td></tr></table></figure>
+<p>以上均为合法的条件表达式.</p>
+<ul>
+<li>条件表达式的执行顺序为:先求解表达式1,若值为非0,表示条件为真,则求解表达式2,此时表达式2的值就作为整个条件表达式的值;</li>
+</ul>
+<p>若表达式1的值为0,表示条件为假,则求解表达式3,表达式3的值就是整个条件表达式的值.例如:</p>
+<p>(a&gt;&#x3D;0)?a:-a 　　执行结果是a的绝对值.</p>
+<ul>
+<li>在程序中,通过把条件表达式的值直接赋予某个变量.例如:</li>
+</ul>
+<p>min&#x3D;(a&lt;b)?a:b　　执行结果就是将条件表达式的值赋予变量min,即将a和b二者中较小的数赋给min.</p>
+<ul>
+<li>条件表达式的优先级别仅高于赋值运算符,而低于前面遇到过的所有运算符.</li>
+</ul>
+<p>因此,min&#x3D;(a&lt;b)?a:b括号可以不要,可直接写成,min&#x3D;a&lt;b?a:b如果有x&lt;y?x+1:y-1等效于x&lt;y(x+1):(y-1)而不等效于(x&lt;y?x+1:y)-1</p>
+<ul>
+<li>条件运算符的结合方向为”自右至左”.</li>
+<li>条件表达式允许嵌套,即允许条件表达式中的表达式2和表达式3又是一个条件表达式.例如:</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">x</span>&gt;<span class="number">0</span>?<span class="number">1</span>:x&lt;<span class="number">0</span>?-<span class="number">1</span>:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>上述条件表达式中,表达式3部分又是一个条件表达式.根据条件表达式的结合性,上述条件表达式等价于:</p>
+<blockquote>
+<p> 　 x&gt;0?1:(x&lt;0?-1:0)</p>
+</blockquote>
+<p>其作用是判断x的符号情况.当x为正数时,该条件表达式的值为1;当x为负数时,该条件表达式的值为-1;当x为0时,该条件表达式的值为0.</p>
+<ul>
+<li>条件表达式不能取代一般的if语句,仅当if语句中内嵌的语句为赋值语句(且两个分支都给同一变量赋值)时才能代替if语句.例如:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(a%<span class="number">2</span>==<span class="number">0</span>)</span><br><span class="line">　　　<span class="built_in">printf</span>(<span class="string">&quot;even/n&quot;</span>);</span><br><span class="line">　　　<span class="keyword">else</span></span><br><span class="line">    　　　<span class="built_in">printf</span>(<span class="string">&quot;odd/n&quot;</span></span><br></pre></td></tr></table></figure>
+<p>);</p>
+<p>不能写成:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(a%<span class="number">2</span>==<span class="number">0</span>)?<span class="built_in">printf</span>(<span class="string">&quot;even/n&quot;</span>):<span class="built_in">printf</span>(<span class="string">&quot;odd/n&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>　　　　　　但可以用下面语句代替:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s/n&quot;</span>,(a%<span class="number">2</span>==<span class="number">0</span>?<span class="string">&quot;even&quot;</span>:<span class="string">&quot;o</span></span><br></pre></td></tr></table></figure>
+<p>dd”);</p>
+<p>　该语句的作用是:若 a 为偶数,输出 even;若 a 为奇数,输出odd.</p>
+<ul>
+<li>表达式1,表达式2,表达式3的类型可以不同.此时条件表达式的值的类型为它们中较高的类型.例如:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main() &#123;</span><br><span class="line"></span><br><span class="line">　　　　　　　　　　<span class="type">char</span> c1, ch;</span><br><span class="line"></span><br><span class="line">　　　　　　　　　　ch = getchar();</span><br><span class="line"></span><br><span class="line">　　　　　　　　　　c1 = ch &lt;= <span class="string">&#x27;Z&#x27;</span> &amp;&amp; ch &gt;= <span class="string">&#x27;A&#x27;</span> ? <span class="string">&#x27; @ &#x27;</span> : ch ;</span><br><span class="line"></span><br><span class="line">　　　　　　　　　　<span class="built_in">putchar</span>(c1);</span><br><span class="line"></span><br><span class="line">　　　　　　　　&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>该程序的作用是从键盘输入任意一个字符,判别它们是否大写字母,如果是,输出一个@;否则按原样输出 dot</p>
+<p>上例中,程序第6行是关键语句,该语句实现输入字符的判断,选择与更换工作.</p>
+<p>其执行过程为:先由此语句中的赋值号右侧的条件运算符对输入的字符进行判断和选择,若ch&gt;&#x3D;’A’&amp;&amp;ch&lt;&#x3D;’Z’成立,说明ch是大写英文字母,此时选@;否则仍选原字符ch,然后把选择的结果赋值给原变量ch 。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017121254.htm">https://m.is-local.org/post/2017121254.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E4%B8%89%E7%9B%AE%E8%BF%90%E7%AE%97/">🏷️ 三目运算</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017122134.htm">CMS源码解读</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017122334.htm">Spring Batch 4.0.0批处理框架</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

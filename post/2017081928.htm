@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>OAuth2认证的基本流程 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">OAuth2认证的基本流程</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 30, 2017&nbsp;&nbsp;19:28:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/OAuth/">OAuth</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0028.jpg" alt="image"></p>
+<p>在一个单位中，可能是存在多个不同的应用，比如学校会有财务的系统会有学生工作的系统，还有图书馆的系统等等，如果每个系统都用独立的账号认证体系，会给用户带来很大困扰，也给管理带来很大不便。所以需要设计一种统一登录的解决方案。比如我登陆了百度账号，进贴吧时发现已经登录了，进糯米发现也自动登录了。常见的有两种情况，一种是SSO（单点登录）效果是一次输入密码多个网站可以识别在线状态；还有一种是多平台登录，效果是可以用一个账号（比如QQ账号）登录多个不同的网站。</p>
+<span id="more"></span>
+<h3 id="SSO与多平台登录"><a href="#SSO与多平台登录" class="headerlink" title="SSO与多平台登录"></a>SSO与多平台登录</h3><p>SSO一般用于同一单位的多个站点的登陆状态保持，技术上一般参考CAS协议；多平台登录一般是Oauth体系的协议，有多种认证模式但是不具备会话管理和状态保持。<br>不过从本质上讲，我觉得两者都是通过可信的第三方进行身份验证，如果说同一单位的多个子系统共同只围绕一个第三方账户（可以称为认证中心）进行多平台登录验证，那么在第三方平台登录后再访问其他网站，效果和统一登录是差不多的。此外，Oauth2还有个好处就是可以实现跨平台的登录管理，因为他的认证过程不依赖于session和cookie，比如对于移动端设备，以及在前后端分离后这种登录认证方式也可以起到很大作用。<br>这篇文章里我就着结合之前项目中整合过的OAUTH2来讲一讲这种登录认证的过程。项目是基于Shiro+ALTU实现，参考方案<a target="_blank" rel="noopener" href="http://git.oschina.net/mkk/oauth2-shiro">mkk&#x2F;oauth2-shiro - 码云 - 开源中国</a> 。</p>
+<h3 id="oauth2的基本概念"><a href="#oauth2的基本概念" class="headerlink" title="oauth2的基本概念"></a>oauth2的基本概念</h3><p>在Oauth中至少是有用户，应用服务器，认证服务器这几个角色在交互。OAuth的作用就是让”客户端”安全可控地获取”用户”的授权，与”应用服务器”进行互动。</p>
+<h4 id="OAuth2的基本流程"><a href="#OAuth2的基本流程" class="headerlink" title="OAuth2的基本流程"></a>OAuth2的基本流程</h4><p>用户通过浏览器访问一个应用，比如我要上慕课网学习。</p>
+<ol>
+<li>网站要求我登录，我选择使用QQ登录，这里的QQ登录就是那个认证服务器。</li>
+<li>这个时候慕课提供的QQ登录链接会把我带到QQ登录页面</li>
+<li>在QQ的登录页面完成登录后，选择授权，也就是允许慕课网获取我的资料。</li>
+<li>这个时候我们看到浏览器经过几次跳转后返回慕课网，这个时候我们已经完成了登录。</li>
+</ol>
+<p>重点在于<strong>几次跳转的过程</strong>中，慕课网和QQ登录的服务之间还有过几次交互。</p>
+<ol>
+<li>我们选择了授权的时候QQ登录服务器会根据慕课跳转到QQ时候给出的重定向链接返回给慕课网一个code，这个code代表QQ的登录服务器认可慕课网这个应用服务器的这个请求是合法的予以放行.</li>
+<li>慕课这个时候就会用这个code再次向QQ登录服务发起请求服务令牌（token）。</li>
+<li>拿到这个令牌之后，接下来慕课需要用户的一些基本信息时就可以通过在向QQ服务提交的请求头里带上这个令牌，令牌验证通过就可以拿到用户资源。</li>
+</ol>
+<p>这一部分的操作是<strong>应用服务器和验证服务器之间</strong>的交互，这个过程对用户是透明的。这个过程中慕课网是不需要知道用户的账号密码也可以完成对用户身份的认证，这个token就可以用来标识用户资源。<br>官方的运行流程图是这样的:<br><img src="http://ovi3ob9p4.bkt.clouddn.com/oa.jpg" alt="基于OAUTH2的统一认证的实例解析_"></p>
+<h4 id="OAuth的几种认证模式"><a href="#OAuth的几种认证模式" class="headerlink" title="OAuth的几种认证模式"></a>OAuth的几种认证模式</h4><p>上述讲的是OAuth2中支持的授权码（CODE）方式的认证流程，也是其支持的四种认证方式里最复杂的，其他的三种种包括：</p>
+<ol>
+<li>简化模式（implicit），(在redirect_uri 的Hash传递token; Auth客户端运行在浏览器中,如JS,Flash)</li>
+<li>密码模式（resource owner password credentials），将用户名,密码传过去,直接获取token；</li>
+<li>客户端模式（client credentials），无用户,用户向客户端注册,然后客户端以自己的名义向’服务端’获取资源；<br>详细的OAuth2资料参考<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0|阮一峰的网络日志</a><br>分别适用不同场景，复杂度也比授权码模式要低，所以这里就只说说授权码模式的具体过程。</li>
+</ol>
+<h3 id="CODE方式认证实例"><a href="#CODE方式认证实例" class="headerlink" title="CODE方式认证实例"></a>CODE方式认证实例</h3><p>假设现在有一个应用服务器跑在我本机8000端口，认证服务器在8090端口。在需要用户登录时候把用户带到以下的一个URL.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8090/oauth/authorize?response_type=code&amp;scope=<span class="built_in">read</span> write&amp;client_id=<span class="built_in">test</span>&amp;redirect_uri=http://localhost:8000/login&amp;state=09876999</span><br></pre></td></tr></table></figure>
+
+<p>我们注意到几个重要的参数：<br><img src="http://ovi3ob9p4.bkt.clouddn.com/2.jpg" alt="基于OAUTH2的统一认证的实例解析_"></p>
+<ul>
+<li>response_type：表示授权类型，就是上面讲的那四种类型，这里用的是code方式。</li>
+<li>client_id：表示客户端的ID，代表哪个应用请求验证</li>
+<li>redirect_uri：表示重定向URI，验证以后的回调地址，一般用来接收返回的code，以及做下一步处理。</li>
+<li>scope：表示申请的权限范围，</li>
+<li>state：表示客户端的当前状态，可以指定任意值，认证服务器会原封不动地返回这个值。作为安全校验。</li>
+</ul>
+<p>下面是验证服务器接受这个请求的控制器关键代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;authorize&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">authorize</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">         <span class="type">OAuthAuthxRequest</span> <span class="variable">oauthRequest</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OAuthAuthxRequest</span>(request);</span><br><span class="line">         <span class="keyword">if</span> (oauthRequest.isCode()) &#123;</span><br><span class="line">            <span class="type">CodeAuthorizeHandler</span> <span class="variable">codeAuthorizeHandler</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CodeAuthorizeHandler</span>(oauthRequest, response);</span><br><span class="line">             LOG.debug(<span class="string">&quot;Go to  response_type = &#x27;code&#x27; handler: &#123;&#125;&quot;</span>, codeAuthorizeHandler);</span><br><span class="line">             codeAuthorizeHandler.handle();</span><br><span class="line">         &#125; <span class="keyword">else</span> <span class="keyword">if</span> (oauthRequest.isToken()) &#123;</span><br><span class="line">             <span class="type">TokenAuthorizeHandler</span> <span class="variable">tokenAuthorizeHandler</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TokenAuthorizeHandler</span>(oauthRequest, response);</span><br><span class="line">             LOG.debug(<span class="string">&quot;Go to response_type = &#x27;token&#x27; handler: &#123;&#125;&quot;</span>, tokenAuthorizeHandler);</span><br><span class="line">             tokenAuthorizeHandler.handle();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">             unsupportResponseType(oauthRequest, response);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先拿到这个请求以后根据请求的参数将其封装成一个<code>OAuthAuthxRequest</code>,基本就是把请求过来的参数，方法绑定便于使用。这是由oltu提供的<code>OAuthRequest</code>的进一步封装。<br>然后判断这个请求的授权的类型是否是code，也就是判断下请求参数的<code>response_type</code>是否为code，可以看到目前制作了两种类型的授权。<br>然后根据对应的授权类型，构造对应的方法处理器。下面是handle的实现接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> void handle() throws OAuthSystemException, ServletException, IOException &#123;</span><br><span class="line">      <span class="comment">//验证请求是否合法，主要是针对参数做基本的校验，重定向链接，客户端ID授权范围等这些信息与注册的是否相同。</span></span><br><span class="line">      <span class="keyword">if</span> (validateFailed()) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//判断用户是否登录过，根据session判断。因此多个应用使用同一个授权服务的话，是可以直接跳过登录步骤的也就实现了单点登录的效果。如果没有登录的话，这一步的请求会被重定向至登录页面。（登录也得隐藏域会带上这些参数）</span></span><br><span class="line">      <span class="keyword">if</span> (goLogin()) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//这个请求如果是从登录页面提交过来的，那么就提交用户的登录，这个框架中交给shiro去做登录相关的操作。</span></span><br><span class="line">      <span class="keyword">if</span> (submitLogin()) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 本系统中把登录和授权放在两个步骤中完成，有点像新浪微博的方式，QQ是一步完成授权。用户未授权则跳转授权页面</span></span><br><span class="line">      <span class="keyword">if</span> (goApproval()) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">     <span class="comment">//与登录类似，也是提交用户批准或拒绝了权限请求</span></span><br><span class="line">      <span class="keyword">if</span> (submitApproval()) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//以上任意一步没有通过都是授权失败会进行相应处理，如果都通过了就发放Code码。</span></span><br><span class="line">      handleResponse();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果以上步骤都通过的话，认证服务器会转向这个会调地址，带上发放的Code码，类似如下：</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:<span class="number">8000</span>/login?code=bca654ab6133ab3cbc55bb751da93b1c&amp;<span class="keyword">state</span>=<span class="number">09876999</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到带回了返回的参数，以及原样返回的状态码。<br>应用服务器这时候拿到返回的code去换token,发起如下的一个请求：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">localhost:</span><span class="number">8090</span><span class="keyword">/oauth/</span>token?client_<span class="attr">id</span><span class="operator">=</span>test<span class="variable">&amp;client_secret</span>=test<span class="variable">&amp;grant_type</span>=authorization_code<span class="variable">&amp;code</span>=bca654ab6133ab3cbc55bb751da93b1c<span class="variable">&amp;redirect_uri</span>=http:<span class="comment">//localhost:8000/login&amp;scope=read%20write&amp;state=09876999</span></span><br></pre></td></tr></table></figure>
+
+<p>与之前请求类似只是多了一个code字段，去验证客户端的合法性。</p>
+<p><img src="http://ovi3ob9p4.bkt.clouddn.com/3.jpg" alt="基于OAUTH2的统一认证的实例解析_"><br>验证服务器会在收到code以后去查找是否有支持这种code的处理器，如果有则发放token。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (OAuthTokenHandler <span class="keyword">handler</span> : handlers) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">handler</span>.support(tokenRequest)) &#123;</span><br><span class="line">                <span class="keyword">LOG</span>.<span class="keyword">debug</span>(&quot;Found &#x27;&#123;&#125;&#x27; handle OAuthTokenxRequest: &#123;&#125;&quot;, <span class="keyword">handler</span>, tokenRequest);</span><br><span class="line">                <span class="keyword">handler</span>.handle(tokenRequest, response);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化支持的handler</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initialHandlers</span>()</span> &#123;</span><br><span class="line">        handlers.<span class="keyword">add</span>(<span class="keyword">new</span> AuthorizationCodeTokenHandler());</span><br><span class="line">        handlers.<span class="keyword">add</span>(<span class="keyword">new</span> PasswordTokenHandler());</span><br><span class="line">        handlers.<span class="keyword">add</span>(<span class="keyword">new</span> RefreshTokenHandler());</span><br><span class="line">        handlers.<span class="keyword">add</span>(<span class="keyword">new</span> ClientCredentialsTokenHandler());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>验证通过后应用服务器会接受到包含token的一个json数据：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;23e003b5e4b9b7eda228b845532d8336&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;d6b49710f398c405a62f31a6676c5830&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Bearer&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">43199</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个token是有一定的有效期的，在服务端会缓存这个token以便下一次查询，应用客户端也应该保留这个token，访问受限资源时候需要带上这个token去验证身份。<br>比如请求一个API如下：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X GET <span class="string">\</span></span><br><span class="line">   -H <span class="string">&quot;Authorization:Bearer 33dbfc80f5659c6fdec73a044ff724c3&quot;</span> <span class="string">\</span></span><br><span class="line"> <span class="string">&#x27;http://localhost:8090/api/test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>资源服务器上使用shiro做安全验证，配置OAuth2对应的realms即可：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">&quot;realms&quot;</span>&gt;</span><br><span class="line">&lt;<span class="built_in">list</span>&gt;</span><br><span class="line">    &lt;bean <span class="built_in">id</span>=<span class="string">&quot;systemAuthorizingRealm&quot;</span> <span class="built_in">class</span>=<span class="string">&quot;me.kbiao.example.modules.sys.security.SystemAuthorizingRealm&quot;</span>/&gt;</span><br><span class="line">    &lt;bean <span class="built_in">id</span>=<span class="string">&quot;oAuth2Realm&quot;</span> <span class="built_in">class</span>=<span class="string">&quot;me.kbiao.example..modules.sys.security.OAuth2Realm&quot;</span>/&gt;</span><br><span class="line">&lt;/<span class="built_in">list</span>&gt;</span><br><span class="line">&lt;/<span class="keyword">property</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在这个reamls中根据token去查到用户信息，再去分发对应的资源。<br>自此便完成了整个oauth2的流程。<br>这个流程中认证服务系统需要配置三张数据表：<br><img src="http://ovi3ob9p4.bkt.clouddn.com/4.jpg" alt="基于OAUTH2的统一认证的实例解析_"></p>
+<ul>
+<li>client_details表中存放注册的客户端数据。如回调地址，授权类型，是否信任，权限信息等</li>
+<li>code中存放发放给客户端应用的code，使用后失效，以保证安全性</li>
+<li>access_token中存放用户信息、客户端和token的对应关系。</li>
+</ul>
+<p>项目是基于Shiro+ALTU实现，参考方案<a target="_blank" rel="noopener" href="http://git.oschina.net/mkk/oauth2-shiro">mkk&#x2F;oauth2-shiro - 码云 - 开源中国</a> ，更详细的内容，可以去读读<code>Shengzhao Li</code>开源的代码</p>
+<p>总结</p>
+<p>本文简单介绍了几种统一认证的解决方案，然后详细介绍了OAuth2的认证流程，并结合实例详细介绍了CODE授权的流程。尽管OAuth2被广泛用于多平台登录解决方案，我觉得在设置cookie、session共享之后也可以被应用于单点登录的解决方案。</p>
+<p>作者： K_Biao   来源：慕课网</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017081928.htm">https://m.is-local.org/post/2017081928.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/OAuth2/">🏷️ OAuth2</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017090728.htm">HEXO主题图配置</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017082128.htm">Node.js</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

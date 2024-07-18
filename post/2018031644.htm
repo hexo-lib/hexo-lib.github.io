@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>库内新增对象的流程及其他技巧 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">库内新增对象的流程及其他技巧</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 10, 2018&nbsp;&nbsp;16:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/cms/">cms</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/15/auXHkLIB3jz4lwU.jpg"></p>
+<p>cms开发 ———— 库内新增对象Products的流程说明及其他技巧</p>
+<span id="more"></span>
+<h3 id="第一步：Entity"><a href="#第一步：Entity" class="headerlink" title="第一步：Entity"></a>第一步：Entity</h3><ol>
+<li><code>com.jeecms.cms.entity.assist.base</code>下建立模型基础类<code>BaseCmsProducts.java</code></li>
+<li><code>com.jeecms.cms.entity.assist</code>  下建立对象类继承继承模型CmsProducts.java</li>
+<li><code>com.jeecms.cms.entity.assist.hbm</code> 配置hibernate对象映射CmsProducts.hbm.xml</li>
+<li><code>src .ehcache-hibernate.xml</code> 缓存对象配置：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">cache</span> <span class="attr">name</span>=<span class="string">&quot;com.jeecms.cms.entity.assist.CmsProducts&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">maxElementsInMemory</span>=<span class="string">&quot;100&quot;</span> <span class="attr">eternal</span>=<span class="string">&quot;false&quot;</span> <span class="attr">timeToIdleSeconds</span>=<span class="string">&quot;600&quot;</span> <span class="attr">timeToLiveSeconds</span>=<span class="string">&quot;7200&quot;</span> <span class="attr">overflowToDisk</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第二步：Dao"><a href="#第二步：Dao" class="headerlink" title="第二步：Dao"></a>第二步：Dao</h3><ol>
+<li><code>com.jeecms.cms.dao.assist</code>数据库交互持久层DAO接口和实现<code>ProductsDao.java</code> <code>ProductsDaoImpl.java</code> </li>
+<li>配置<code>WebRoot/WEB-INF/config/jeecms-context.xml</code>文件:</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;cmsproductsDao&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.dao.assist.impl.CmsProductsDaoImpl&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第三步：Service"><a href="#第三步：Service" class="headerlink" title="第三步：Service"></a>第三步：Service</h3><ol>
+<li><code>com.jeecms.cms.manager.assist</code>业务层接口和实现，<code>ProductsMng.java , ProductsMngImpl.java</code></li>
+<li>配置<code>WebRoot/WEB-INF/config/jeecms-context.xml</code>文件:</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;cmsProductsMng&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.manager.assist.impl.CmsProductsMngImpl&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第四步：Action"><a href="#第四步：Action" class="headerlink" title="第四步：Action"></a>第四步：Action</h3><ol>
+<li><code>com.jeecms.cms.action.front</code> 写Action与前台对接，<code>ProductsAct.java</code></li>
+<li>XML配置：<code>jeecms-servlet-front-action.xml</code></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;productsAct&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.action.front.ProductsAct&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>com.jeecms.cms.action.admin.assist</code> （加、删、改）写Action与后台对接<code>CmsProductsAct.java</code> </li>
+<li>XML配置：<code>jeecms-servlet-admin-action.xml</code></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;cmsProductsAct&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.action.admin.assist.CmsProductsAct&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="第五步：Directive"><a href="#第五步：Directive" class="headerlink" title="第五步：Directive"></a>第五步：Directive</h3><ol>
+<li><code>com.jeecms.cms.action.directive</code> (设置并返回标签对象<code>[@cms_products_page]</code>)</li>
+<li>配置<code>WebRoot/WEB-INF/config/jeecms-context.xml</code>文件:</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;cms_products_page&quot;</span> </span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag"><span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.action.directive.CmsProductsDirective&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;staticPageSvc&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.jeecms.cms.staticpage.StaticPageSvcImpl&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;tplMessageSource&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;tplMessageSource&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freeMarkerConfigurer&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freemarkerVariables&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">          <span class="tag">&lt;<span class="name">map</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>此处添加标签的配置信息：</li>
+</ol>
+   <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;cms_products_page&quot;</span> <span class="attr">value-ref</span>=<span class="string">&quot;cms_products_page&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>配置<code>WebRoot/WEB-INF/config/ Jeecms-servlet-front.xml</code>文件:</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;freemarkerConfig&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freemarkerVariables&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">map</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>此处添加标签的配置信息：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;cms_products_page&quot;</span> <span class="attr">value-ref</span>=<span class="string">&quot;cms_products_page&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="特别注意点："><a href="#特别注意点：" class="headerlink" title="特别注意点："></a>特别注意点：</h3><ol>
+<li>对象模板位置控制：<code>com.jeecms.cms.action.front.ProductsAct.java</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方案路径site.getSolutionPath()=”/WEB-INF/t/cms/www/default”</span></span><br><span class="line"><span class="comment">// TPLDIR_SPECIAL=&quot;special&quot; 模板位置</span></span><br><span class="line"><span class="comment">// PRODUCTS_INDEX= &quot;tpl.productsIndex&quot;; 模板名称</span></span><br><span class="line"><span class="keyword">return</span> FrontUtils.getTplPath(request, site.getSolutionPath(),TPLDIR_SPECIAL, PRODUCTS_INDEX);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>PRODUCTS_INDEX</code>对象需要在国际化处进行设置：<code>WebRoot/WEB-INF/languages/jeecms_tpl/messages_zh_CN.properties</code> ：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tpl.productsIndex=products_index</span><br></pre></td></tr></table></figure>
+
+<h3 id="国际化文件说明："><a href="#国际化文件说明：" class="headerlink" title="国际化文件说明："></a>国际化文件说明：</h3><ol>
+<li><p><code>WEB-INF/languages/fck</code>  友情提示</p>
+</li>
+<li><p><code>WEB-INF/languages/jeecms_admin</code>  (后台)功能页面，如：首页》内容统计 <code>statistic.function.content=内容统计</code></p>
+</li>
+<li><p><code>WEB-INF/languages/jeecms_front</code>  (前台)友情提示，如：验证码错误。</p>
+</li>
+<li><p><code>WEB-INF/languages/jeecms_tpl</code>    (前台)功能页面，如：投票内容页， <code>tpl.tagDetail=voteIndex</code></p>
+</li>
+<li><p><code>WEB-INF/languages/jeecore_admin</code> 功能按钮、提示信息，如：<code>global.submit=提交，global.confirm.logout=您确定退出吗？</code></p>
+</li>
+</ol>
+<h3 id="修改后台访问地址"><a href="#修改后台访问地址" class="headerlink" title="修改后台访问地址"></a>修改后台访问地址</h3><p>将<code>jeeadmin/jeecms/index.do</code> 改为<code>admin/index.do</code>为例</p>
+<ol>
+<li>修改<code>WebContent\WEB-INF\web.xml</code></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>JeeCmsAdmin<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span>  </span><br><span class="line">  <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/jeeadmin/jeecms/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span>  </span><br><span class="line"> <span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
+
+<p>改为 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>JeeCmsAdmin<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/admin/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改<code>WebContent\WEB-INF\config\jeecms-servlet-admin.xml</code></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;appBase&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/jeeadmin/jeecms&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>改为 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;appBase&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/admin&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改<code>WebContent\WEB-INF\config\shiro-context.xml</code></li>
+</ol>
+<p>把 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">*.jspx = anon </span><br><span class="line">*.jhtml = anon </span><br><span class="line">/member/forgot_password.jspx = anon </span><br><span class="line">/member/password_reset.jspx = anon </span><br><span class="line">/login.jspx = authc </span><br><span class="line">/logout.jspx = logout </span><br><span class="line">/member/** = user </span><br><span class="line">/jeeadmin/jeecms/login.do = authc </span><br><span class="line">/jeeadmin/jeecms/logout.do = logout </span><br><span class="line">/jeeadmin/jeecms/** =user </span><br></pre></td></tr></table></figure>
+
+<p>改为              </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">*.jspx = anon </span><br><span class="line">  *.jhtml = anon </span><br><span class="line">  /member/forgot_password.jspx = anon </span><br><span class="line">  /member/password_reset.jspx = anon </span><br><span class="line">  /login.jspx = authc </span><br><span class="line">  /logout.jspx = logout </span><br><span class="line">  /member/** = user </span><br><span class="line">  /admin/login.do = authc </span><br><span class="line">  /admin/logout.do = logout </span><br><span class="line">  /admin/** =user </span><br></pre></td></tr></table></figure>
+
+<p>把 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminLogin&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/jeeadmin/jeecms/login.do&quot;</span>/&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminPrefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/jeeadmin/jeecms/&quot;</span>/&gt;</span>  </span><br></pre></td></tr></table></figure>
+
+<p>改为 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminLogin&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/admin/login.do&quot;</span>/&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminPrefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/admin/&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>把 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminIndex&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/jeeadmin/jeecms/index.do&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+
+<p>改为 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;adminIndex&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/admin/index.do&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改<code>\src\com\jeecms\cms\web\AdminContextInterceptor.java</code></li>
+</ol>
+<p>把</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getURI</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> IllegalStateException &#123; </span><br><span class="line">        <span class="type">UrlPathHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UrlPathHelper</span>(); </span><br><span class="line">        <span class="type">String</span> <span class="variable">uri</span> <span class="operator">=</span> helper.getOriginatingRequestUri(request); </span><br><span class="line">        <span class="type">String</span> <span class="variable">ctxPath</span> <span class="operator">=</span> helper.getOriginatingContextPath(request); </span><br><span class="line">        <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> <span class="number">0</span>, i = <span class="number">0</span>, count = <span class="number">2</span> </span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isBlank(ctxPath)) &#123; </span><br><span class="line">            count++; </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">while</span> (i &lt; count &amp;&amp; start != -<span class="number">1</span>) &#123; </span><br><span class="line">            start = uri.indexOf(<span class="string">&#x27;/&#x27;</span>, start + <span class="number">1</span>); </span><br><span class="line">            i++; </span><br><span class="line">        &#125; </span><br><span class="line">    <span class="keyword">if</span> (start &lt;= <span class="number">0</span>) &#123; </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;admin access path not like &#x27;/jeeadmin/jeecms/...&#x27; pattern: &quot;</span> + uri); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> uri.substring(start); </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>改为 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">getURI</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> IllegalStateException &#123; </span><br><span class="line">        <span class="type">UrlPathHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UrlPathHelper</span>(); </span><br><span class="line">        <span class="type">String</span> <span class="variable">uri</span> <span class="operator">=</span> helper.getOriginatingRequestUri(request); </span><br><span class="line">        <span class="type">String</span> <span class="variable">ctxPath</span> <span class="operator">=</span> helper.getOriginatingContextPath(request); </span><br><span class="line">        <span class="comment">// int start = 0, i = 0, count = 2;修改 </span></span><br><span class="line">        <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> <span class="number">0</span>, i = <span class="number">0</span>, count = <span class="number">1</span>; </span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isBlank(ctxPath)) &#123; </span><br><span class="line">            count++; </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">while</span> (i &lt; count &amp;&amp; start != -<span class="number">1</span>) &#123; </span><br><span class="line">            start = uri.indexOf(<span class="string">&#x27;/&#x27;</span>, start + <span class="number">1</span>); </span><br><span class="line">            i++; </span><br><span class="line">        &#125;   </span><br><span class="line">    <span class="keyword">if</span> (start &lt;= <span class="number">0</span>) &#123; </span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;admin access path not like &#x27;/admin/...&#x27; pattern: &quot;</span> + uri); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> uri.substring(start); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="通过数据库修改密码"><a href="#通过数据库修改密码" class="headerlink" title="通过数据库修改密码"></a>通过数据库修改密码</h3><ol>
+<li>通过数据库修改admin密码</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> core_user;</span><br><span class="line"><span class="operator">|</span>       <span class="number">1</span> <span class="operator">|</span> admin      <span class="operator">|</span> jobar     <span class="operator">|</span> <span class="number">0230504</span>dd5de96d2f6784d45d1bc7633 <span class="operator">|</span></span><br></pre></td></tr></table></figure>
+
+<p>密码已经是被加密过的了。</p>
+<ol start="2">
+<li>密码加密类：<code>com.ponyjava.common.util.Md5PwdEncoder</code></li>
+</ol>
+<p> 例如我想将密码设为“zhaozh”,就先用这个类加密，然后更新数据库就ok了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		<span class="type">Md5PwdEncoder</span> <span class="variable">encoder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Md5PwdEncoder</span>();</span><br><span class="line">		System.out.println(encoder.encodePassword(<span class="string">&quot;zhaozh&quot;</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出为：<code>f06238ff925a61f9c62de7d64c64bad3</code></p>
+<p>mysql&gt;</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> core_user <span class="keyword">set</span> password<span class="operator">=</span><span class="string">&#x27;f06238ff925a61f9c62de7d64c64bad3&#x27;</span> <span class="keyword">where</span> user_id<span class="operator">=</span><span class="string">&#x27;1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>再次登录就ok了。</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2018031644.htm">https://m.is-local.org/post/2018031644.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/cms/">🏷️ cms</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018031644.htm">Logback日志组件的使用</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018021644.htm">API开发规范</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

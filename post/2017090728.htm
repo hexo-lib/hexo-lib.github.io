@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>HEXO主题图配置 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">HEXO主题图配置</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 1, 2017&nbsp;&nbsp;7:28:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/hexo/">hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0042.jpg" alt="image"></p>
+<p>为一篇博客添加相关的图片可以快速吸引读者的目光，也能帮助读者理解文章概要，尤其是在写技术博客或是某些很复杂的东西时。</p>
+<p>然而，Hexo 主题一般只提供一种默认的图片样式，包括 Jacman。所以，我为 Jacman 实现了几种常见的图片样式。这里我会展示这几种图片样式以及其实现方法。</p>
+<span id="more"></span>
+<p><a target="_blank" rel="noopener" href="http://ww4.sinaimg.cn/large/81b78497jw1en8b95t5kmj203j00u743.jpg"><img src="http://ww4.sinaimg.cn/large/81b78497jw1en8b95t5kmj203j00u743.jpg" alt="img"></a></p>
+<h2 id="主题图片"><a href="#主题图片" class="headerlink" title="主题图片"></a>主题图片</h2><p>我比较喜欢像<a target="_blank" rel="noopener" href="http://www.36kr.com/">36氪</a>那样，一篇文章带一张相关图片。图片能传达的信息永远比文字丰富。当浏览文章列表时，除了标题最吸引人的自然就属文章主题图片了。</p>
+<p>所以为了方便使用，我创建了一个图片样式叫<code>img-topic</code>，大概是长这样子的。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/themes/jacman/<span class="selector-tag">source</span>/css/_partial/index<span class="selector-class">.styl</span></span><br><span class="line"><span class="selector-class">.img-topic</span></span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">1800px</span>;</span><br><span class="line">  <span class="attribute">display</span>: block ;</span><br><span class="line">  <span class="attribute">margin-left</span>: .<span class="number">7em</span>;</span><br><span class="line">  <span class="attribute">margin-right</span>: .<span class="number">7em</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">  <span class="attribute">clear</span>: right;</span><br></pre></td></tr></table></figure>
+
+<p>在博客中，我更希望主题图片居右，并且点进文章正文后该图片不会显示。我们可以使用HTML语法插入图片。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src<span class="operator">=</span><span class="string">&quot;图片路径&quot;</span> class<span class="operator">=</span><span class="string">&quot;img-topic&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这儿是一张使用<code>img-topic</code>样式后的效果图。</p>
+<p><a target="_blank" rel="noopener" href="http://ww2.sinaimg.cn/large/81b78497jw1en8cj4beb9j20s80b8adb.jpg"><img src="http://ww2.sinaimg.cn/large/81b78497jw1en8cj4beb9j20s80b8adb.jpg" alt="img-topic效果图"></a>img-topic效果图</p>
+<h2 id="Logo-图片"><a href="#Logo-图片" class="headerlink" title="Logo 图片"></a>Logo 图片</h2><p>Logo 图片可以快速定义一篇文章的主题。与主题图片非常类似，只不过 Logo 图片放置的是 Logo ，而且一般比主题图片要小。类似的，Logo 图片也是居右，并且在文章正文中不会显示。</p>
+<p>关于<code>img-logo</code>的样式如下</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/themes/jacman/<span class="selector-tag">source</span>/css/_partial/index<span class="selector-class">.styl</span></span><br><span class="line"><span class="selector-class">.img-logo</span> </span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">180px</span>;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">96px</span>;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">margin-right</span>: .<span class="number">7em</span>;</span><br><span class="line">  <span class="attribute">margin-left</span>: .<span class="number">7em</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">  <span class="attribute">clear</span>: right;</span><br></pre></td></tr></table></figure>
+
+<p>使用HTML语法插入图片</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src<span class="operator">=</span><span class="string">&quot;图片路径&quot;</span> class<span class="operator">=</span><span class="string">&quot;img-logo&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下图：</p>
+<p><a target="_blank" rel="noopener" href="http://ww4.sinaimg.cn/large/81b78497jw1en8cj55warj20se0avgoh.jpg"><img src="http://ww4.sinaimg.cn/large/81b78497jw1en8cj55warj20se0avgoh.jpg" alt="img-logo效果图"></a>img-logo效果图</p>
+<h2 id="居中图片"><a href="#居中图片" class="headerlink" title="居中图片"></a>居中图片</h2><p>有网友抱怨 Jacman 的图片只能居左，他喜欢让图片居中却不知道该怎么做。为此，我也创建了一个图片样式叫<code>img-center</code>，所需的代码很短。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/themes/jacman/<span class="selector-tag">source</span>/css/_partial/<span class="selector-tag">article</span><span class="selector-class">.styl</span></span><br><span class="line"><span class="selector-class">.img-center</span></span><br><span class="line">  <span class="attribute">display</span>: block ;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br></pre></td></tr></table></figure>
+
+<h2 id="阴影图片"><a href="#阴影图片" class="headerlink" title="阴影图片"></a>阴影图片</h2><p>有时候添加的图片可能会与文章背景混淆，使得读者看不清到底哪部分是图片哪部分是文章。使用<code>img-shadow</code>为图片添加边角阴影可以更加凸显图片的位置，也能更美观。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/themes/jacman/<span class="selector-tag">source</span>/css/_partial/<span class="selector-tag">article</span><span class="selector-class">.styl</span></span><br><span class="line"><span class="selector-class">.img-shadow</span></span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">2px</span> <span class="number">3px</span> <span class="number">#ddd</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用HTML语法插入图片</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src<span class="operator">=</span><span class="string">&quot;http://ww1.sinaimg.cn/large/81b78497jw1enhkcat9mqj20go06g0sy.jpg&quot;</span> class<span class="operator">=</span><span class="string">&quot;img-shadow&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://ww1.sinaimg.cn/large/81b78497jw1enhkcat9mqj20go06g0sy.jpg"><img src="http://ww1.sinaimg.cn/large/81b78497jw1enhkcat9mqj20go06g0sy.jpg" alt="img"></a></p>
+<h2 id="画廊图片"><a href="#画廊图片" class="headerlink" title="画廊图片"></a>画廊图片</h2><p>Hexo 中提供了一种文章类别叫<code>photo</code>，Jacman 也为这种文章设计了图片浏览方式。具体效果可以看这篇 <a target="_blank" rel="noopener" href="http://wuchong.me/jacman/gallery/">Demo</a>。<code>photo</code>类文章的写法可以看 <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/wuchong/jacman/site/source/_posts/gallery.md">Demo Sample</a>。</p>
+<p><a target="_blank" rel="noopener" href="http://ww3.sinaimg.cn/large/81b78497jw1en8cj4r4bij20sl0krn4x.jpg"><img src="http://ww3.sinaimg.cn/large/81b78497jw1en8cj4r4bij20sl0krn4x.jpg" alt="photo文章效果图"></a>photo文章效果图</p>
+<h2 id="图片备注"><a href="#图片备注" class="headerlink" title="图片备注"></a>图片备注</h2><p>Jacman 中可以方便地为图片提供备注。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!<span class="selector-attr">[添加你的备注]</span>(<span class="attribute">http</span>:<span class="comment">//ww1.sinaimg.cn/mw690/81b78497jw1emfgts2pt4j21hc0u0k1c.jpg)</span></span><br></pre></td></tr></table></figure>
+
+<p>效果就如下图，在图片左下方会显示关于图片的描述。</p>
+<p><a target="_blank" rel="noopener" href="http://ww1.sinaimg.cn/mw690/81b78497jw1emfgts2pt4j21hc0u0k1c.jpg"><img src="http://ww1.sinaimg.cn/mw690/81b78497jw1emfgts2pt4j21hc0u0k1c.jpg" alt="添加你的备注"></a>添加你的备注</p>
+<p>OK，就这么多了，希望大家喜欢。如果嫌折腾麻烦，欢迎使用最新版的 <a target="_blank" rel="noopener" href="https://github.com/wuchong/jacman">Jacman</a>，可以直接使用以上定义的样式！</p>
+<p><em>PS:有任何关于 Hexo 的问题，欢迎来 Hexo 中文社区 咨询。</em></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017090728.htm">https://m.is-local.org/post/2017090728.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/hexo/">🏷️ hexo</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017091534.htm">JEECMS自定义标签</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017081928.htm">OAuth2认证的基本流程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

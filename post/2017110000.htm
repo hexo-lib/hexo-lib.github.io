@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>如何借助 Excel 快速批量创建 200 个文件夹 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">如何借助 Excel 快速批量创建 200 个文件夹</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 23, 2017&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/office/">office</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2024/05/04/iKrAoQfWIbDEZw6.jpg" alt="办公"></p>
+<p>还有五分钟就要下班了，正在想着吃什么，突然老板叫了我一声,然后..</p>
+<span id="more"></span>
+
+<p>小安，我这里有公司所有人的名单，你帮我<strong>把这些姓名都单独做成一个个文件夹</strong>再下班吧。</p>
+<p><img src="https://s2.loli.net/2023/04/20/4fBAqDmuIwVFaRj.png" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>我：好的呀，包在我身上吧！</p>
+<p>这是摆明了要让我加班呗！</p>
+<p>我看了看文件，大概有两百多个人的姓名。</p>
+<p><img src="https://s2.loli.net/2023/04/20/oSLMq8pcxyu97dv.gif" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>看到这里，你是不是以为我要新建文件夹，用复制粘贴大法一个个去修改文件夹名字了。</p>
+<p>不不，按照姓名快速新建文件夹，我有更快的办法。</p>
+<p>—— 利用<strong>记事本</strong>，三步轻松搞定！</p>
+<p>接下来，我们看下操作步骤：</p>
+<p>❶【Ctrl+A】全选数据，右键-「选择性粘贴」- 「转置」，将数据变为横向；</p>
+<p><img src="https://s2.loli.net/2023/04/20/b9INToBV1wyXLun.gif" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>❷ 将转置好的数据复制，新建记事本，在里面<strong>输入「md」和一个空格，</strong>然后将复制好的数据粘贴进去；</p>
+<p><img src="https://s2.loli.net/2023/04/20/b4oSZfxcrQuJp9D.gif" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>❸ 点击【文件】 - 【另存为】 ，文件名后缀改为 bat，编码改为「ANSI」，保存后双击 bat 文件，即可按照姓名批量生成文件夹。</p>
+<p><img src="https://s2.loli.net/2023/04/20/1youYd6V4HJ5IDr.gif" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>想不到吧，记事本还能这么用~</p>
+<p>两百多个文件夹，一分钟不到就搞定了。</p>
+<p>收拾好我的包包准备下班啦！（晚上吃火锅去，嘿嘿~）</p>
+<p>PS：如果电脑上新建记事本后，没有显示后缀.txt，可以打开任意文件夹，点击【查看】 —— 勾选【文件扩展名】，就显示出来啦！</p>
+<p><img src="https://s2.loli.net/2023/04/20/FBPCGYcoQEIKhzS.gif" alt="如何借助 Excel 快速批量创建 200 个文件夹"></p>
+<p>本文来自IT之家    作者：机智的秋小 E</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017110000.htm">https://m.is-local.org/post/2017110000.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/excel/">🏷️ excel</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017112342.htm">使用 Travis CI 自动更新 GitHub Pages</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017091522.htm">Eclipse报Building workspace GC overhead limit exceeded</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

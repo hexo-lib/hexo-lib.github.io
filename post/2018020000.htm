@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Word 中常见且好用的 20 组快捷键汇总 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Word 中常见且好用的 20 组快捷键汇总</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 24, 2018&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/office/">office</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/20/FjfPq4HSc8ZtU1w.jpg"></p>
+<p>你不知道的Word隐藏技巧，学会了你就是Word大神！</p>
+<span id="more"></span>
+
+<h3 id="1、快速移动到首、尾"><a href="#1、快速移动到首、尾" class="headerlink" title="1、快速移动到首、尾"></a>1、快速移动到首、尾</h3><ul>
+<li>Ctrl+Home 移至首部</li>
+<li>Ctrl+End 移至末尾处</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/2je7VdyH1lmgSns.gif"></p>
+<h3 id="2、快速设置行距"><a href="#2、快速设置行距" class="headerlink" title="2、快速设置行距"></a>2、快速设置行距</h3><ul>
+<li>Ctrl+1 设置一倍行距</li>
+<li>Ctrl+2 两倍行距</li>
+<li>Ctrl+5 1.5 倍行距</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/f7vAsdIgQO4tDRK.gif"></p>
+<h3 id="3、切换样式标题"><a href="#3、切换样式标题" class="headerlink" title="3、切换样式标题"></a>3、切换样式标题</h3><ul>
+<li>Ctrl+Alt+1 标题 1</li>
+<li>Ctrl+Alt+2 标题 2</li>
+<li>Ctrl+Alt+3 标题 3</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/1FBsmJWkbYR9Gdf.gif"></p>
+<h3 id="4、快速对齐"><a href="#4、快速对齐" class="headerlink" title="4、快速对齐"></a>4、快速对齐</h3><ul>
+<li>Ctrl+E 居中对齐</li>
+<li>Ctrl+L 左对齐</li>
+<li>Ctrl+R 右对齐</li>
+<li>Ctrl+Shift+J 分散对齐</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/j5cYsIZ1oXFekhJ.gif"></p>
+<h3 id="5、打印预览"><a href="#5、打印预览" class="headerlink" title="5、打印预览"></a>5、打印预览</h3><p> Ctrl+F2 打印预览</p>
+<p><img src="https://s2.loli.net/2023/04/20/Na7EkMDX8SBr6Jv.gif"></p>
+<h3 id="6、快速定位"><a href="#6、快速定位" class="headerlink" title="6、快速定位"></a>6、快速定位</h3><p> F5 快速定位</p>
+<p><img src="https://s2.loli.net/2023/04/20/S9XqYi14xMtuTIm.gif"></p>
+<h3 id="7、复制、粘贴格式"><a href="#7、复制、粘贴格式" class="headerlink" title="7、复制、粘贴格式"></a>7、复制、粘贴格式</h3><ul>
+<li>Ctrl+Shift+C 复制格式</li>
+<li>Ctrl+Shift+V 粘贴格式</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/eF1sHhP7SfRTXJU.gif"></p>
+<h3 id="8、自动图文集"><a href="#8、自动图文集" class="headerlink" title="8、自动图文集"></a>8、自动图文集</h3><p> F3 构建基块</p>
+<p><img src="https://s2.loli.net/2023/04/20/we9Cl3QaL8IU7nZ.gif"></p>
+<h3 id="9、图文场"><a href="#9、图文场" class="headerlink" title="9、图文场"></a>9、图文场</h3><ul>
+<li>Ctrl+F3 剪切到图文场</li>
+<li>Ctrl+Shift+F3 粘贴图文场</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/iCBh8NTdAJvkX5p.gif"></p>
+<h3 id="10、重复上一步操作"><a href="#10、重复上一步操作" class="headerlink" title="10、重复上一步操作"></a>10、重复上一步操作</h3><p> F4 重复上一步操作</p>
+<p><img src="https://s2.loli.net/2023/04/20/b31WkAzgoVBpvn7.gif"></p>
+<h3 id="11、放大缩小字体"><a href="#11、放大缩小字体" class="headerlink" title="11、放大缩小字体"></a>11、放大缩小字体</h3><ul>
+<li>Ctrl + ] 放大字体</li>
+<li>Ctrl + [ 缩小字体</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/WF8my1LRqjYUgax.gif"></p>
+<h3 id="12、字体格式"><a href="#12、字体格式" class="headerlink" title="12、字体格式"></a>12、字体格式</h3><p> Ctrl + D 打开字体格式</p>
+<p><img src="https://s2.loli.net/2023/04/20/gjK5fuQ81LScJtG.gif"></p>
+<h3 id="13、插入日期和时间"><a href="#13、插入日期和时间" class="headerlink" title="13、插入日期和时间"></a>13、插入日期和时间</h3><ul>
+<li>Alt+Shift+D 插入日期</li>
+<li>Alt+Shift+T 插入时间</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/HPbRV3TtM8x4oWN.gif"></p>
+<h3 id="14、精确调整"><a href="#14、精确调整" class="headerlink" title="14、精确调整"></a>14、精确调整</h3><p> Alt + 左键 拖动标尺可以准确的调整段落位置</p>
+<p><img src="https://s2.loli.net/2023/04/20/SXu893knrQwL4Fe.gif"></p>
+<h3 id="15、调整段落位置"><a href="#15、调整段落位置" class="headerlink" title="15、调整段落位置"></a>15、调整段落位置</h3><ul>
+<li>Alt+Shift+↑ 向上移动一行</li>
+<li>Alt+Shift+↓ 向下移动一行</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/04/20/5bTcINmnqGLd7jR.gif"></p>
+<h3 id="16、一键取消超级链接"><a href="#16、一键取消超级链接" class="headerlink" title="16、一键取消超级链接"></a>16、一键取消超级链接</h3><p> Ctrl+Shift+F9 取消超级链接</p>
+<p><img src="https://s2.loli.net/2023/04/20/ApEh4HdjvJntNQZ.gif"></p>
+<h3 id="17、保存文档"><a href="#17、保存文档" class="headerlink" title="17、保存文档"></a>17、保存文档</h3><p> Ctrl+S 保存文档</p>
+<p><img src="https://s2.loli.net/2023/04/20/o136R9TQIUweE2N.gif"></p>
+<h3 id="18、大小写转换"><a href="#18、大小写转换" class="headerlink" title="18、大小写转换"></a>18、大小写转换</h3><p> Shift + F3 切换字母大小写</p>
+<p><img src="https://s2.loli.net/2023/04/20/ZEc1AWm5KVxB7Xv.gif"></p>
+<h3 id="19、拆分表格"><a href="#19、拆分表格" class="headerlink" title="19、拆分表格"></a>19、拆分表格</h3><p> Ctrl+Shift+Enter 快速拆分表格</p>
+<p><img src="https://s2.loli.net/2023/04/20/YSbqj9RaBMXD3Ql.gif"></p>
+<h3 id="20、跳过空格加下划线"><a href="#20、跳过空格加下划线" class="headerlink" title="20、跳过空格加下划线"></a>20、跳过空格加下划线</h3><p> Ctrl+Shift+W 只给字符加下划线，空格不加</p>
+<p><img src="https://s2.loli.net/2023/04/20/3tqLbEYTKVNCysr.gif"></p>
+<p>本文来自IT之家  作者：易雪龙</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2018020000.htm">https://m.is-local.org/post/2018020000.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/word/">🏷️ word</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018021644.htm">面向对象设计和编程</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018021644.htm">Java成神之路-Tomcat、Jsp/servlet、Ajax（八）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>hexo 常用命令 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">hexo 常用命令</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 24, 2017&nbsp;&nbsp;17:28:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/hexo/">hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0043.jpg" alt="image"></p>
+<p>hexo 常用的命令 </p>
+<span id="more"></span>
+<pre><code>npm install hexo -g #安装  
+npm update hexo -g #升级  
+hexo init #初始化
+</code></pre>
+<p>简写</p>
+<pre><code>hexo n &quot;我的博客&quot; == hexo new &quot;我的博客&quot; #新建文章
+hexo p == hexo publish
+hexo g == hexo generate#生成
+hexo s == hexo server #启动服务预览
+hexo d == hexo deploy#部署
+</code></pre>
+<p>服务器</p>
+<pre><code>hexo server #Hexo 会监视文件变动并自动更新，您无须重启服务器。
+hexo server -s #静态模式
+hexo server -p 5000 #更改端口
+hexo server -i 192.168.1.1 #自定义 IP
+
+hexo clean #清除缓存 网页正常情况下可以忽略此条命令
+hexo g #生成静态网页
+hexo d #开始部署
+</code></pre>
+<p>监视文件变动</p>
+<pre><code>hexo generate #使用 Hexo 生成静态文件快速而且简单
+hexo generate --watch #监视文件变动
+</code></pre>
+<p>完成后部署</p>
+<p>两个命令的作用是相同的</p>
+<p>hexo generate –deploy</p>
+<p>hexo deploy –generate</p>
+<pre><code>hexo deploy -g
+hexo server -g
+</code></pre>
+<p>草稿</p>
+<pre><code>hexo publish [layout] &lt;title&gt;
+</code></pre>
+<p>模版</p>
+<pre><code>hexo new &quot;postName&quot; #新建文章
+hexo new page &quot;pageName&quot; #新建页面
+hexo generate #生成静态页面至public目录
+hexo server #开启预览访问端口（默认端口4000，&#39;ctrl + c&#39;关闭server）
+hexo deploy #将.deploy目录部署到GitHub
+
+hexo new [layout] &lt;title&gt;
+hexo new photo &quot;My Gallery&quot;
+hexo new &quot;Hello World&quot; --lang tw
+</code></pre>
+<p>  变量    	描述<br>  layout	布局<br>  title 	标题<br>  date  	文件建立日期</p>
+<p>​    </p>
+<pre><code>title: 使用Hexo搭建个人博客
+layout: post
+date: 2014-03-03 19:07:43
+comments: true
+categories: Blog
+tags: [Hexo]
+keywords: Hexo, Blog
+description: 生命在于折腾，又把博客折腾到Hexo了。给Hexo点赞。
+</code></pre>
+<p>模版（Scaffold）</p>
+<pre><code>hexo new photo &quot;My Gallery&quot;
+</code></pre>
+<p>  变量    	描述<br>  layout	布局<br>  title 	标题<br>  date  	文件建立日期</p>
+<p>设置文章摘要</p>
+<pre><code>以上是文章摘要 &lt;!--more--&gt; 以下是余下全文 
+</code></pre>
+<p>写作</p>
+<pre><code>hexo new page &lt;title&gt;
+hexo new post &lt;title&gt;
+</code></pre>
+<p>  变量      	描述<br>  :title  	标题<br>  :year   	建立的年份（4 位数）<br>  :month  	建立的月份（2 位数）<br>  :i_month	建立的月份（去掉开头的零）<br>  :day    	建立的日期（2 位数）<br>  :i_day  	建立的日期（去掉开头的零）</p>
+<p>推送到服务器上</p>
+<pre><code>hexo n #写文章
+hexo g #生成
+hexo d #部署 #可与hexo g合并为 hexo d -g
+</code></pre>
+<p>报错</p>
+<p>1.找不到git部署</p>
+<p>​    </p>
+<pre><code>ERROR Deployer not found: git
+</code></pre>
+<p>​    </p>
+<p>解决方法</p>
+<pre><code>npm install hexo-deployer-git --save
+</code></pre>
+<p>3.部署类型设置git</p>
+<p>hexo 3.0 部署类型不再是github，_config.yml 中修改</p>
+<p>​    </p>
+<pre><code># Deployment
+## Docs: http://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repository: git@***.github.com:***/***.github.io.git
+  branch: master
+</code></pre>
+<ol start="4">
+<li><p>xcodebuild</p>
+<p> xcode-select: error: tool ‘xcodebuild’ requires Xcode, but active developer directory ‘&#x2F;Library&#x2F;Developer&#x2F;CommandLineTools’ is a command line tools instance</p>
+<p> npm install bcrypt</p>
+</li>
+<li><p>RSS不显示</p>
+</li>
+</ol>
+<p>安装RSS插件</p>
+<pre><code>npm install hexo-generator-feed --save
+</code></pre>
+<p>开启RSS功能</p>
+<p>编辑hexo&#x2F;_config.yml，添加如下代码：</p>
+<p>​    </p>
+<pre><code>rss: /atom.xml #rss地址  默认即可
+</code></pre>
+<p>开启评论</p>
+<p>1.我使用多说代替自带的评论，在多说 网站注册 &gt; 后台管理 &gt; 添加新站点 &gt; 工具 &#x3D;&#x3D;&#x3D; 复制通用代码 里面有 short_name</p>
+<ol>
+<li><p>在根目录 _config.yml 添加一行 disqus_shortname: jslite 是在多说注册时产生的</p>
+</li>
+<li><p>复制到 themes\landscape\layout_partial\article.ejs<br>把</p>
+<p> &lt;% if (!index &amp;&amp; post.comments &amp;&amp; config.disqus_shortname){ %&gt;</p>
+ <section id="comments">
+ <div id="disqus_thread">
+   <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+ </div>
+ </section>
+ <% } %></li>
+</ol>
+<p>​    </p>
+<p>改为</p>
+<pre><code>&lt;% if (!index &amp;&amp; post.comments &amp;&amp; config.disqus_shortname)&#123; %&gt;
+  &lt;section id=&quot;comments&quot;&gt;
+    &lt;!-- 多说评论框 start --&gt;
+    &lt;div class=&quot;ds-thread&quot; data-thread-key=&quot;&lt;%= post.layout %&gt;-&lt;%= post.slug %&gt;&quot; data-title=&quot;&lt;%= post.title %&gt;&quot; data-url=&quot;&lt;%= page.permalink %&gt;&quot;&gt;&lt;/div&gt;
+    &lt;!-- 多说评论框 end --&gt;
+    &lt;!-- 多说公共JS代码 start (一个网页只需插入一次) --&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+    var duoshuoQuery = &#123;short_name:&#39;&lt;%= config.disqus_shortname %&gt;&#39;&#125;;
+      (function() &#123;
+        var ds = document.createElement(&#39;script&#39;);
+        ds.type = &#39;text/javascript&#39;;ds.async = true;
+        ds.src = (document.location.protocol == &#39;https:&#39; ? &#39;https:&#39; : &#39;http:&#39;) + &#39;//static.duoshuo.com/embed.js&#39;;
+        ds.charset = &#39;UTF-8&#39;;
+        (document.getElementsByTagName(&#39;head&#39;)[0] 
+         || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(ds);
+      &#125;)();
+      &lt;/script&gt;
+    &lt;!-- 多说公共JS代码 end --&gt;
+  &lt;/section&gt;
+&lt;% &#125; %&gt;
+</code></pre>
+<p> ####hexo命令</p>
+<h5 id="更新hexo："><a href="#更新hexo：" class="headerlink" title="更新hexo："></a>更新hexo：</h5><p><code>npm update -g hexo</code></p>
+<h5 id="更新主题："><a href="#更新主题：" class="headerlink" title="更新主题："></a>更新主题：</h5><p>cd 到主题文件夹，执行命令：<br><code>git pull</code></p>
+<h5 id="更新插件："><a href="#更新插件：" class="headerlink" title="更新插件："></a>更新插件：</h5><p><code>npm update</code></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017081728.htm">https://m.is-local.org/post/2017081728.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/hexo-next/">🏷️ hexo next</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017081728.htm">servlet中web.xml配置详解</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017071728.htm">hexo next主题集成gitment评论系统</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

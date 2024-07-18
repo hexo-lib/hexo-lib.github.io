@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>FreeMarker自定义TemplateDirectiveModel(一) | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">FreeMarker自定义TemplateDirectiveModel(一)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 7, 2017&nbsp;&nbsp;19:36:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java/">Java</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0031.jpg" alt="image"></p>
+<p>FreeMarker是一个用Java语言编写的模板引擎，它基于模板来生成文本输出。FreeMarker与Web容器无关，即在Web运行时，它并不知道Servlet或HTTP。它不仅可以用作表现层的实现技术，而且还可以用于生成XML，JSP或Java 等。</p>
+<span id="more"></span>
+<h5 id="一、Freemarker的介绍"><a href="#一、Freemarker的介绍" class="headerlink" title="一、Freemarker的介绍"></a>一、Freemarker的介绍</h5><p>​    Freemarker 是一款模板引擎，是一种基于模版生成静态文件的通用 工具，它是为java程序员提供的一个开发包，或者说是一个类库，它不是面向最终用户的，而是为程序员提供了一款可以嵌入他们开发产品的应用程序。</p>
+<p>​    Freemarker 是使用纯java编写的，为了提高页面的访问速度，需要把页面静态化， 那么Freemarker就是被用来生成html页面。</p>
+<p>​    到目前为止，Freemarker使用越来越广泛，不光光只是它强大的生成技术，而且它能够与spring进行很好的集成。</p>
+<p>​    现在开始一层层揭开它的神秘面纱。。</p>
+<h5 id="二、Freemarker的准备条件"><a href="#二、Freemarker的准备条件" class="headerlink" title="二、Freemarker的准备条件"></a>二、Freemarker的准备条件</h5><p>​    freemarker.2.3.16.jar  </p>
+<h5 id="三、Freemarker生成静态页面的原理"><a href="#三、Freemarker生成静态页面的原理" class="headerlink" title="三、Freemarker生成静态页面的原理"></a>三、Freemarker生成静态页面的原理</h5><p>​    Freemarker 生成静态页面，首先需要使用自己定义的模板页面，这个模板页面可以是最最普通的html，也可以是嵌套freemarker中的 取值表达式， 标签或者自定义标签等等，然后后台读取这个模板页面，解析其中的标签完成相对应的操作， 然后采用键值对的方式传递参数替换模板中的的取值表达式，做完之后 根据配置的路径生成一个新的html页面， 以达到静态化访问的目的。</p>
+<h5 id="四、Freemarker提供的标签"><a href="#四、Freemarker提供的标签" class="headerlink" title="四、Freemarker提供的标签"></a>四、Freemarker提供的标签</h5><p>Freemarker提供了很多有用 常用的标签，Freemarker标签都是&lt;#标签名称&gt;这样子命名的，${value} 表示输出变量名的内容 ，具体如下：</p>
+<ul>
+<li>list：该标签主要是进行迭代服务器端传递过来的List集合，比如：</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list nameList as names&gt;  </span><br><span class="line">  $&#123;names&#125; </span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	name是list循环的时候取的一个循环变量，freemarker在解析list标签的时候，等价于：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (String names : nameList) &#123;</span><br><span class="line">		System.out.println(names);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>if：    该标签主要是做if判断用的，比如：</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#if (names==&quot;陈靖仇&quot;)&gt;</span><br><span class="line"> 他的武器是: 十五~~</span><br><span class="line">&lt;/#if&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	这个是条件判断标签，要注意的是条件等式必须用括号括起来， 等价于：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(names.equals(<span class="string">&quot;陈靖仇&quot;</span>))&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;他的武器是: 十五~~&quot;</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>include：该标签用于导入文件用的。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;#include &quot;include.html&quot;/&gt;  </span><br></pre></td></tr></table></figure>
+
+<p>​	这个导入标签非常好用，特别是页面的重用。</p>
+<p>另外在静态文件中可以使用${} 获取值，取值方式和el表达式一样，非常方便。</p>
+<p>​	下面举个例子（static.html）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">描述：$&#123;description&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">集合大小:$&#123;nameList?size&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">迭代list集合：</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;#list nameList as names&gt;</span><br><span class="line">这是第$&#123;names_index+1&#125;个人，叫做：<span class="tag">&lt;<span class="name">label</span> <span class="attr">style</span>=<span class="string">&quot;color:red&quot;</span>&gt;</span>$&#123;names&#125;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">if判断：</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;#if (names==&quot;陈靖仇&quot;)&gt;</span><br><span class="line"> 他的武器是: 十五~~</span><br><span class="line">&lt;#elseif (names==&quot;宇文拓&quot;)&gt;       &lt;#--注意这里没有返回而是在最后面--&gt; </span><br><span class="line"> 他的武器是: 轩辕剑~·</span><br><span class="line">&lt;#else&gt;</span><br><span class="line">她的绝招是：蛊毒~~</span><br><span class="line">&lt;/#if&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;/#list&gt;</span><br><span class="line">迭代map集合：</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;#list weaponMap?keys as key&gt;</span><br><span class="line">key---&gt;$&#123;key&#125;<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">value-----&gt;$&#123;weaponMap[key]!(&quot;null&quot;)&#125;</span><br><span class="line">&lt;#-- </span><br><span class="line">fremarker 不支持null, 可以用！ 来代替为空的值。</span><br><span class="line">其实也可以给一个默认值  </span><br><span class="line">value-----$&#123;weaponMap[key]?default(&quot;null&quot;)&#125;</span><br><span class="line">还可以 在输出前判断是否为null</span><br><span class="line">&lt;#if weaponMap[key]??&gt;&lt;/#if&gt;都可以</span><br><span class="line">--&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;/#list&gt;</span><br><span class="line">include导入文件：</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">&lt;#include &quot;include.html&quot;/&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​	实际代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.chenghui.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStreamWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.Writer;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> freemarker.template.Configuration;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.DefaultObjectWrapper;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.Template;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CreateHtml</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">//创建一个合适的Configration对象</span></span><br><span class="line">			<span class="type">Configuration</span> <span class="variable">configuration</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>();</span><br><span class="line">			configuration.setDirectoryForTemplateLoading(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;D:\\project\\webProject\\WebContent\\WEB-INF\\template&quot;</span>));</span><br><span class="line">			configuration.setObjectWrapper(<span class="keyword">new</span> <span class="title class_">DefaultObjectWrapper</span>());</span><br><span class="line">			configuration.setDefaultEncoding(<span class="string">&quot;UTF-8&quot;</span>);   <span class="comment">//这个一定要设置，不然在生成的页面中 会乱码</span></span><br><span class="line">			<span class="comment">//获取或创建一个模版。</span></span><br><span class="line">			<span class="type">Template</span> <span class="variable">template</span> <span class="operator">=</span> configuration.getTemplate(<span class="string">&quot;static.html&quot;</span>);</span><br><span class="line">			Map&lt;String, Object&gt; paramMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Object&gt;();</span><br><span class="line">			paramMap.put(<span class="string">&quot;description&quot;</span>, <span class="string">&quot;我正在学习使用Freemarker生成静态文件！&quot;</span>);</span><br><span class="line">			</span><br><span class="line">			List&lt;String&gt; nameList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line">			nameList.add(<span class="string">&quot;陈靖仇&quot;</span>);</span><br><span class="line">			nameList.add(<span class="string">&quot;玉儿&quot;</span>);</span><br><span class="line">			nameList.add(<span class="string">&quot;宇文拓&quot;</span>);</span><br><span class="line">			paramMap.put(<span class="string">&quot;nameList&quot;</span>, nameList);</span><br><span class="line">			</span><br><span class="line">			Map&lt;String, Object&gt; weaponMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, Object&gt;();</span><br><span class="line">			weaponMap.put(<span class="string">&quot;first&quot;</span>, <span class="string">&quot;轩辕剑&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;second&quot;</span>, <span class="string">&quot;崆峒印&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;third&quot;</span>, <span class="string">&quot;女娲石&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;fourth&quot;</span>, <span class="string">&quot;神农鼎&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;fifth&quot;</span>, <span class="string">&quot;伏羲琴&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;sixth&quot;</span>, <span class="string">&quot;昆仑镜&quot;</span>);</span><br><span class="line">			weaponMap.put(<span class="string">&quot;seventh&quot;</span>, <span class="literal">null</span>);</span><br><span class="line">			paramMap.put(<span class="string">&quot;weaponMap&quot;</span>, weaponMap);</span><br><span class="line">			</span><br><span class="line">			<span class="type">Writer</span> <span class="variable">writer</span>  <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;success.html&quot;</span>),<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">			template.process(paramMap, writer);</span><br><span class="line">			</span><br><span class="line">			System.out.println(<span class="string">&quot;恭喜，生成成功~~&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (TemplateException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	这样子基本上可以算的上可以简单的去做一点简单的生成了，但是要在实际中去运用，还是差的很远的，因为freemarker给的标签完全满足不了我们的需要，这时候就需要自定义标签来完成我们的需求了。。</p>
+<h5 id="五、Freemarker自定义标签"><a href="#五、Freemarker自定义标签" class="headerlink" title="五、Freemarker自定义标签"></a>五、Freemarker自定义标签</h5><p>Freemarker自定义标签就是自己写标签，然后自己解析，完全由自己来控制标签的输入输出，极大的为程序员提供了很大的发挥空间。</p>
+<p>基于步骤：</p>
+<p>​       以前写标签需要在&lt;后加# ，但是freemarker要识别自定义标签需要在后面加上@，然后后面可以定义一些参数，当程序执行template.process(paramMap, out);,就会去解析整个页面的所有的freemarker标签。</p>
+<p>​     自定义标签 需要自定义一个类，然后实现TemplateDirectiveModel，重写execute方法，完成获取参数，根据参数do something等等。</p>
+<p>​    将自定义标签与解析类绑定在一起需要在paramMap中放入该解析类的实例，存放的key与自定义标签一致即可。</p>
+<p>​    注意：在自定义标签中，如果标签内什么也没有，开始标签和结束标签绝对不能再同一行，不然会报错 freemarker.log.JDK14LoggerFactory$JDK14Logger error</p>
+<ul>
+<li>例:static.html模板</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">&lt;#--自定义变量--&gt;</span><br><span class="line">&lt;#assign num=&#x27;hehe&#x27;/&gt;</span><br><span class="line">$&#123;num&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">自定义标签</span><br><span class="line">  &lt;@content name=&quot;chenghui&quot; age=&quot;120&quot;&gt;</span><br><span class="line">  	$&#123;output&#125;</span><br><span class="line">  	$&#123;append&#125;</span><br><span class="line">  &lt;/@content&gt;</span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>static.html模板解析类：</li>
+</ul>
+<p>​	参数解释：</p>
+<p>TemplateDirectiveModel接口是freemarker自定标签或者自定义指令的核心处理接口。通过实现该接口，用户可以自定义标签（指令）进行任意操作， 任意文本写入模板的输出。<br>该接口中只定义了如下方法，当模板页面遇到用户自定义的标签指令时，该方法会被执行。<br>public void execute(Environment env, Map params, TemplateModel[] loopVars,  TemplateDirectiveBody body) throws TemplateException, IOException;</p>
+<blockquote>
+<p> @param  env：系统环境变量，通常用它来输出相关内容，如Writer out &#x3D; env.getOut();</p>
+</blockquote>
+<blockquote>
+<p>@param  params：自定义标签传过来的对象，其key&#x3D;自定义标签的参数名，value值是TemplateModel类型，而TemplateModel是一个接口类型，通常我们都使用TemplateScalarModel接口来替代它获取一个String 值，如TemplateScalarModel.getAsString();当然还有其它常用的替代接口，如TemplateNumberModel获取number，TemplateHashModel等</p>
+</blockquote>
+<blockquote>
+<p>@param  loopVars  循环替代变量</p>
+</blockquote>
+<blockquote>
+<p>@param  body 用于处理自定义标签中的内容，如&lt;@myDirective&gt;将要被处理的内容&lt;&#x2F;@myDirective&gt;；当标签是&lt;@myDirective &#x2F;&gt;格式时，body&#x3D;null</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.chenghui.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> freemarker.template.ObjectWrapper.DEFAULT_WRAPPER;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.Writer;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> freemarker.core.Environment;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateDirectiveBody;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateDirectiveModel;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateException;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateModel;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateModelException;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateNumberModel;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateScalarModel;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义标签解析类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ContentDirective</span> <span class="keyword">implements</span> <span class="title class_">TemplateDirectiveModel</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PARAM_NAME</span> <span class="operator">=</span> <span class="string">&quot;name&quot;</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PARAM_AGE</span> <span class="operator">=</span> <span class="string">&quot;age&quot;</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Environment env, Map params,TemplateModel[] loopVars,</span></span><br><span class="line"><span class="params">			TemplateDirectiveBody body)</span> <span class="keyword">throws</span> TemplateException, IOException &#123;</span><br><span class="line">		<span class="keyword">if</span>(body==<span class="literal">null</span>)&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TemplateModelException</span>(<span class="string">&quot;null body&quot;</span>);</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> getString(PARAM_NAME, params);</span><br><span class="line">			<span class="type">Integer</span> <span class="variable">age</span> <span class="operator">=</span> getInt(PARAM_AGE, params);</span><br><span class="line">			<span class="comment">//接收到参数之后可以根据做具体的操作，然后将数据再在页面中显示出来。</span></span><br><span class="line">			<span class="keyword">if</span>(name!=<span class="literal">null</span>)&#123;</span><br><span class="line">				env.setVariable(<span class="string">&quot;output&quot;</span>, DEFAULT_WRAPPER.wrap(<span class="string">&quot;从ContentDirective解析类中获得的参数是：&quot;</span>+name+<span class="string">&quot;, &quot;</span>));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(age!=<span class="literal">null</span>)&#123;</span><br><span class="line">				env.setVariable(<span class="string">&quot;append&quot;</span>, DEFAULT_WRAPPER.wrap(<span class="string">&quot;年龄：&quot;</span>+age));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="type">Writer</span> <span class="variable">out</span> <span class="operator">=</span> env.getOut();</span><br><span class="line">			out.write(<span class="string">&quot;从这里输出可以再页面看到具体的内容，就像document.writer写入操作一样。&lt;br/&gt;&quot;</span>);</span><br><span class="line">			body.render(out);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">/*</span></span><br><span class="line"><span class="comment">		  	如果细心的话，会发现页面上是显示out.write（）输出的语句，然后再输出output的内容，</span></span><br><span class="line"><span class="comment">			可见 在body在解析的时候会先把参数放入env中，在页面遇到对应的而来表单时的才会去取值</span></span><br><span class="line"><span class="comment">			但是，如果该表单时不存在，就会报错，  我觉得这里freemarker没有做好，解析的时候更加会把错误暴露在页面上。</span></span><br><span class="line"><span class="comment">			可以这样子弥补$&#123;output!&quot;null&quot;&#125;,始终感觉没有el表达式那样好。</span></span><br><span class="line"><span class="comment">			*/</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 获取String类型的参数的值</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> paramName</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> paramMap</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> TemplateModelException</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getString</span><span class="params">(String paramName, Map&lt;String, TemplateModel&gt; paramMap)</span> <span class="keyword">throws</span> TemplateModelException&#123;</span><br><span class="line">		<span class="type">TemplateModel</span> <span class="variable">model</span> <span class="operator">=</span> paramMap.get(paramName);</span><br><span class="line">		<span class="keyword">if</span>(model == <span class="literal">null</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(model <span class="keyword">instanceof</span> TemplateScalarModel)&#123;</span><br><span class="line">			<span class="keyword">return</span> ((TemplateScalarModel)model).getAsString();</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span> (model <span class="keyword">instanceof</span> TemplateNumberModel) &#123;</span><br><span class="line">			<span class="keyword">return</span> ((TemplateNumberModel)model).getAsNumber().toString();</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TemplateModelException</span>(paramName);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * 获得int类型的参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> paramName</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> paramMap</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> TemplateModelException </span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title function_">getInt</span><span class="params">(String paramName, Map&lt;String, TemplateModel&gt; paramMap)</span> <span class="keyword">throws</span> TemplateModelException&#123;</span><br><span class="line">		<span class="type">TemplateModel</span> <span class="variable">model</span> <span class="operator">=</span> paramMap.get(paramName);</span><br><span class="line">		<span class="keyword">if</span>(model==<span class="literal">null</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(model <span class="keyword">instanceof</span> TemplateScalarModel)&#123;</span><br><span class="line">			<span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> ((TemplateScalarModel)model).getAsString();</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> Integer.valueOf(str);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</span><br><span class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TemplateModelException</span>(paramName);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(model <span class="keyword">instanceof</span> TemplateNumberModel)&#123;</span><br><span class="line">			<span class="keyword">return</span> ((TemplateNumberModel)model).getAsNumber().intValue();</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TemplateModelException</span>(paramName);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	然后再前面的实际代码中加上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paramMap.put(<span class="string">&quot;content&quot;</span>, <span class="keyword">new</span> <span class="title class_">ContentDirective</span>());  </span><br></pre></td></tr></table></figure>
+
+<p>这样子基本上可以使用，freemarker完成自定义标签了，解决一写简单的业务逻辑， 但是在实际的项目中不可能这样子去做，因为还没有和spring进行集成使用，每次都需要在解析的时候把解析类的实例放进去。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017091936.htm">https://m.is-local.org/post/2017091936.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/freemarker/">🏷️ freemarker</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017092206.htm">FreeMarker自定义TemplateDirectiveModel(二)</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017091902.htm">Java知识梳理（二）——算法与编程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

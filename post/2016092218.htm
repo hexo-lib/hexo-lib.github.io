@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Hexo-NexT搭建个人博客（二） | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Hexo-NexT搭建个人博客（二）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 4, 2016&nbsp;&nbsp;22:18:22</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Hexo/">Hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0038.jpg" alt="image"></p>
+<p>本篇文章将介绍基于NexT主题下的一些扩展功能的实现。<br>首先，我们需要明白：</p>
+<p id="div-border-left-yellow">在 Hexo 中有两份主要的配置文件，其名称都是 _config.yml 。其中，一份位于站点根目录下，主要包含 Hexo 本身的配置；另一份位于主题目录下，这份配置由主题作者提供，主要用于配置主题相关的选项。
+  我们约定，将前者称为 <span id="inline-blue">站点配置文件</span>，后者称为 <span id="inline-purple">主题配置文件</span></p>
+
+<span id="more"></span>
+<h4 id="1-设置侧栏的位置"><a href="#1-设置侧栏的位置" class="headerlink" title="1.设置侧栏的位置"></a>1.设置侧栏的位置</h4><p>修改 <span id="inline-purple">主题配置文件</span> 中 <code>sidebar.position</code> 的值，支持的选项有：<strong>left</strong> <strong>right</strong><br>目前仅 Pisces Scheme 支持 position 配置，也就是说NexT主题的侧栏位置是不能设置的，设置了也没用，反正都在右边。</p>
+<h4 id="2-关于添加居中模块"><a href="#2-关于添加居中模块" class="headerlink" title="2. 关于添加居中模块"></a>2. 关于添加居中模块</h4><blockquote class="blockquote-center">优秀的人，不是不合群，而是他们合群的人里面没有你</blockquote>
+代码如下：
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">class</span>=<span class="string">&quot;blockquote-center&quot;</span>&gt;</span>优秀的人，不是不合群，而是他们合群的人里面没有你<span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-添加High一下"><a href="#3-添加High一下" class="headerlink" title="3. 添加High一下"></a>3. 添加High一下</h4><p>打开博客根目录 <code>\themes\next\layout\_partials\header.swig</code> ，在<br><code>&lt;ul&gt; ... /ul&gt;</code> 标签之间加入以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line">&lt;li&gt; <span class="language-xml"><span class="tag">&lt;<span class="name">a</span> <span class="attr">title</span>=<span class="string">&quot;把这个链接拖到你的Chrome收藏夹工具栏中&quot;</span> <span class="attr">href</span>=<span class="string">&#x27;javascript:(function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function c() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.createElement(&quot;link&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;type&quot;, &quot;text/css&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;rel&quot;, &quot;stylesheet&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;href&quot;, f);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;class&quot;, l);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        document.body.appendChild(e)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function h() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.getElementsByClassName(l);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        for (var t = 0; t &lt; e.length; t++) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            document.body.removeChild(e[t])</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function p() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.createElement(&quot;div&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;class&quot;, a);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        document.body.appendChild(e);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        setTimeout(function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            document.body.removeChild(e)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;, 100)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function d(e) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            height : e.offsetHeight,</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            width : e.offsetWidth</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function v(i) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var s = d(i);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return s.height &gt; e &amp;&amp; s.height &lt; n &amp;&amp; s.width &gt; t &amp;&amp; s.width &lt; r</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function m(e) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var t = e;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var n = 0;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        while (!!t) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            n += t.offsetTop;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            t = t.offsetParent</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return n</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function g() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.documentElement;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        if (!!window.innerWidth) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            return window.innerHeight</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125; else if (e &amp;&amp; !isNaN(e.clientHeight)) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            return e.clientHeight</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return 0</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function y() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        if (window.pageYOffset) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            return window.pageYOffset</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function E(e) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var t = m(e);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return t &gt;= w &amp;&amp; t &lt;= b + w</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function S() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.createElement(&quot;audio&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.setAttribute(&quot;class&quot;, l);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.src = i;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.loop = false;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.addEventListener(&quot;canplay&quot;, function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            setTimeout(function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                x(k)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            &#125;, 500);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            setTimeout(function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                N();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                p();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                for (var e = 0; e &lt; O.length; e++) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                    T(O[e])</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            &#125;, 15500)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;, true);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.addEventListener(&quot;ended&quot;, function() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            N();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            h()</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;, true);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.innerHTML = &quot; &lt;p&gt;If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.&lt;/p&gt; &lt;p&gt;&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        document.body.appendChild(e);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.play()</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function x(e) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.className += &quot; &quot; + s + &quot; &quot; + o</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function T(e) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        e.className += &quot; &quot; + s + &quot; &quot; + u[Math.floor(Math.random() * u.length)]</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    function N() &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var e = document.getElementsByClassName(s);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var t = new RegExp(&quot;\\b&quot; + s + &quot;\\b&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        for (var n = 0; n &lt; e.length; ) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            e[n].className = e[n].className.replace(t, &quot;&quot;)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml"></span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var e = 30;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var t = 30;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var n = 350;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var r = 350;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var i = &quot;//7xuupy.com1.z0.glb.clouddn.com/tongxingSibel%20-%20Im%20Sorry.mp3&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var s = &quot;mw-harlem_shake_me&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var o = &quot;im_first&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var u = [&quot;im_drunk&quot;, &quot;im_baked&quot;, &quot;im_trippin&quot;, &quot;im_blown&quot;];</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var a = &quot;mw-strobe_light&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var f = &quot;//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var l = &quot;mw_added_css&quot;;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var b = g();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var w = y();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var C = document.getElementsByTagName(&quot;*&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var k = null;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    for (var L = 0; L &lt; C.length; L++) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var A = C[L];</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        if (v(A)) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            if (E(A)) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                k = A;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">                break</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    if (A === null) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        console.warn(&quot;Could not find a node of the right size. Please try a different page.&quot;);</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        return</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    c();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    S();</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    var O = [];</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    for (var L = 0; L &lt; C.length; L++) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        var A = C[L];</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        if (v(A)) &#123;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">            O.push(A)</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">        &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="language-xml">    &#125;)()    &#x27;</span>&gt;</span>High一下<span class="tag">&lt;/<span class="name">a</span>&gt;</span> <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-添加最近访客"><a href="#4-添加最近访客" class="headerlink" title="4. 添加最近访客"></a>4. 添加最近访客</h4><p>在需要添加最近访客的网页对应的 markdown 文件中添加如下代码：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">最近访客</span><br><span class="line">&lt;div <span class="attribute">class</span>=<span class="string">&quot;ds-recent-visitors&quot;</span> <span class="attribute">data-num-items</span>=<span class="string">&quot;39&quot;</span> <span class="attribute">data-avatar-size</span>=<span class="string">&quot;40&quot;</span> <span class="attribute">id</span>=<span class="string">&quot;ds-recent-visitors&quot;</span>&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="5-鼠标点击小红心的设置"><a href="#5-鼠标点击小红心的设置" class="headerlink" title="5. 鼠标点击小红心的设置"></a>5. 鼠标点击小红心的设置</h4><ol>
+<li>将 <a target="_blank" rel="noopener" href="https://github.com/Neveryu/Neveryu.github.io/blob/master/js/src/love.js">love.js</a> 文件添加到 \themes\next\source\js\src 文件目录下。</li>
+<li>找到 <code>\themes\next\layout\_layout.swing</code> 文件，** 在文件的后面，<code>&lt;/body&gt;</code> 标签之前 ** 添加以下代码：  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 页面点击小红心 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/js/src/love.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="6-背景的设置"><a href="#6-背景的设置" class="headerlink" title="6. 背景的设置"></a>6. 背景的设置</h4><ol>
+<li>将 <a target="_blank" rel="noopener" href="https://github.com/Neveryu/Neveryu.github.io/blob/master/js/src/particle.js">particle.js</a> 文件添加到 \themes\next\source\js\src 文件目录下。</li>
+<li>找到 <code>\themes\next\layout\_layout.swing</code> 文件，** 在文件的后面，<code>&lt;/body&gt;</code>标签之前 ** 添加以下代码：  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 背景动画 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/js/src/particle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="7-修改文章内链接文本样式"><a href="#7-修改文章内链接文本样式" class="headerlink" title="7.修改文章内链接文本样式"></a>7.修改文章内链接文本样式</h4><p>将链接文本设置为蓝色，鼠标划过时文字颜色加深，并显示下划线。<br>找到文件 <code>themes\next\source\css\_custom\custom.styl</code> ，添加如下 css 样式：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.post-body</span> <span class="selector-tag">p</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0593d3</span>;</span><br><span class="line">  <span class="attribute">border-bottom</span>: none;</span><br><span class="line">  &amp;<span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#0477ab</span>;</span><br><span class="line">    <span class="attribute">text-decoration</span>: underline;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-多说评论不稳定，加载速度慢怎么办？"><a href="#8-多说评论不稳定，加载速度慢怎么办？" class="headerlink" title="8. 多说评论不稳定，加载速度慢怎么办？"></a>8. 多说评论不稳定，加载速度慢怎么办？</h4><p>把多说评论依赖的 embed.js 放置底部，这里需要修改的文件是 duoshuo.swig。<br>将</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">document.getElementsByTagName</span>(<span class="symbol">&#x27;head</span>&#x27;)[<span class="name">0</span>]</span><br></pre></td></tr></table></figure>
+<p>修改成下面的代码</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">document.getElementById</span>(<span class="symbol">&#x27;footer</span>&#x27;)</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="9-给-Github-添加-README"><a href="#9-给-Github-添加-README" class="headerlink" title="9. 给 Github 添加 README"></a>9. 给 Github 添加 README</h4><p>默认情况下，Github中每一个项目，我们希望有一份 README.md 的文件来作为项目的说明，但是我们在项目根目录下的 blog\source 目录下创建一份 README.md 文件，写好说明介绍，部署的时候，这个 README.md 会被 hexo 解析掉，而不会被解析到 Github 中去的。<br>正确的解决方法其实很简单：<br>** 把 README.md 文件的后缀名改成 “MDOWN” 然后扔到<code>blog/source</code>文件夹下即可，这样 hexo 不会解析，Github 也会将其作为 MD 文件解析。 **</p>
+<h4 id="10-给-Blog-添加-LICENSE"><a href="#10-给-Blog-添加-LICENSE" class="headerlink" title="10. 给 Blog 添加 LICENSE"></a>10. 给 Blog 添加 LICENSE</h4><p>在 <span id="inline-purple">主题配置文件</span> 中的 160 行左右：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Creative Commons 4.0 International License.</span><br><span class="line"># http:<span class="comment">//creativecommons.org/</span></span><br><span class="line"># Available: <span class="keyword">by</span> | <span class="keyword">by</span>-nc | <span class="keyword">by</span>-nc-nd | <span class="keyword">by</span>-nc-<span class="keyword">sa</span> | <span class="keyword">by</span>-nd | <span class="keyword">by</span>-<span class="keyword">sa</span> | zero</span><br><span class="line">creative_commons: <span class="keyword">by</span>-nc-<span class="keyword">sa</span></span><br><span class="line">#creative_commons:</span><br></pre></td></tr></table></figure>
+<p>将其中第 4 行的注释放开，然后选择你想使用的 LICENSE 即可，可选项参照第 3 行。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2016092218.htm">https://m.is-local.org/post/2016092218.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Hexo/">🏷️ Hexo</a>
+                    
+                        <a href="/tags/Next/">🏷️ Next</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2016091325.htm">Hexo-NexT搭建个人博客（三）</a>
+            
+            
+            <a class="next" rel="next" href="/post/2016091325.htm">Hexo-NexT搭建个人博客（一）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

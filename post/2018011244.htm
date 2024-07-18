@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>URL请求到Action的映射规则 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">URL请求到Action的映射规则</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 24, 2018&nbsp;&nbsp;12:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Spring/">Spring</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/jGl6LS4spIE7HT9.jpg"></p>
+<p>URL请求到Action的映射规则</p>
+<span id="more"></span>
+<h3 id="1-URL路径映射"><a href="#1-URL路径映射" class="headerlink" title="1.URL路径映射"></a>1.URL路径映射</h3><h4 id="1-1-对一个action配置多个URL映射："><a href="#1-1-对一个action配置多个URL映射：" class="headerlink" title="1.1.对一个action配置多个URL映射："></a>1.1.对一个action配置多个URL映射：</h4><p>我们把上一篇中的HelloWorldController的index() action方法的@RequestMapping更改为@RequestMapping(value&#x3D;{“&#x2F;index”, “&#x2F;hello”}, method &#x3D; {RequestMethod.GET})，这表示对该action配置了&#x2F;index和&#x2F;hello两个映射。运行测试，可以看到&#x2F;helloworld&#x2F;hello请求也成功匹配。</p>
+<h4 id="1-2-URL请求参数映射："><a href="#1-2-URL请求参数映射：" class="headerlink" title="1.2.URL请求参数映射："></a>1.2.URL请求参数映射：</h4><p>这在查询的时候经常用到，比如我们根据id或编号来获取某一条记录。</p>
+<p>在HelloWorldController添加一个getDetail的action，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value=&quot;/detail/&#123;id&#125;&quot;, method = &#123;RequestMethod.GET&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ModelAndView <span class="title function_">getDetail</span><span class="params">(<span class="meta">@PathVariable(value=&quot;id&quot;)</span> Integer id)</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();  </span><br><span class="line">    modelAndView.addObject(<span class="string">&quot;id&quot;</span>, id);  </span><br><span class="line">    modelAndView.setViewName(<span class="string">&quot;detail&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中value&#x3D;”&#x2F;detail&#x2F;{id}”,中的{id}为占位符表示可以映射请求为&#x2F;detail&#x2F;xxxx 的URL如：&#x2F;detail&#x2F;123等。</p>
+<p>方法的参数@PathVariable(value&#x3D;”id”) Integer id 用于将URL中占位符所对应变量映射到参数id上，@PathVariable(value&#x3D;”id”) 中value的值要和占位符&#x2F;{id}大括号中的值一致。</p>
+<p>在views中添加detail.jsp视图，用于将获取到的id值展示出来。视图内容如下：</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span></span><br><span class="line">    pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=<span class="string">&quot;Content-Type&quot;</span> content=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br><span class="line">&lt;title&gt;Insert title here&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    $&#123;id&#125;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>运行试，请求URL地址 <a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/detail/123">http://localhost:8080/SpringMVCLesson/helloworld/detail/123</a> ，结果可以看到已经正确的显示了我们请求的id。</p>
+<h4 id="1-3-URL通配符映射："><a href="#1-3-URL通配符映射：" class="headerlink" title="1.3.URL通配符映射："></a>1.3.URL通配符映射：</h4><p>我们还可以通过通配符对URL映射进行配置，通配符有“？”和“<em>”两个字符。其中“？”表示1个字符，“</em>”表示匹配多个字符，“**”表示匹配0个或多个路径。</p>
+<p>例如：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">“<span class="regexp">/helloworld/i</span>ndex?”可以匹配“<span class="regexp">/helloworld/i</span>ndexA”、“<span class="regexp">/helloworld/i</span>ndexB”</span><br><span class="line">但不能匹配“<span class="regexp">/helloworld/i</span>ndex”也不能匹配“<span class="regexp">/helloworld/i</span>ndexAA”；</span><br><span class="line"></span><br><span class="line"> “<span class="regexp">/helloworld/i</span>ndex*”可以匹配“<span class="regexp">/helloworld/i</span>ndex”、“<span class="regexp">/helloworld/i</span>ndexA”、“<span class="regexp">/helloworld/i</span>ndexAA”</span><br><span class="line"> 但不能匹配“<span class="regexp">/helloworld/i</span>ndex/A”；</span><br><span class="line"></span><br><span class="line"> “<span class="regexp">/helloworld/i</span>ndex<span class="regexp">/*”可以匹配“/</span>helloworld<span class="regexp">/index/</span>”、“<span class="regexp">/helloworld/i</span>ndex<span class="regexp">/A”、“/</span>helloworld<span class="regexp">/index/</span>AA”、“<span class="regexp">/helloworld/i</span>ndex/AB”</span><br><span class="line"> 但不能匹配  “<span class="regexp">/helloworld/i</span>ndex”、“<span class="regexp">/helloworld/i</span>ndex<span class="regexp">/A/</span>B”;</span><br><span class="line"></span><br><span class="line"> “<span class="regexp">/helloworld/i</span>ndex<span class="regexp">/**”可以匹配“/</span>helloworld<span class="regexp">/index/</span>”下的多有子路径，比如：“<span class="regexp">/helloworld/i</span>ndex<span class="regexp">/A/</span>B<span class="regexp">/C/</span>D”;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如果现在有“&#x2F;helloworld&#x2F;index”和“&#x2F;helloworld&#x2F;*”，如果请求地址为“&#x2F;helloworld&#x2F;index”那么将如何匹配？Spring MVC会按照最长匹配优先原则（即和映射配置中哪个匹配的最多）来匹配，所以会匹配“&#x2F;helloworld&#x2F;index”，下面来做测试：</p>
+<p>在HelloWorldController添加一个urlTest的action，内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value=&quot;/*&quot;, method = &#123;RequestMethod.GET&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ModelAndView <span class="title function_">urlTest</span><span class="params">()</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();   </span><br><span class="line">    modelAndView.setViewName(<span class="string">&quot;urltest&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在views文件夹中新加一个视图urltest.jsp，为了和index.jsp做区别urltest.jsp的内容如下：</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span></span><br><span class="line">    pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=<span class="string">&quot;Content-Type&quot;</span> content=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br><span class="line">&lt;title&gt;Insert title here&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    urlTest!</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/index%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/index查看结果：</a></p>
+<p>可以看出映射的是index对应的action。</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/AAA%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/AAA查看结果：</a></p>
+<p>可以看出映射的是urlTest对应的action。</p>
+<h4 id="1-4-URL正则表达式映射："><a href="#1-4-URL正则表达式映射：" class="headerlink" title="1.4.URL正则表达式映射："></a>1.4.URL正则表达式映射：</h4><p>Spring MVC还支持正则表达式方式的映射配置，我们通过一个测试来展示：</p>
+<p>在HelloWorldController添加一个regUrlTest的action，内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value=&quot;/reg/&#123;name:\\w+&#125;-&#123;age:\\d+&#125;&quot;, method = &#123;RequestMethod.GET&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ModelAndView <span class="title function_">regUrlTest</span><span class="params">(<span class="meta">@PathVariable(value=&quot;name&quot;)</span> String name, <span class="meta">@PathVariable(value=&quot;age&quot;)</span> Integer age)</span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();   </span><br><span class="line">    modelAndView.addObject(<span class="string">&quot;name&quot;</span>, name); </span><br><span class="line">    modelAndView.addObject(<span class="string">&quot;age&quot;</span>, age); </span><br><span class="line">    modelAndView.setViewName(<span class="string">&quot;regurltest&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在views文件夹中新加一个视图regurltest.jsp内容如下：</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span></span><br><span class="line">    pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=<span class="string">&quot;Content-Type&quot;</span> content=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br><span class="line">&lt;title&gt;Insert title here&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    $&#123;name&#125;-$&#123;age&#125;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/reg/Hanmeimei-18%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/reg/Hanmeimei-18查看结果：</a></p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/reg/Hanmeimei-Lilei%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%88%E4%BC%9A%E5%8F%91%E7%8E%B0%E6%89%BE%E4%B8%8D%E5%88%B0%E5%AF%B9%E5%BA%94%E7%9A%84action%E8%BF%94%E5%9B%9E404%EF%BC%89%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/reg/Hanmeimei-Lilei查看结果（会发现找不到对应的action返回404）：</a></p>
+<h3 id="2-限制action所接受的请求方式（get或post）："><a href="#2-限制action所接受的请求方式（get或post）：" class="headerlink" title="2.限制action所接受的请求方式（get或post）："></a>2.限制action所接受的请求方式（get或post）：</h3><p>之前我们在HelloWorldController的index() action方法上配置的为@RequestMapping(value&#x3D;”&#x2F;<em>“, method &#x3D; {RequestMethod.GET})我们把它改为@RequestMapping(value&#x3D;”&#x2F;</em>“, method &#x3D; {RequestMethod.POST})再次请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/index%E8%AF%95%E4%B8%80%E4%B8%8B%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/index试一下：</a></p>
+<p>这里可以看到结果映射到了urlTest这个action，这是因为我们在urlTest上配置的为@RequestMapping(value&#x3D;”&#x2F;*”, method &#x3D; {RequestMethod.GET})，当index这个action映射不在符合时便映射到了urlTest。</p>
+<p>我们也可以这样配置@RequestMapping(value&#x3D;”&#x2F;*”, method &#x3D; {RequestMethod.GET, RequestMethod.POST})表示该action可以接受get或post请求，不过更简单的是不对method做配置则默认支持所有请求方式。</p>
+<h3 id="3-限制action所接受请求的参数："><a href="#3-限制action所接受请求的参数：" class="headerlink" title="3.限制action所接受请求的参数："></a>3.限制action所接受请求的参数：</h3><p>我们可以为某个action指定映射的请求中必须包含某参数，或必须不包含某参数，或者某参数必须等于某个值，或者某参数必须不等于某个值这些限制。</p>
+<h4 id="3-1-指定映射请求必须包含某参数："><a href="#3-1-指定映射请求必须包含某参数：" class="headerlink" title="3.1.指定映射请求必须包含某参数："></a>3.1.指定映射请求必须包含某参数：</h4><p>在HelloWorldController添加一个paramsTest的action，内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value=&quot;/paramstest&quot;, params=&quot;example&quot;, method = &#123;RequestMethod.GET&#125;)</span></span><br><span class="line"><span class="keyword">public</span> ModelAndView <span class="title function_">paramsTest</span><span class="params">()</span>&#123;  </span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">modelAndView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();   </span><br><span class="line">    modelAndView.setViewName(<span class="string">&quot;paramstest&quot;</span>);  </span><br><span class="line">    <span class="keyword">return</span> modelAndView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在view文件夹中新加一个视图paramstest.jsp内容如下：</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span></span><br><span class="line">    pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html PUBLIC <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=<span class="string">&quot;Content-Type&quot;</span> content=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span><br><span class="line">&lt;title&gt;Insert title here&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    paramstest!</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest查看结果：</a></p>
+<p>这里可以看到没有找到paramsTest这个action结果还是映射到了urlTest这个action。</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example查看结果：</a></p>
+<p>这次可以看到请求映射到了paramsTest这个action。</p>
+<h4 id="3-2-指定映射请求必须不包含某参数："><a href="#3-2-指定映射请求必须不包含某参数：" class="headerlink" title="3.2.指定映射请求必须不包含某参数："></a>3.2.指定映射请求必须不包含某参数：</h4><p>把刚才添加的paramsTest的@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”example”, method &#x3D; {RequestMethod.GET}) 改为@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”!example”, method &#x3D; {RequestMethod.GET})</p>
+<p>重新请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example查看结果：</a></p>
+<p>可以看到又没有找到paramsTest这个action而映射到了urlTest这个action。</p>
+<h4 id="3-3-指定映射请求中或者某参数必须等于某个值："><a href="#3-3-指定映射请求中或者某参数必须等于某个值：" class="headerlink" title="3.3.指定映射请求中或者某参数必须等于某个值："></a>3.3.指定映射请求中或者某参数必须等于某个值：</h4><p>把刚才添加的paramsTest的@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”example”, method &#x3D; {RequestMethod.GET}) 改为@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”example&#x3D;AAA”, method &#x3D; {RequestMethod.GET})</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=BBB%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=BBB查看结果：</a></p>
+<p>可以看到没有找到paramsTest这个action而映射到了urlTest这个action。</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=AAA%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=AAA查看结果：</a></p>
+<p>这次可以看到请求映射到了paramsTest这个action。</p>
+<h4 id="3-4-指定映射请求中或者某参数必须不等于某个值："><a href="#3-4-指定映射请求中或者某参数必须不等于某个值：" class="headerlink" title="3.4.指定映射请求中或者某参数必须不等于某个值："></a>3.4.指定映射请求中或者某参数必须不等于某个值：</h4><p>把刚才添加的paramsTest的@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”example”, method &#x3D; {RequestMethod.GET}) 改为@RequestMapping(value&#x3D;”&#x2F;paramstest”, params&#x3D;”example!&#x3D;AAA”, method &#x3D; {RequestMethod.GET})</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=BBB%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=BBB查看结果：</a></p>
+<p>可以看到请求映射到了paramsTest这个action。</p>
+<p>请求<a target="_blank" rel="noopener" href="http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=AAA%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%EF%BC%9A">http://localhost:8080/SpringMVCLesson/helloworld/paramstest?example=AAA查看结果：</a></p>
+<p>可以看到没有找到paramsTest这个action而映射到了urlTest这个action。</p>
+<p>注：当我们为params指定多个参数时如：params&#x3D;{“example1”, “example2”}，表示的是and关系，即两个参数限制必须同时满足。</p>
+<h3 id="4-限制action所接受请求头参数："><a href="#4-限制action所接受请求头参数：" class="headerlink" title="4.限制action所接受请求头参数："></a>4.限制action所接受请求头参数：</h3><p>同限制action所接受的请求参数一样，我们也可以为某个action指定映射的请求头中必须包含某参数，或必须不包含某参数，或者某参数必须等于某个值，或者某参数必须不等于某个值这些限制。</p>
+<h4 id="4-1-指定映射请求头必须包含某参数："><a href="#4-1-指定映射请求头必须包含某参数：" class="headerlink" title="4.1.指定映射请求头必须包含某参数："></a>4.1.指定映射请求头必须包含某参数：</h4><p>@RequestMapping(value&#x3D;”&#x2F;headerTest”, headers &#x3D; “example”)。与限制请求参数是一样的，可以参考上面的例子进行测试。</p>
+<h4 id="4-2-指定映射请求头必须不包含某参数："><a href="#4-2-指定映射请求头必须不包含某参数：" class="headerlink" title="4.2.指定映射请求头必须不包含某参数："></a>4.2.指定映射请求头必须不包含某参数：</h4><p>@RequestMapping(value&#x3D;”&#x2F;headerTest”, headers &#x3D; “!example”)。与限制请求参数是一样的，可以参考上面的例子进行测试。</p>
+<h4 id="4-3-指定映射请求头中或者某参数必须等于某个值："><a href="#4-3-指定映射请求头中或者某参数必须等于某个值：" class="headerlink" title="4.3.指定映射请求头中或者某参数必须等于某个值："></a>4.3.指定映射请求头中或者某参数必须等于某个值：</h4><p>@RequestMapping(value&#x3D;”&#x2F;headerTest”, headers &#x3D; “Accept&#x3D;text&#x2F;html”)。与限制请求参数是一样的，可以参考上面的例子进行测试。</p>
+<h4 id="4-4-指定映射请求头中或者某参数必须不等于某个值："><a href="#4-4-指定映射请求头中或者某参数必须不等于某个值：" class="headerlink" title="4.4.指定映射请求头中或者某参数必须不等于某个值："></a>4.4.指定映射请求头中或者某参数必须不等于某个值：</h4><p>@RequestMapping(value&#x3D;”&#x2F;headerTest”, headers &#x3D; “Accept!&#x3D;text&#x2F;html”)。与限制请求参数是一样的，可以参考上面的例子进行测试。</p>
+<p>注：当我们为headers指定多个参数时如：headers&#x3D;{“example1”, “example2”}，表示的是and关系，即两个参数限制必须同时满足。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2018011244.htm">https://m.is-local.org/post/2018011244.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Spring/">🏷️ Spring</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018011344.htm">Web站点如何防范XSS、CSRF、SQL注入攻击</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018012344.htm">程序员的职业方向</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

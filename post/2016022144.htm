@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>HEXO添加音乐播放器 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">HEXO添加音乐播放器</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 9, 2016&nbsp;&nbsp;21:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Hexo/">Hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/14/U14OBKJqZTW89pr.jpg"></p>
+<p>HTML5 音乐播放器 jQuery 插件参考<a target="_blank" rel="noopener" href="http://www.jq22.com/jquery-info11923">HTML5 悬浮音乐播放器</a>和<a target="_blank" rel="noopener" href="https://ergou.scuxl.cn/2017/05/23/%E4%B8%BA%E4%BD%A0%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8">h5 audio 播放器</a>。</p>
+<span id="more"></span>
+<h4 id="HTML5-音乐播放器"><a href="#HTML5-音乐播放器" class="headerlink" title="HTML5 音乐播放器"></a>HTML5 音乐播放器</h4><ol>
+<li><p>下载<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1slyR4yp">播放器</a> 密码：oznd，解压后丢到站点根目录，也就是<code>source-static</code>目录下面。在站点<code>_config.yml</code>中，设置<code>skip_rende: static/**</code>（两个星号）</p>
+</li>
+<li><p>如果你想整个博客都能够播放音乐，添加如下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/themes/next/layout/_layout.swig&#123;% include &#x27;_third-party/exturl.swig&#x27; %&#125;</span><br><span class="line"></span><br><span class="line">+ &#123;% include &#x27;_my/audio.swig&#x27; %&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 <code>~/hexo/themes/next/layout</code> 中新建<code>_my</code>目录 和<code>audio.swig</code> 文件，添加如下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/themes/next/layout/_my/audio.swig&#123;% if theme.audio.enable %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;/static/css/player.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;QPlayer&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;pContent&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;player&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;cover&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;ctrl&quot;</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;musicTag marquee&quot;</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">strong</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span><br><span class="line">					 <span class="tag">&lt;<span class="name">span</span>&gt;</span> - <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;artist&quot;</span>&gt;</span>Artist<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;progress&quot;</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;timer left&quot;</span>&gt;</span>0:00<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;contr&quot;</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;rewind icon&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;playback icon&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;fastforward icon&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right&quot;</span>&gt;</span></span><br><span class="line">						<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;liebiao icon&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;ssBtn&quot;</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;adf&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ol</span> <span class="attr">id</span>=<span class="string">&quot;playlist&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ol</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;//cdn.bootcss.com/jQuery.Marquee/1.3.94/jquery.marquee.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> playlist = [];</span></span><br><span class="line"><span class="language-javascript">  &#123;% <span class="keyword">for</span> src <span class="keyword">in</span> theme.<span class="property">audio</span>.<span class="property">sources</span> %&#125;</span></span><br><span class="line"><span class="language-javascript">  playlist.<span class="title function_">push</span>(<span class="params">&#123;title:<span class="string">&#x27;&#123;&#123;src.title&#125;&#125;&#x27;</span>,artist:<span class="string">&#x27;&#123;&#123;src.artist&#125;&#125;&#x27;</span>,mp3:<span class="string">&#x27;&#123;&#123; src.mp3 &#125;&#125;&#x27;</span>,cover:<span class="string">&#x27;&#123;&#123;src.cover&#125;&#125;&#x27;</span>&#125;</span>)</span></span><br><span class="line"><span class="language-javascript">  &#123;% endfor %&#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> isRotate = <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> autoplay = <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/static/js/player.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">function</span> <span class="title function_">bgChange</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="keyword">var</span> lis= $(<span class="string">&#x27;.lib&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">	<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;lis.<span class="property">length</span>; i+=<span class="number">2</span>)</span></span><br><span class="line"><span class="language-javascript">	lis[i].<span class="property">style</span>.<span class="property">background</span> = <span class="string">&#x27;rgba(246, 246, 246, 0.5)&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="variable language_">window</span>.<span class="property">onload</span> = bgChange;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在主题配置文件中添加如下项：其中<code>sources</code>就是我们主要要填写的配置项。<code>enable</code>是控制整个播放器是否开启。如果有多个音乐的话，每个音乐之间用<code>,</code>隔开。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/themes/next/_config.ymlaudio:</span><br><span class="line">  enable: true</span><br><span class="line">  sources: [</span><br><span class="line">  &#123; title: &#x27;爱是昂贵的&#x27;,</span><br><span class="line">    artist: &#x27;声音玩具&#x27;,</span><br><span class="line">    mp3: &#x27;http://m2.music.126.net/66i9ySu3BLIQ8_fwK9yvVQ==/7963762720382833.mp3&#x27;,</span><br><span class="line">    cover: &#x27;http://img.xiami.net/images/album/img29/3029/16250159661472438031.jpg&#x27; &#125;</span><br><span class="line">  ]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取<a target="_blank" rel="noopener" href="https://sli1989.github.io/2017/05/30/music/#music-download">音乐外链</a>，<strong>使用前试听一下得到的音乐链接</strong>。</p>
+</li>
+<li><p>修改 HTML5 音乐播放器颜色：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/css/player.css#pContent .ssBtn &#123;</span><br><span class="line">	width:20px;</span><br><span class="line">	height:60px;</span><br><span class="line">+	background:#1abc9c none repeat scroll 0% 0%;</span><br><span class="line">	position:relative;</span><br><span class="line">	right:0px;</span><br><span class="line">	bottom:0px;</span><br><span class="line">	box-sizing:border-box;</span><br><span class="line">	border-left:none;</span><br><span class="line">	cursor:pointer;</span><br><span class="line">	display:box-shadow:;</span><br><span class="line">	float:right;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#playlist li:hover &#123;</span><br><span class="line">	color:#716e6e;</span><br><span class="line">	font-weight:bold;</span><br><span class="line">+	border-left:3px solid #1abc9c;</span><br><span class="line">	padding:3px 15px 3px 11px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#playlist li.playing &#123;</span><br><span class="line">  color:#716e6e;</span><br><span class="line">	font-weight:bold;</span><br><span class="line">+	border-left:3px solid #bc1a1a;</span><br><span class="line">	padding:3px 15px 3px 11px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HTML5 音乐播放器添加音量控制。播放器里是有两个上一首和下一首的按钮的，左键点击他们就会切换歌曲，那么我们让他右键点击降低和升高声音就好啦。<strong>无缓存第一次的声音存在 bug，如有缓存时，音量默认为系统音量的 0.2 倍</strong>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/js/player.js$(document).bind(&quot;contextmenu&quot;, function () &#123;</span><br><span class="line">    return false;</span><br><span class="line">&#125;)</span><br><span class="line">$(&#x27;.rewind&#x27;).on(&#x27;click&#x27;, function () &#123;</span><br><span class="line">    if (isShuffle) &#123;</span><br><span class="line">        shufflePlay(0);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        switchTrack(--currentTrack);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).mousedown(function (e) &#123;</span><br><span class="line">    if (3 == e.which) &#123;</span><br><span class="line">        if (audio.volume &gt;= 0.05) &#123;</span><br><span class="line">            audio.volume -= 0.05</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            audio.volume = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        localStorage.volume = audio.volume</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">$(&#x27;.fastforward&#x27;).on(&#x27;click&#x27;, function () &#123;</span><br><span class="line">    if (isShuffle) &#123;</span><br><span class="line">        shufflePlay(1);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        switchTrack(++currentTrack);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).mousedown(function (e) &#123;</span><br><span class="line">    if (3 == e.which) &#123;</span><br><span class="line">        if (audio.volume &lt;= 0.95) &#123;</span><br><span class="line">            audio.volume += 0.05</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            audio.volume = 1;</span><br><span class="line">        &#125;</span><br><span class="line">        localStorage.volume = audio.volume</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HTML5 音乐播放器使用<code>localstorage</code>存储音乐的播放状态：</p>
+<ol>
+<li><p>在<code>~/hexo/source/static/js/player.js</code>的<code>setProgress</code>函数中加入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/js/player.jsvar setProgress = function (value) &#123;</span><br><span class="line">    var currentSec = parseInt(value % 60) &lt; 10 ? &#x27;0&#x27; + parseInt(value % 60) : parseInt(value % 60),</span><br><span class="line">        ratio = value / audio.duration * 100;</span><br><span class="line"></span><br><span class="line">    $(&#x27;.timer&#x27;).html(parseInt(value / 60) + &#x27;:&#x27; + currentSec);</span><br><span class="line">+   localStorage.time = value</span><br><span class="line">+   localStorage.song = currentTrack</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>loadMusic</code>函数后面，新定义一个函数。<code>sessionStorage.autoPlay = &quot;true&quot;</code>控制自动播放。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/js/player.jsvar FirstLoad = function (i, time) &#123;</span><br><span class="line">    if (i == undefined) &#123;</span><br><span class="line">        i = 0</span><br><span class="line">        currentTrack = 0</span><br><span class="line">        shuffleIndex = 0</span><br><span class="line">    &#125;</span><br><span class="line">    loadMusic(i)</span><br><span class="line">    if (time) &#123;</span><br><span class="line">        audio.currentTime = time</span><br><span class="line">    &#125;</span><br><span class="line">    if (localStorage.volume) &#123;</span><br><span class="line">        audio.volume = localStorage.volume</span><br><span class="line">    &#125;</span><br><span class="line">    if (sessionStorage.autoPlay == undefined) &#123;</span><br><span class="line">        sessionStorage.autoPlay = &quot;true&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>currentTrack</code>的赋值部分。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/js/player.jsvar currentTrack = localStorage.song, audio, timeout;</span><br><span class="line">var shuffle_array = localStorage.qplayer_shuffle_array;</span><br><span class="line"></span><br><span class="line">if (isShuffle &amp;&amp; shuffle_array != undefined &amp;&amp; playlist.length === (shuffleArray = JSON.parse(shuffle_array)).length) &#123;</span><br><span class="line">    shuffleIndex = 0;</span><br><span class="line">    if (currentTrack == undefined) &#123;</span><br><span class="line">        currentTrack = shuffleArray[0];</span><br><span class="line">        $(&#x27;#QPlayer .cover&#x27;).attr(&#x27;title&#x27;, &#x27;点击关闭随机播放&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    isShuffle = false;</span><br><span class="line">    $(&#x27;#QPlayer .cover&#x27;).attr(&#x27;title&#x27;, &#x27;点击开启随机播放&#x27;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后，将最开始调用的<code>loadMusic</code>替换为<code>FirstLoad</code>函数，这样就可以在打开 &#x2F; 刷新页面时将播放上次的音乐和上次的时间。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">~/hexo/source/static/js/player.js- loadMusic(currentTrack);</span><br><span class="line">+ FirstLoad(currentTrack, localStorage.time);</span><br><span class="line">if (sessionStorage.autoPlay == &quot;true&quot;) &#123;</span><br><span class="line">    play()</span><br><span class="line">&#125;</span><br><span class="line">if (localStorage.volume == undefined) &#123;</span><br><span class="line">    localStorage.volume = 0.2</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p><code>~/hexo/source/static/js/player.js</code>的<code>$(&quot;div.ssBtn&quot;).click()</code>控制播放器是否一直弹出，注释掉即可。</p>
+</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2016022144.htm">https://m.is-local.org/post/2016022144.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Hexo/">🏷️ Hexo</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2016091325.htm">Hexo-NexT搭建个人博客（一）</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

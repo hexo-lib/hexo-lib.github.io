@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Request Mapping 基础用法 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Request Mapping 基础用法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 15, 2017&nbsp;&nbsp;9:15:22</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/BackEnd/">BackEnd</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/ib8mUB7xhqCgcNw.jpg"></p>
+<p>@RequestMapping 是 Spring Web 应用程序中最常被用到的注解之一。这个注解会将 HTTP 请求映射到 MVC 和 REST 控制器的处理方法上。<br>在这篇文章中，你将会看到 @RequestMapping 注解在被用来进行 Spring MVC 控制器方法的映射可以如何发挥其多才多艺的功能的。</p>
+<span id="more"></span>
+<h2 id="Request-Mapping-基础用法"><a href="#Request-Mapping-基础用法" class="headerlink" title="Request Mapping 基础用法"></a>Request Mapping 基础用法</h2><p>在 Spring MVC 应用程序中，RequestDispatcher (在 Front Controller 之下) 这个 servlet 负责将进入的 HTTP 请求路由到控制器的处理方法。</p>
+<p>在对 Spring MVC 进行的配置的时候, 你需要指定请求与处理方法之间的映射关系。</p>
+<p>要配置 Web 请求的映射，就需要你用上 @RequestMapping 注解。</p>
+<p>@RequestMapping 注解可以在控制器类的级别和&#x2F;或其中的方法的级别上使用。</p>
+<p>在类的级别上的注解会将一个特定请求或者请求模式映射到一个控制器之上。之后你还可以另外添加方法级别的注解来进一步指定到处理方法的映射关系。</p>
+<p>下面是一个同时在类和方法上应用了 @RequestMapping 注解的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/&quot;)</span></span><br><span class="line">    String <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//mapped to hostname:port/home/</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from get&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/index&quot;)</span></span><br><span class="line">    String <span class="title function_">index</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//mapped to hostname:port/home/index/</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from index&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上述代码所示，到 &#x2F;home 的请求会由 get() 方法来处理，而到 &#x2F;home&#x2F;index 的请求会由 index() 来处理。</p>
+<h2 id="RequestMapping-来处理多个-URI"><a href="#RequestMapping-来处理多个-URI" class="headerlink" title="@RequestMapping 来处理多个 URI"></a>@RequestMapping 来处理多个 URI</h2><p>你可以将多个请求映射到一个方法上去，只需要添加一个带有请求路径值列表的 @RequestMapping 注解就行了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &#123;</span></span><br><span class="line"><span class="meta">        &quot;&quot;,</span></span><br><span class="line"><span class="meta">        &quot;/page&quot;,</span></span><br><span class="line"><span class="meta">        &quot;page*&quot;,</span></span><br><span class="line"><span class="meta">        &quot;view/*,**/msg&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    String <span class="title function_">indexMultipleMapping</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from index multiple mapping.&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如你在这段代码中所看到的，@RequestMapping 支持统配符以及ANT风格的路径。前面这段代码中，如下的这些 URL 都会由 indexMultipleMapping() 来处理：</p>
+<ul>
+<li>localhost:8080&#x2F;home</li>
+<li>localhost:8080&#x2F;home&#x2F;</li>
+<li>localhost:8080&#x2F;home&#x2F;page</li>
+<li>localhost:8080&#x2F;home&#x2F;pageabc</li>
+<li>localhost:8080&#x2F;home&#x2F;view&#x2F;</li>
+<li>localhost:8080&#x2F;home&#x2F;view&#x2F;view</li>
+</ul>
+<h2 id="带有-RequestParam-的-RequestMapping"><a href="#带有-RequestParam-的-RequestMapping" class="headerlink" title="带有 @RequestParam 的 @RequestMapping"></a>带有 @RequestParam 的 @RequestMapping</h2><p>@RequestParam 注解配合 @RequestMapping 一起使用，可以将请求的参数同处理方法的参数绑定在一起。</p>
+<p>@RequestParam 注解使用的时候可以有一个值，也可以没有值。这个值指定了需要被映射到处理方法参数的请求参数, 代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/id&quot;)</span></span><br><span class="line">    String <span class="title function_">getIdByValue</span><span class="params">(<span class="meta">@RequestParam(&quot;id&quot;)</span> String personId)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;ID is &quot;</span> + personId);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Get ID from query string of URL with value element&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/personId&quot;)</span></span><br><span class="line">    String <span class="title function_">getId</span><span class="params">(<span class="meta">@RequestParam</span> String personId)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;ID is &quot;</span> + personId);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Get ID from query string of URL without value element&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在代码的第6行，id 这个请求参数被映射到了 thegetIdByValue() 这个处理方法的参数 personId 上。</p>
+<p>如果请求参数和处理方法参数的名称一样的话，@RequestParam 注解的 value 这个参数就可省掉了, 如代码的第11行所示。</p>
+<p>@RequestParam 注解的 required 这个参数定义了参数值是否是必须要传的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/name&quot;)</span></span><br><span class="line">    String <span class="title function_">getName</span><span class="params">(<span class="meta">@RequestParam(value = &quot;person&quot;, required = false)</span> String personName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Required element of request param&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在这段代码中，因为 required 被指定为 false，所以 getName() 处理方法对于如下两个 URL 都会进行处理：</p>
+<ul>
+<li>&#x2F;home&#x2F;name?person&#x3D;xyz</li>
+<li>&#x2F;home&#x2F;name</li>
+</ul>
+<p>@RequestParam 的 defaultValue 取值就是用来给取值为空的请求参数提供一个默认值的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/name&quot;)</span></span><br><span class="line">    String <span class="title function_">getName</span><span class="params">(<span class="meta">@RequestParam(value = &quot;person&quot;, defaultValue = &quot;John&quot;)</span> String personName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Required element of request param&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，如果 person 这个请求参数为空，那么 getName() 处理方法就会接收 John 这个默认值作为其参数。</p>
+<h2 id="用-RequestMapping-处理-HTTP-的各种方法"><a href="#用-RequestMapping-处理-HTTP-的各种方法" class="headerlink" title="用 @RequestMapping 处理 HTTP 的各种方法"></a>用 @RequestMapping 处理 HTTP 的各种方法</h2><p>Spring MVC 的 @RequestMapping 注解能够处理 HTTP 请求的方法, 比如 GET, PUT, POST, DELETE 以及 PATCH。</p>
+<p>所有的请求默认都会是 HTTP GET 类型的。</p>
+<p>为了能降一个请求映射到一个特定的 HTTP 方法，你需要在 @RequestMapping 中使用 method 来声明 HTTP 请求所使用的方法类型，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(method = RequestMethod.GET)</span></span><br><span class="line">    String <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from get&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(method = RequestMethod.DELETE)</span></span><br><span class="line">    String <span class="title function_">delete</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from delete&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(method = RequestMethod.POST)</span></span><br><span class="line">    String <span class="title function_">post</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from post&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(method = RequestMethod.PUT)</span></span><br><span class="line">    String <span class="title function_">put</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from put&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(method = RequestMethod.PATCH)</span></span><br><span class="line">    String <span class="title function_">patch</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello from patch&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上述这段代码中， @RequestMapping 注解中的 method 元素声明了 HTTP 请求的 HTTP 方法的类型。</p>
+<p>所有的处理处理方法会处理从这同一个 URL( &#x2F;home)进来的请求, 但要看指定的 HTTP 方法是什么来决定用哪个方法来处理。</p>
+<p>例如，一个 POST 类型的请求 &#x2F;home 会交给 post() 方法来处理，而一个 DELETE 类型的请求 &#x2F;home 则会由 delete() 方法来处理。</p>
+<p>你会看到 Spring MVC 将使用这样相同的逻辑来映射其它的方法。</p>
+<h2 id="用-RequestMapping-来处理生产和消费对象"><a href="#用-RequestMapping-来处理生产和消费对象" class="headerlink" title="用 @RequestMapping 来处理生产和消费对象"></a>用 @RequestMapping 来处理生产和消费对象</h2><p>可以使用 @RequestMapping 注解的 produces 和 consumes 这两个元素来缩小请求映射类型的范围。</p>
+<p>为了能用请求的媒体类型来产生对象, 你要用到 @RequestMapping 的 produces 元素再结合着 @ResponseBody 注解。</p>
+<p>你也可以利用 @RequestMapping 的 comsumes 元素再结合着 @RequestBody 注解用请求的媒体类型来消费对象。</p>
+<p>下面这段代码就用到的 @RequestMapping 的生产和消费对象元素：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/prod&quot;, produces = &#123;</span></span><br><span class="line"><span class="meta">        &quot;application/JSON&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    String <span class="title function_">getProduces</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Produces attribute&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/cons&quot;, consumes = &#123;</span></span><br><span class="line"><span class="meta">        &quot;application/JSON&quot;,</span></span><br><span class="line"><span class="meta">        &quot;application/XML&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    String <span class="title function_">getConsumes</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Consumes attribute&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中， getProduces() 处理方法会产生一个 JSON 响应， getConsumes() 处理方法可以同时处理请求中的 JSON 和 XML 内容。</p>
+<h2 id="使用-RequestMapping-来处理消息头"><a href="#使用-RequestMapping-来处理消息头" class="headerlink" title="使用 @RequestMapping 来处理消息头"></a>使用 @RequestMapping 来处理消息头</h2><p>@RequestMapping 注解提供了一个 header 元素来根据请求中的消息头内容缩小请求映射的范围。</p>
+<p>在可以指定 header 元素的值，用 myHeader &#x3D; myValue 这样的格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/head&quot;, headers = &#123;</span></span><br><span class="line"><span class="meta">        &quot;content-type=text/plain&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    String <span class="title function_">post</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Mapping applied along with headers&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面这段代码中， @RequestMapping 注解的 headers 属性将映射范围缩小到了 post() 方法。有了这个，post() 方法就只会处理到 &#x2F;home&#x2F;head 并且 content-typeheader 被指定为 text&#x2F;plain 这个值的请求。</p>
+<p>你也可以像下面这样指定多个消息头：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/head&quot;, headers = &#123;</span></span><br><span class="line"><span class="meta">        &quot;content-type=text/plain&quot;,</span></span><br><span class="line"><span class="meta">        &quot;content-type=text/html&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span> String <span class="title function_">post</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Mapping applied along with headers&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样， post() 方法就能同时接受 text&#x2F;plain 还有 text&#x2F;html 的请求了。</p>
+<h2 id="使用-RequestMapping-来处理请求参数"><a href="#使用-RequestMapping-来处理请求参数" class="headerlink" title="使用 @RequestMapping 来处理请求参数"></a>使用 @RequestMapping 来处理请求参数</h2><p>@RequestMapping 直接的 params 元素可以进一步帮助我们缩小请求映射的定位范围。使用 params 元素，你可以让多个处理方法处理到同一个URL 的请求, 而这些请求的参数是不一样的。</p>
+<p>你可以用 myParams &#x3D; myValue 这种格式来定义参数，也可以使用通配符来指定特定的参数值在请求中是不受支持的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/fetch&quot;, params = &#123;</span></span><br><span class="line"><span class="meta">        &quot;personId=10&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    String <span class="title function_">getParams</span><span class="params">(<span class="meta">@RequestParam(&quot;personId&quot;)</span> String id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Fetched parameter using params attribute = &quot;</span> + id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/fetch&quot;, params = &#123;</span></span><br><span class="line"><span class="meta">        &quot;personId=20&quot;</span></span><br><span class="line"><span class="meta">    &#125;)</span></span><br><span class="line">    String <span class="title function_">getParamsDifferent</span><span class="params">(<span class="meta">@RequestParam(&quot;personId&quot;)</span> String id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Fetched parameter using params attribute = &quot;</span> + id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，getParams() 和 getParamsDifferent() 两个方法都能处理相同的一个 URL (&#x2F;home&#x2F;fetch) ，但是会根据 params 元素的配置不同而决定具体来执行哪一个方法。</p>
+<p>例如，当 URL 是 &#x2F;home&#x2F;fetch?id&#x3D;10 的时候, getParams() 会执行，因为 id 的值是10,。对于 localhost:8080&#x2F;home&#x2F;fetch?personId&#x3D;20 这个URL, getParamsDifferent() 处理方法会得到执行，因为 id 值是 20。</p>
+<h2 id="使用-RequestMapping-处理动态-URI"><a href="#使用-RequestMapping-处理动态-URI" class="headerlink" title="使用 @RequestMapping 处理动态 URI"></a>使用 @RequestMapping 处理动态 URI</h2><p>@RequestMapping 注解可以同 @PathVaraible 注解一起使用，用来处理动态的 URI，URI 的值可以作为控制器中处理方法的参数。你也可以使用正则表达式来只处理可以匹配到正则表达式的动态 URI。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/fetch/&#123;id&#125;&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    String <span class="title function_">getDynamicUriValue</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;ID is &quot;</span> + id);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Dynamic URI parameter fetched&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/fetch/&#123;id:[a-z]+&#125;/&#123;name&#125;&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    String <span class="title function_">getDynamicUriValueRegex</span><span class="params">(<span class="meta">@PathVariable(&quot;name&quot;)</span> String name)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Name is &quot;</span> + name);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Dynamic URI parameter fetched using regex&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，方法 getDynamicUriValue() 会在发起到 localhost:8080&#x2F;home&#x2F;fetch&#x2F;10 的请求时执行。这里 getDynamicUriValue() 方法 id 参数也会动态地被填充为 10 这个值。</p>
+<p>方法 getDynamicUriValueRegex() 会在发起到 localhost:8080&#x2F;home&#x2F;fetch&#x2F;category&#x2F;shirt 的请求时执行。不过，如果发起的请求是 &#x2F;home&#x2F;fetch&#x2F;10&#x2F;shirt 的话，会抛出异常，因为这个URI并不能匹配正则表达式。</p>
+<p>@PathVariable 同 @RequestParam的运行方式不同。你使用 @PathVariable 是为了从 URI 里取到查询参数值。换言之，你使用 @RequestParam 是为了从 URI 模板中获取参数值。</p>
+<h2 id="RequestMapping-默认的处理方法"><a href="#RequestMapping-默认的处理方法" class="headerlink" title="@RequestMapping 默认的处理方法"></a>@RequestMapping 默认的处理方法</h2><p>在控制器类中，你可以有一个默认的处理方法，它可以在有一个向默认 URI 发起的请求时被执行。</p>
+<p>下面是默认处理方法的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping()</span></span><br><span class="line">    String</span><br><span class="line">    <span class="title function_">default</span> <span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;This is a default method for the class&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，向 &#x2F;home 发起的一个请求将会由 default() 来处理，因为注解并没有指定任何值。</p>
+<h2 id="RequestMapping-快捷方式"><a href="#RequestMapping-快捷方式" class="headerlink" title="@RequestMapping 快捷方式"></a>@RequestMapping 快捷方式</h2><p><a target="_blank" rel="noopener" href="https://spring.io/blog/2016/06/10/spring-framework-4-3-goes-ga">Spring 4.3</a> 引入了方法级注解的变体，也被叫做 @RequestMapping 的组合注解。组合注解可以更好的表达被注解方法的语义。它们所扮演的角色就是针对 @RequestMapping 的封装，而且成了定义端点的标准方法。</p>
+<p>例如，@GetMapping 是一个组合注解，它所扮演的是 @RequestMapping(method &#x3D;RequestMethod.GET) 的一个快捷方式。<br>方法级别的注解变体有如下几个：</p>
+<ul>
+<li>@GetMapping</li>
+<li>@PostMapping</li>
+<li>@PutMapping</li>
+<li>@DeleteMapping</li>
+<li>@PatchMapping</li>
+</ul>
+<p>如下代码展示了如何使用组合注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/home&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/person&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; getPerson() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from GET&quot;</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/person/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; getPersonById(<span class="meta">@PathVariable</span> String id) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from GET with id &quot;</span> + id, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PostMapping(&quot;/person&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; postPerson() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from POST method&quot;</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PutMapping(&quot;/person&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; putPerson() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from PUT method&quot;</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;/person&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; deletePerson() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from DELETE method&quot;</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PatchMapping(&quot;/person&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> ResponseEntity &lt; String &gt; patchPerson() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ResponseEntity</span> &lt; String &gt; (<span class="string">&quot;Response from PATCH method&quot;</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，每一个处理方法都使用 @RequestMapping 的组合变体进行了注解。尽管每个变体都可以使用带有方法属性的 @RequestMapping 注解来互换实现, 但组合变体仍然是一种最佳的实践 — 这主要是因为组合注解减少了在应用程序上要配置的元数据，并且代码也更易读。</p>
+<h2 id="RequestMapping-总结"><a href="#RequestMapping-总结" class="headerlink" title="@RequestMapping 总结"></a>@RequestMapping 总结</h2><p>如你在本文中所看到的，@RequestMapping 注解是非常灵活的。你可以使用该注解配置 Spring MVC 来处理大量的场景用例。它可以被用来在 Spring MVC 中配置传统的网页请求，也可以是 REST 风格的 Web 服务。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017090915.htm">https://m.is-local.org/post/2017090915.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Spring/">🏷️ Spring</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017091941.htm">REST客户端编程实例</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017092206.htm">FreeMarker自定义TemplateDirectiveModel(二)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

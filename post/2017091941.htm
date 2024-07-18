@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>REST客户端编程实例 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">REST客户端编程实例</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 18, 2017&nbsp;&nbsp;19:41:52</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/BackEnd/">BackEnd</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/h1TSw7P9Dk6uWAK.jpg"></p>
+<h1 id="导读"><a href="#导读" class="headerlink" title="导读"></a>导读</h1><p>JAX-RS 2.0 又称 JSR 339 不仅定义了一套用于构建 RESTful 网络服务的 API，同时也通过增强客户端 API 功能简化了REST 客户端的构建过程。</p>
+<span id="more"></span>
+<blockquote>
+<p>JAX-RS: Java API for RESTful Web Services是一个<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Java">Java编程语言</a>的<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%8E%A5%E5%8F%A3">应用程序接口</a>,支持按照 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/REST">表象化状态转变</a> (REST)架构风格创建Web服务<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Web%E6%9C%8D%E5%8A%A1">Web服务</a>[<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/JAX-RS#cite_note-1">1]</a>. JAX-RS使用了<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Java_SE">Java SE 5</a>引入的<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Java_%E6%A0%87%E6%B3%A8">Java 标注</a>来简化Web服务客户端和服务端的开发和部署 [<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/JAX-RS">wikipedia</a>]。</p>
+</blockquote>
+<p>在下面的教程中，我们将为一个预先设置好的 REST 服务构建一个客户端，并在这个过程中探索新的构建选项。例如，如何处理同步或者异步的请求，如何给一个请求注册一个回调，如何指定调用对象来构建一个请求使得请求可以被延迟执行。再或者比如，如何使用客户端请求和相应的过滤方法来过滤客户端与服务器之前的通信。</p>
+<h1 id="我们开始吧"><a href="#我们开始吧" class="headerlink" title="我们开始吧"></a>我们开始吧</h1><p>对于想要重建下述客户端例子的读者，我已经使用 Maven 创建好了一个完整的 RESTful 网络服务程序。程序中有内嵌的应用程序服务器，以及一个可独立运行的应用服务器 （war-file 可以通过下文中的下载地址获取）。</p>
+<p>请根据下面的一系列命令来下载并启动 REST 服务器 （下载所有依赖可能会耗费些时间……）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clone https://bitbucket.org/hascode/jaxrs2-client-tutorial.git &amp;&amp; cd jaxrs2-client-tutorial &amp;&amp; make rest-server</span><br></pre></td></tr></table></figure>
+
+<p>现在，让我们先来看看这个 REST 服务的一些实现细节和我们的客户端示例中要用到的对象。如果你对这些没什么兴趣，大可以略过服务端的细节直接去看客户端示例。</p>
+<h2 id="REST-服务"><a href="#REST-服务" class="headerlink" title="REST 服务"></a>REST 服务</h2><p>下面的代码就是个客户端提供服务的 REST 服务。这里的 BookRepository 就是一个由 <em>@Singleton</em> 和 <em>@Startup</em> 修饰的简单 session bean，这个 bean 用来模拟存储或获取 Book Entity。服务对外提供了保存一本书、删除一本书、根据标识查找书籍和获取所有可用书籍的接口。当一本书被保存在服务端时，服务器会为该书生成一个 id，并会返回一个 entity 或一组 entity 的 JSON 数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.hascode.tutorial.jaxrs.server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.ejb.EJB;</span><br><span class="line"><span class="keyword">import</span> javax.ejb.Stateless;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.Consumes;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.DELETE;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.GET;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.POST;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.Path;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.PathParam;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.Produces;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.core.GenericEntity;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.core.MediaType;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.core.Response;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.hascode.tutorial.jaxrs.entity.Book;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Stateless</span></span><br><span class="line"><span class="meta">@Path(&quot;/book&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BookStoreService</span> &#123;</span><br><span class="line">    <span class="meta">@EJB</span></span><br><span class="line">    <span class="keyword">private</span> BookRepository bookRepository;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@POST</span></span><br><span class="line">    <span class="meta">@Consumes(MediaType.APPLICATION_JSON)</span></span><br><span class="line">    <span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">saveBook</span><span class="params">(<span class="keyword">final</span> Book book)</span> &#123;</span><br><span class="line">        <span class="type">Book</span> <span class="variable">bookPersisted</span> <span class="operator">=</span> bookRepository.saveBook(book);</span><br><span class="line">        <span class="keyword">return</span> Response.ok(bookPersisted).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@DELETE</span></span><br><span class="line">    <span class="meta">@Path(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">deleteBook</span><span class="params">(<span class="keyword">final</span> <span class="meta">@PathParam(&quot;id&quot;)</span> String id)</span> &#123;</span><br><span class="line">        bookRepository.deleteBook(id);</span><br><span class="line">        <span class="keyword">return</span> Response.ok().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getAll</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;Book&gt; books = bookRepository.getAll();</span><br><span class="line">        GenericEntity&lt;List&lt;Book&gt;&gt; bookWrapper = <span class="keyword">new</span> <span class="title class_">GenericEntity</span>&lt;List&lt;Book&gt;&gt;(books) &#123;&#125;;</span><br><span class="line">        <span class="keyword">return</span> Response.ok(bookWrapper).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="meta">@Path(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="meta">@Produces(MediaType.APPLICATION_JSON)</span></span><br><span class="line">    <span class="keyword">public</span> Response <span class="title function_">getById</span><span class="params">(<span class="keyword">final</span> <span class="meta">@PathParam(&quot;id&quot;)</span> String id)</span> &#123;</span><br><span class="line">        <span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> bookRepository.getById(id);</span><br><span class="line">        <span class="keyword">return</span> Response.ok(book).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>备注：</strong>我修改了应用服务器，以便使用 Jackson 提供的服务发现机制处理 JSON 数据。</p>
+<h2 id="Book-Entity"><a href="#Book-Entity" class="headerlink" title="Book Entity"></a>Book Entity</h2><p>下面代码中的 bean 就是贯穿本教程的 Book Entity，它包含id、书名、价格和出版日期属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.hascode.tutorial.jaxrs.entity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Book</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="keyword">private</span> BigDecimal price;</span><br><span class="line">    <span class="keyword">private</span> Calendar published;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// getter+setter..</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="创建并绑定一个客户端"><a href="#创建并绑定一个客户端" class="headerlink" title="创建并绑定一个客户端"></a>创建并绑定一个客户端</h1><p>我们可以创建一个 REST 客户端，将其绑定到一个特定的目标 URL 上。并且为它指定专属的、参数化的路径。具体步骤如下：</p>
+<ul>
+<li><strong>通过 ClientBuilder 获取一个客户端的引用：</strong><em>Client client &#x3D; ClientBuilder.newClient();</em></li>
+<li><strong>使用 target() 方法将客户端绑定到 REST 服务上提供的某个 URL：</strong><em>client.target(“<a target="_blank" rel="noopener" href="http://localhost:8080/myrestservice%E2%80%9D">http://localhost:8080/myrestservice”</a>);</em></li>
+<li><strong>通过 path() 和 resolveTemplate() 方法来处理动态的 URL 路径参数：</strong><em>client.target(..).path(“{id}”).resolveTemplate(“id”, someId);</em></li>
+<li>使用 request() 函数来<strong>初始化一个请求</strong>并用后续的 post 或者 get 等方法来指定请求的类型，例如：<em>client.target(..).request().get();</em></li>
+<li>每一步都提供了<strong>多样的可选择的参数和配置选项</strong>，稍后的教程中我将用到其中的一些配置像异步请求、回调处理、还有过滤器注册和特性类等。</li>
+</ul>
+<p>现在，让我们先看一些具备说明性的例子。</p>
+<h1 id="客户端例子"><a href="#客户端例子" class="headerlink" title="客户端例子"></a>客户端例子</h1><p>由于我把所有客户端示例都融进了 jUnit 和 Hamcrest 驱动的测试用例，因此下面的代码实际上在每一个测试用例中都有使用。不过为了让文章尽量简练，重复代码将在后面的代码示例中省略。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">REST_SERVICE_URL</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8080/tutorial/rs/book&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TITLE</span> <span class="operator">=</span> <span class="string">&quot;One big book&quot;</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">BigDecimal</span> <span class="variable">PRICE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="string">&quot;20.0&quot;</span>);</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">GregorianCalendar</span> <span class="variable">PUBLISHED</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GregorianCalendar</span>(</span><br><span class="line">, <span class="number">12</span>, <span class="number">24</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">Client</span> <span class="variable">client</span> <span class="operator">=</span> ClientBuilder.newClient().register(JacksonFeature.class);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Book <span class="title function_">mockBook</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Book</span>();</span><br><span class="line">	book.setTitle(TITLE);</span><br><span class="line">	book.setPrice(PRICE);</span><br><span class="line">	book.setPublished(PUBLISHED);</span><br><span class="line">	<span class="keyword">return</span> book;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>唯一值得注意的是，我在客户端运行时中加入了 Jackson 框架，因此可以通过* javax.ws.rs.client.ClientBuilder* 来获取客户端实例。</p>
+<h2 id="Maven-整合"><a href="#Maven-整合" class="headerlink" title="Maven 整合"></a>Maven 整合</h2><p>所有代码示例运行都需要用到下面依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.glassfish.jersey.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jersey-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.glassfish.jersey.media<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jersey-media-json-jackson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h2><p>下面的示例中我们首先将一个书本实体的信息序列化成 JSON 格式，通过 POST 请求发送到服务端来保存这本书。</p>
+<p>之后，我们使用客户端提供的* path() *和 *resolveTemplate() *方法通过匹配服务端返回值的协议来获取该本书的标识。</p>
+<p>第三步， 我们获取所有可用图书的列表，并在最后删除掉刚才保存的那本书。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">crudExample</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// 1. Save a new book</span></span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line">	<span class="type">Book</span> <span class="variable">bookPersisted</span> <span class="operator">=</span> client</span><br><span class="line">			.target(REST_SERVICE_URL)</span><br><span class="line">			.request()</span><br><span class="line">			.post(Entity.entity(book, MediaType.APPLICATION_JSON),</span><br><span class="line">					Book.class);</span><br><span class="line"></span><br><span class="line">	<span class="type">String</span> <span class="variable">bookId</span> <span class="operator">=</span> bookPersisted.getId();</span><br><span class="line">	assertThat(bookId, notNullValue());</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 2. Fetch book by id</span></span><br><span class="line">	<span class="type">Book</span> <span class="variable">book2</span> <span class="operator">=</span> client.target(REST_SERVICE_URL).path(<span class="string">&quot;/&#123;bookId&#125;&quot;</span>)</span><br><span class="line">			.resolveTemplate(<span class="string">&quot;bookId&quot;</span>, bookId).request().get(Book.class);</span><br><span class="line">	assertThat(book2, notNullValue());</span><br><span class="line">	assertThat(book2.getTitle(), equalTo(TITLE));</span><br><span class="line">	assertThat(book2.getPrice(), equalTo(PRICE));</span><br><span class="line">	assertThat(book2.getPublished().getTime(), equalTo(PUBLISHED.getTime()));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 3. Fetch all books</span></span><br><span class="line">	GenericType&lt;List&lt;Book&gt;&gt; bookType = <span class="keyword">new</span> <span class="title class_">GenericType</span>&lt;List&lt;Book&gt;&gt;() &#123;</span><br><span class="line">	&#125;; <span class="comment">// generic type to wrap a generic list of books</span></span><br><span class="line">	List&lt;Book&gt; books = client.target(REST_SERVICE_URL).request()</span><br><span class="line">			.get(bookType);</span><br><span class="line">	assertThat(books.size(), equalTo(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 4. Delete a book</span></span><br><span class="line">	client.target(REST_SERVICE_URL).path(<span class="string">&quot;/&#123;bookId&#125;&quot;</span>)</span><br><span class="line">			.resolveTemplate(<span class="string">&quot;bookId&quot;</span>, bookId).request().delete();</span><br><span class="line">	List&lt;Book&gt; books2 = client.target(REST_SERVICE_URL).request()</span><br><span class="line">			.get(bookType);</span><br><span class="line">	assertThat(books2.isEmpty(), equalTo(<span class="literal">true</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h2><p>只要给请求构造器加一个简单的 *async() *方法，我们就可以使用 Java 的 *Future *API 提供的多种途径来异步地处理请求。</p>
+<p>下面的例子中，我们在第一个请求中添加一本书，然后再删除它。最后获取所有可用图书的列表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">asyncExample</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line"></span><br><span class="line">	Future&lt;Book&gt; fb = client</span><br><span class="line">			.target(REST_SERVICE_URL)</span><br><span class="line">			.request()</span><br><span class="line">			.async()</span><br><span class="line">			.post(Entity.entity(book, MediaType.APPLICATION_JSON),</span><br><span class="line">					Book.class);</span><br><span class="line"></span><br><span class="line">	<span class="type">Book</span> <span class="variable">bookPersisted</span> <span class="operator">=</span> fb.get();</span><br><span class="line"></span><br><span class="line">	<span class="type">String</span> <span class="variable">bookId</span> <span class="operator">=</span> bookPersisted.getId();</span><br><span class="line">	assertThat(bookId, notNullValue());</span><br><span class="line"></span><br><span class="line">	client.target(REST_SERVICE_URL).path(<span class="string">&quot;/&#123;bookId&#125;&quot;</span>)</span><br><span class="line">			.resolveTemplate(<span class="string">&quot;bookId&quot;</span>, bookId).request().async().delete()</span><br><span class="line">			.get();</span><br><span class="line"></span><br><span class="line">	Future&lt;List&lt;Book&gt;&gt; bookRequest = client.target(REST_SERVICE_URL)</span><br><span class="line">			.request().async().get(<span class="keyword">new</span> <span class="title class_">GenericType</span>&lt;List&lt;Book&gt;&gt;() &#123;</span><br><span class="line">			&#125;);</span><br><span class="line">	List&lt;Book&gt; books2 = bookRequest.get();</span><br><span class="line">	assertThat(books2.isEmpty(), equalTo(<span class="literal">true</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="发起回调"><a href="#发起回调" class="headerlink" title="发起回调"></a>发起回调</h2><p>在客户端与服务器通信过程中，我们还有另一种方式可以对服务器的相应进行修改，那就是在请求中加入一个 InvocationCallback 回调处理。</p>
+<p>可以看到，下面代码段中有着很多缩进那部分就是我们的回调函数了，这些回调可以打印保存成功的图书的完整信息，或者在出现错误的情况下则打印错误和堆栈信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invocationCallbackExample</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line">	client.target(REST_SERVICE_URL)</span><br><span class="line">			.request()</span><br><span class="line">			.async()</span><br><span class="line">			.post(Entity.entity(book, MediaType.APPLICATION_JSON),</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">InvocationCallback</span>&lt;Book&gt;() &#123;</span><br><span class="line">						<span class="meta">@Override</span></span><br><span class="line">						<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">completed</span><span class="params">(<span class="keyword">final</span> Book bookPersisted)</span> &#123;</span><br><span class="line">							System.out.println(<span class="string">&quot;book saved: &quot;</span></span><br><span class="line">									+ bookPersisted);</span><br><span class="line">							assertThat(bookPersisted.getId(),</span><br><span class="line">									notNullValue());</span><br><span class="line">						&#125;</span><br><span class="line"></span><br><span class="line">						<span class="meta">@Override</span></span><br><span class="line">						<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">failed</span><span class="params">(<span class="keyword">final</span> Throwable throwable)</span> &#123;</span><br><span class="line">							throwable.printStackTrace();</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;).get();</span><br><span class="line"></span><br><span class="line">	client.target(REST_SERVICE_URL).request().async()</span><br><span class="line">			.get(<span class="keyword">new</span> <span class="title class_">InvocationCallback</span>&lt;List&lt;Book&gt;&gt;() &#123;</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">completed</span><span class="params">(<span class="keyword">final</span> List&lt;Book&gt; books)</span> &#123;</span><br><span class="line">					System.out.println(books.size() + <span class="string">&quot; books received&quot;</span>);</span><br><span class="line">					assertThat(books.size(), greaterThanOrEqualTo(<span class="number">1</span>));</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">failed</span><span class="params">(<span class="keyword">final</span> Throwable throwable)</span> &#123;</span><br><span class="line">					throwable.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;).get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="延迟调用-请求构建"><a href="#延迟调用-请求构建" class="headerlink" title="延迟调用 &#x2F; 请求构建"></a>延迟调用 &#x2F; 请求构建</h2><p>通过 <em>javax.ws.rs.client.Invocation</em> 类，我们可以先构建一个请求而不用即时发送。这个请求可以是同步的, 也可以是异步的。</p>
+<p>在下面的示例中，我们构建了两个调用但并不马上使用—— 一个请求用来保存图书，另一个请求则是获取所有可用的图书。然后，我们在后面调用时才使用这两个构建好的请求。</p>
+<p>我们应当使用* invoke() <em>方法来同步地调用一个请求。当需要使用异步请求时，则需要用</em> submit() <em>方法——两种调用都会返回一个</em> javax.ws.rs.core.Response *对象。如果调用者在调用参数中给定了返回实体的类，则上述方法会返回该类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">requestPreparationExample</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line">	<span class="type">Invocation</span> <span class="variable">saveBook</span> <span class="operator">=</span> client.target(REST_SERVICE_URL).request()</span><br><span class="line">			.buildPost(Entity.entity(book, MediaType.APPLICATION_JSON));</span><br><span class="line">	<span class="type">Invocation</span> <span class="variable">listBooks</span> <span class="operator">=</span> client.target(REST_SERVICE_URL).request()</span><br><span class="line">			.buildGet();</span><br><span class="line"></span><br><span class="line">	<span class="type">Response</span> <span class="variable">response</span> <span class="operator">=</span> saveBook.invoke();</span><br><span class="line">	<span class="type">Book</span> <span class="variable">b1</span> <span class="operator">=</span> response.readEntity(Book.class);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// alternative: Book b1 = saveBook.invoke(Book.class);</span></span><br><span class="line">	assertThat(b1.getId(), notNullValue());</span><br><span class="line"></span><br><span class="line">	<span class="comment">// async invocation</span></span><br><span class="line">	Future&lt;List&lt;Book&gt;&gt; b = listBooks.submit(<span class="keyword">new</span> <span class="title class_">GenericType</span>&lt;List&lt;Book&gt;&gt;() &#123;</span><br><span class="line">	&#125;);</span><br><span class="line">	List&lt;Book&gt; books = b.get();</span><br><span class="line">	assertThat(books.size(), greaterThanOrEqualTo(<span class="number">2</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="客户端请求过滤器"><a href="#客户端请求过滤器" class="headerlink" title="客户端请求过滤器"></a>客户端请求过滤器</h2><p>JAX-RS 允许我们使用请求过滤器来截获客户端发送到服务器的请求。</p>
+<p>为了达成这个目标，只需要实现* javax.ws.rs.client.ClientRequestFilter <em>这个接口。当创建客户端时，使用客户端的</em> register() <em>方法将</em> ClientRequestFilter *的具体实现注册到客户端中。</p>
+<p>*javax.ws.rs.client.ClientRequestContext *对象将赋予访问信息请求足够的权限。</p>
+<p>下面就是一个客户端请求过滤的例子。这个例子中，所有客户端发出的 POST 请求中如果包含书籍实体，则书籍价格都会被这个过滤器修改（虽然这不是一个好的实际示例）。对价格的修改则依据相应的税率。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.hascode.tutorial.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.client.ClientRequestContext;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.client.ClientRequestFilter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.hascode.tutorial.jaxrs.entity.Book;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TaxAdjustmentFilter</span> <span class="keyword">implements</span> <span class="title class_">ClientRequestFilter</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">BigDecimal</span> <span class="variable">TAX_RATE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="string">&quot;2.5&quot;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">filter</span><span class="params">(<span class="keyword">final</span> ClientRequestContext rc)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">method</span> <span class="operator">=</span> rc.getMethod();</span><br><span class="line">		<span class="keyword">if</span> (<span class="string">&quot;POST&quot;</span>.equals(method) &amp;&amp; rc.hasEntity()) &#123;</span><br><span class="line">			<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> (Book) rc.getEntity();</span><br><span class="line">			<span class="type">BigDecimal</span> <span class="variable">priceWithTaxes</span> <span class="operator">=</span> book.getPrice().multiply(TAX_RATE);</span><br><span class="line">			book.setPrice(priceWithTaxes);</span><br><span class="line">			rc.setEntity(book);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在我们的测试用例中，只要把这个过滤器注册到客户端上，随后就会看到：保存书籍时候，书本的价格就会根据税率进行的调整。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clientRequestFilterExample</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line"></span><br><span class="line">	<span class="type">Client</span> <span class="variable">client</span> <span class="operator">=</span> ClientBuilder.newClient()</span><br><span class="line">			.register(JacksonFeature.class)</span><br><span class="line">			.register(TaxAdjustmentFilter.class);</span><br><span class="line">	<span class="type">Book</span> <span class="variable">bookPersisted</span> <span class="operator">=</span> client</span><br><span class="line">			.target(REST_SERVICE_URL)</span><br><span class="line">			.request()</span><br><span class="line">			.post(Entity.entity(book, MediaType.APPLICATION_JSON),</span><br><span class="line">					Book.class);</span><br><span class="line"></span><br><span class="line">	<span class="type">String</span> <span class="variable">bookId</span> <span class="operator">=</span> bookPersisted.getId();</span><br><span class="line">	assertThat(bookId, notNullValue());</span><br><span class="line">	assertThat(bookPersisted.getPrice(),</span><br><span class="line">			equalTo(PRICE.multiply(TaxAdjustmentFilter.TAX_RATE)));</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="客户端响应过滤器"><a href="#客户端响应过滤器" class="headerlink" title="客户端响应过滤器"></a>客户端响应过滤器</h2><p>为了获得对服务器相应的控制，有一个十分类似的办法：客户端相应过滤器。</p>
+<p>同样地，只要实现* javax.ws.rs.client.ClientResponseFilter *这个接口，就能够修改或者截获服务器返回的响应。</p>
+<p>下面这个响应过滤器能够将一些 HTTP 响应头打印到标准输出（STDOUT）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.hascode.tutorial.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map.Entry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.client.ClientRequestContext;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.client.ClientResponseContext;</span><br><span class="line"><span class="keyword">import</span> javax.ws.rs.client.ClientResponseFilter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ClientResponseLoggingFilter</span> <span class="keyword">implements</span> <span class="title class_">ClientResponseFilter</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">filter</span><span class="params">(<span class="keyword">final</span> ClientRequestContext reqCtx,</span></span><br><span class="line"><span class="params">			<span class="keyword">final</span> ClientResponseContext resCtx)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;status: &quot;</span> + resCtx.getStatus());</span><br><span class="line">		System.out.println(<span class="string">&quot;date: &quot;</span> + resCtx.getDate());</span><br><span class="line">		System.out.println(<span class="string">&quot;last-modified: &quot;</span> + resCtx.getLastModified());</span><br><span class="line">		System.out.println(<span class="string">&quot;location: &quot;</span> + resCtx.getLocation());</span><br><span class="line">		System.out.println(<span class="string">&quot;headers:&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span> (Entry&lt;String, List&lt;String&gt;&gt; header : resCtx.getHeaders()</span><br><span class="line">				.entrySet()) &#123;</span><br><span class="line">			System.out.print(<span class="string">&quot;\t&quot;</span> + header.getKey() + <span class="string">&quot; :&quot;</span>);</span><br><span class="line">			<span class="keyword">for</span> (String value : header.getValue()) &#123;</span><br><span class="line">				System.out.print(value + <span class="string">&quot;, &quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.print(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;media-type: &quot;</span> + resCtx.getMediaType().getType());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要使用这个过滤器，只需要把它注册到我们的客户端程序中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clientResponseFilterExample</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">Book</span> <span class="variable">book</span> <span class="operator">=</span> mockBook();</span><br><span class="line"></span><br><span class="line">	<span class="type">Client</span> <span class="variable">client</span> <span class="operator">=</span> ClientBuilder.newClient()</span><br><span class="line">			.register(JacksonFeature.class)</span><br><span class="line">			.register(ClientResponseLoggingFilter.class);</span><br><span class="line">	client.target(REST_SERVICE_URL)</span><br><span class="line">			.request()</span><br><span class="line">			.post(Entity.entity(book, MediaType.APPLICATION_JSON),</span><br><span class="line">					Book.class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用内嵌的 GlassFish 服务，POST 请求将有如下结果：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">status: 200</span><br><span class="line">date: Sat Dec 28 18:50:16 CET 2013</span><br><span class="line">last-modified: null</span><br><span class="line">location: null</span><br><span class="line">headers:</span><br><span class="line"> Date :Sat, 28 Dec 2013 17:50:16 GMT,</span><br><span class="line"> Transfer-Encoding :chunked,</span><br><span class="line"> Content-Type :application/json,</span><br><span class="line"> Server :GlassFish Server Open Source Edition 3.1,</span><br><span class="line"> X-Powered-By :Servlet/3.0 JSP/2.2 (GlassFish Server Open Source Edition 3.1 Java/Oracle Corporation/1.7),</span><br><span class="line">media-type: application</span><br></pre></td></tr></table></figure>
+
+<p><em>译注：GlassFish是SUN所研发的开放源代码应用服务器，GlassFish以Java编写以增加跨平台性[wikipedia]。</em></p>
+<h1 id="教程源码"><a href="#教程源码" class="headerlink" title="教程源码"></a>教程源码</h1><p>欢迎下载本教程中的源码，你可以用 Git 来 Fork 或者直接 Clone：<a target="_blank" rel="noopener" href="https://bitbucket.org/hascode/jaxrs2-client-tutorial">Bitbucket代码仓库</a>。</p>
+<h1 id="下载-war-File-REST-服务器"><a href="#下载-war-File-REST-服务器" class="headerlink" title="下载 war-File REST 服务器"></a>下载 war-File REST 服务器</h1><p>你可以从这里下载 war-file 然后运行自己的 RESTful 服务：<a target="_blank" rel="noopener" href="https://bitbucket.org/hascode/jaxrs2-client-tutorial/downloads">https://bitbucket.org/hascode/jaxrs2-client-tutorial/downloads</a></p>
+<h1 id="JAX-RS-1-0-and-JAX-B"><a href="#JAX-RS-1-0-and-JAX-B" class="headerlink" title="JAX-RS 1.0 and JAX-B"></a>JAX-RS 1.0 and JAX-B</h1><p>如果你对旧版本的协议感兴趣，<a target="_blank" rel="noopener" href="http://www.hascode.com/2010/11/creating-a-rest-client-step-by-step-using-jax-rs-jax-b-and-jersey/">这篇文章</a>正是你需要的。</p>
+<p> 翻译： ImportNew.com  - 靳禹</p>
+<p>译文链接： <a target="_blank" rel="noopener" href="http://www.importnew.com/8939.html">http://www.importnew.com/8939.html</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017091941.htm">https://m.is-local.org/post/2017091941.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/restClient/">🏷️ restClient</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017091732.htm">深入浅出REST</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017090915.htm">Request Mapping 基础用法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

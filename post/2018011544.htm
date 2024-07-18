@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Gson和Jackson的使用 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Gson和Jackson的使用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">January 24, 2018&nbsp;&nbsp;15:44:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Json/">Json</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/zRyAXiNIgS5nMQU.png"></p>
+<p>现在json的第三方解析工作很多，如json-lib，gson，jackson，fastjson等，先学习下面两种。</p>
+<span id="more"></span>
+
+<h3 id="JackSON使用："><a href="#JackSON使用：" class="headerlink" title="JackSON使用："></a>JackSON使用：</h3><p>Jackson主要使用ObjectMapper对象来进行序列化以及反序列化操作。</p>
+<p>使用Jackson可以毫无压力的将复杂对象进行完全序列化，也可以将各种类型的对象反序列化</p>
+<p>以下代码均省略异常处理</p>
+<p>普通对象</p>
+<h4 id="序列化Order-order对象："><a href="#序列化Order-order对象：" class="headerlink" title="序列化Order order对象："></a>序列化Order order对象：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line"><span class="type">Writer</span> <span class="variable">strWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringWriter</span>();</span><br><span class="line">mapper.writeValue(strWriter, order);</span><br><span class="line"><span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> strWriter.toString();</span><br></pre></td></tr></table></figure>
+
+<h4 id="反序列化："><a href="#反序列化：" class="headerlink" title="反序列化："></a>反序列化：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> mapper.readValue(json, Order.class);</span><br></pre></td></tr></table></figure>
+
+<p>链表、Map等</p>
+<h4 id="序列化List-orderList："><a href="#序列化List-orderList：" class="headerlink" title="序列化List orderList："></a>序列化List<Order> orderList：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line"><span class="type">Writer</span> <span class="variable">strWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringWriter</span>();</span><br><span class="line">mapper.writeValue(strWriter, orderList);</span><br><span class="line"><span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> strWriter.toString();</span><br></pre></td></tr></table></figure>
+
+<h4 id="反序列化：-1"><a href="#反序列化：-1" class="headerlink" title="反序列化："></a>反序列化：</h4><p>需要用到TypeReference</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Order&gt; orderList = mapper.readValue(json, <span class="keyword">new</span> <span class="title class_">TypeReference</span>&lt;List&lt;Order&gt;&gt;() &#123;  </span><br><span class="line">   &#125;</span><br><span class="line">);  </span><br></pre></td></tr></table></figure>
+
+<h4 id="反序列化List"><a href="#反序列化List" class="headerlink" title="反序列化List&lt;LinkedHashMap&lt;String,String&gt;&gt;"></a>反序列化List&lt;LinkedHashMap&lt;String,String&gt;&gt;</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="variable">orderList</span> <span class="operator">=</span> mapper.readValue(json, List.class);  </span><br></pre></td></tr></table></figure>
+
+<h4 id="解析某个字段"><a href="#解析某个字段" class="headerlink" title="解析某个字段"></a>解析某个字段</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">JsonNode</span> <span class="variable">node</span> <span class="operator">=</span> mapper.readTree(json);</span><br><span class="line">String name= node.get(<span class="string">&quot;name&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Jackson的JSON操作方法"><a href="#Jackson的JSON操作方法" class="headerlink" title="Jackson的JSON操作方法"></a>Jackson的JSON操作方法</h4><h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><p>首先去官网下载Jackson工具包，下载地址<a target="_blank" rel="noopener" href="http://wiki.fasterxml.com/JacksonDownload%E3%80%82Jackson%E6%9C%891.x%E7%B3%BB%E5%88%97%E5%92%8C2.x%E7%B3%BB%E5%88%97%EF%BC%8C%E6%88%AA%E6%AD%A2%E7%9B%AE%E5%89%8D2.x%E7%B3%BB%E5%88%97%E7%9A%84%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E6%98%AF2.2.3%EF%BC%8C2.x%E7%B3%BB%E5%88%97%E6%9C%893%E4%B8%AAjar%E5%8C%85%E9%9C%80%E8%A6%81%E4%B8%8B%E8%BD%BD%EF%BC%9A">http://wiki.fasterxml.com/JacksonDownload。Jackson有1.x系列和2.x系列，截止目前2.x系列的最新版本是2.2.3，2.x系列有3个jar包需要下载：</a></p>
+<p>jackson-core-2.2.3.jar（核心jar包，<a target="_blank" rel="noopener" href="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.2.3/jackson-core-2.2.3.jar">下载地址</a>）</p>
+<p>jackson-annotations-2.2.3.jar（该包提供Json注解支持，<a target="_blank" rel="noopener" href="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.2.3/jackson-annotations-2.2.3.jar">下载地址</a>）</p>
+<p>jackson-databind-2.2.3.jar（<a target="_blank" rel="noopener" href="http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.2.3/jackson-databind-2.2.3.jar">下载地址</a>）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//JSON序列化和反序列化使用的User类</span></span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	<span class="keyword">private</span> Integer age;</span><br><span class="line">	<span class="keyword">private</span> Date birthday;</span><br><span class="line">	<span class="keyword">private</span> String email;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> age;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(Integer age)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> Date <span class="title function_">getBirthday</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> birthday;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBirthday</span><span class="params">(Date birthday)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getEmail</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> email;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEmail</span><span class="params">(String email)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.email = email;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="JAVA对象转JSON-JSON序列化"><a href="#JAVA对象转JSON-JSON序列化" class="headerlink" title="JAVA对象转JSON[JSON序列化]"></a>JAVA对象转JSON[JSON序列化]</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.text.ParseException;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JacksonDemo</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException, IOException &#123;</span><br><span class="line">		<span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">		user.setName(<span class="string">&quot;小民&quot;</span>);	</span><br><span class="line">		user.setEmail(<span class="string">&quot;xiaomin@sina.com&quot;</span>);</span><br><span class="line">		user.setAge(<span class="number">20</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="type">SimpleDateFormat</span> <span class="variable">dateformat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line">		user.setBirthday(dateformat.parse(<span class="string">&quot;1996-10-01&quot;</span>));		</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * ObjectMapper是JSON操作的核心，Jackson的所有JSON操作都是在ObjectMapper中实现。</span></span><br><span class="line"><span class="comment">		 * ObjectMapper有多个JSON序列化的方法，可以把JSON字符串保存File、OutputStream等不同的介质中。</span></span><br><span class="line"><span class="comment">		 * writeValue(File arg0, Object arg1)把arg1转成json序列，并保存到arg0文件中。</span></span><br><span class="line"><span class="comment">		 * writeValue(OutputStream arg0, Object arg1)把arg1转成json序列，并保存到arg0输出流中。</span></span><br><span class="line"><span class="comment">		 * writeValueAsBytes(Object arg0)把arg0转成json序列，并把结果输出成字节数组。</span></span><br><span class="line"><span class="comment">		 * writeValueAsString(Object arg0)把arg0转成json序列，并把结果输出成字符串。</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//User类转JSON</span></span><br><span class="line">		<span class="comment">//输出结果：&#123;&quot;name&quot;:&quot;小民&quot;,&quot;age&quot;:20,&quot;birthday&quot;:844099200000,&quot;email&quot;:&quot;xiaomin@sina.com&quot;&#125;</span></span><br><span class="line">		<span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> mapper.writeValueAsString(user);</span><br><span class="line">		System.out.println(json);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//Java集合转JSON</span></span><br><span class="line">		<span class="comment">//输出结果：[&#123;&quot;name&quot;:&quot;小民&quot;,&quot;age&quot;:20,&quot;birthday&quot;:844099200000,&quot;email&quot;:&quot;xiaomin@sina.com&quot;&#125;]</span></span><br><span class="line">		List&lt;User&gt; users = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;User&gt;();</span><br><span class="line">		users.add(user);</span><br><span class="line">		<span class="type">String</span> <span class="variable">jsonlist</span> <span class="operator">=</span> mapper.writeValueAsString(users);</span><br><span class="line">		System.out.println(jsonlist);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="JSON转Java类-JSON反序列化"><a href="#JSON转Java类-JSON反序列化" class="headerlink" title="JSON转Java类[JSON反序列化]"></a>JSON转Java类[JSON反序列化]</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.text.ParseException;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JacksonDemo</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException, IOException &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;小民\&quot;,\&quot;age\&quot;:20,\&quot;birthday\&quot;:844099200000,\&quot;email\&quot;:\&quot;xiaomin@sina.com\&quot;&#125;&quot;</span>;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * ObjectMapper支持从byte[]、File、InputStream、字符串等数据的JSON反序列化。</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">		<span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> mapper.readValue(json, User.class);</span><br><span class="line">		System.out.println(user);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="JSON注解"><a href="#JSON注解" class="headerlink" title="JSON注解"></a>JSON注解</h5><p>Jackson提供了一系列注解，方便对JSON序列化和反序列化进行控制，下面介绍一些常用的注解。</p>
+<p>@JsonIgnore 此注解用于属性上，作用是进行JSON操作时忽略该属性。</p>
+<p>@JsonFormat 此注解用于属性上，作用是把Date类型直接转化为想要的格式，如@JsonFormat(pattern &#x3D; “yyyy-MM-dd HH-mm-ss”)。</p>
+<p>@JsonProperty 此注解用于属性上，作用是把该属性的名称序列化为另外一个名称，如把trueName属性序列化为name，@JsonProperty(“name”)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//不JSON序列化年龄属性</span></span><br><span class="line">	<span class="meta">@JsonIgnore</span> </span><br><span class="line">	<span class="keyword">private</span> Integer age;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//格式化日期属性</span></span><br><span class="line">	<span class="meta">@JsonFormat(pattern = &quot;yyyy年MM月dd日&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> Date birthday;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//序列化email属性为mail</span></span><br><span class="line">	<span class="meta">@JsonProperty(&quot;mail&quot;)</span></span><br><span class="line">	<span class="keyword">private</span> String email;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> Integer <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> age;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(Integer age)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> Date <span class="title function_">getBirthday</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> birthday;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBirthday</span><span class="params">(Date birthday)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getEmail</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> email;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEmail</span><span class="params">(String email)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.email = email;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.text.ParseException;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JacksonDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException, IOException &#123;</span><br><span class="line">		<span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">		user.setName(<span class="string">&quot;小民&quot;</span>);	</span><br><span class="line">		user.setEmail(<span class="string">&quot;xiaomin@sina.com&quot;</span>);</span><br><span class="line">		user.setAge(<span class="number">20</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="type">SimpleDateFormat</span> <span class="variable">dateformat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line">		user.setBirthday(dateformat.parse(<span class="string">&quot;1996-10-01&quot;</span>));		</span><br><span class="line">		</span><br><span class="line">		<span class="type">ObjectMapper</span> <span class="variable">mapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">		<span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> mapper.writeValueAsString(user);</span><br><span class="line">		System.out.println(json);</span><br><span class="line">		<span class="comment">//输出结果：&#123;&quot;name&quot;:&quot;小民&quot;,&quot;birthday&quot;:&quot;1996年09月30日&quot;,&quot;mail&quot;:&quot;xiaomin@sina.com&quot;&#125;</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="GSON的使用："><a href="#GSON的使用：" class="headerlink" title="GSON的使用："></a>GSON的使用：</h3><p>Gson（又称Google Gson）是Google公司发布的一个开放源代码的Java库，主要用途为串行化Java对象为JSON字符串，或反串行化JSON字符串成Java对象。GSON核心jar包不到1M，非常精简，但提供的功能无疑是非常强大的，如果使用JDK自带的JSON解析API，使用起来相对比较繁琐一点，而且代码量较多。</p>
+<h4 id="GSON目前的发展状况"><a href="#GSON目前的发展状况" class="headerlink" title="GSON目前的发展状况"></a>GSON目前的发展状况</h4><p>初始版本	2008年5月22日<br>最新版本(稳定版本)	2.2.4&#x2F;2013年5月13日；2个月前<br>编程语言	Java<br>操作平台	各种平台<br>许可协议	Apache License 2.0<br>官方网站	<a target="_blank" rel="noopener" href="http://code.google.com/p/google-gson/">http://code.google.com/p/google-gson/</a><br>下载地址	<a target="_blank" rel="noopener" href="http://code.google.com/p/google-gson/downloads/list">http://code.google.com/p/google-gson/downloads/list</a><br>GSON帮助文档	<a target="_blank" rel="noopener" href="http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/index.html">http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/index.html</a></p>
+<h4 id="使用GSON转换时报的一个异常。"><a href="#使用GSON转换时报的一个异常。" class="headerlink" title="使用GSON转换时报的一个异常。"></a>使用GSON转换时报的一个异常。</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 2  at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:176)  </span><br><span class="line">    at com.google.gson.Gson.fromJson(Gson.java:803)  </span><br><span class="line">    at com.google.gson.Gson.fromJson(Gson.java:768)  </span><br><span class="line">    at com.google.gson.Gson.fromJson(Gson.java:717)  </span><br><span class="line">    at com.google.gson.Gson.fromJson(Gson.java:689)  </span><br><span class="line">    at com.demoone.UseGson.testOneBeanFromJSON(UseGson.java:54)  </span><br><span class="line">    at com.demoone.UseGson.main(UseGson.java:89)  </span><br><span class="line">Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 2   //注意这句话跟数组集合有关  </span><br><span class="line">    at com.google.gson.stream.JsonReader.beginObject(JsonReader.java:374)  </span><br><span class="line">    at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:165)  </span><br><span class="line">    ... 6 more  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>下面贴出，笔者的测试源码，注意上述异常，在代码的注释中已经指出问题原因</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.demoone;  </span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;  </span><br><span class="line"><span class="keyword">import</span> java.util.List;    </span><br><span class="line"><span class="keyword">import</span> com.entity.Person;  </span><br><span class="line"><span class="keyword">import</span> com.google.gson.Gson;  </span><br><span class="line"><span class="keyword">import</span> com.google.gson.reflect.*;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">/***  </span></span><br><span class="line"><span class="comment"> * 使用gson </span></span><br><span class="line"><span class="comment"> * 进行序列化,反序列化的操作 </span></span><br><span class="line"><span class="comment"> * json </span></span><br><span class="line"><span class="comment"> * **/</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UseGson</span> &#123;       </span><br><span class="line"> <span class="keyword">static</span> Gson g=<span class="keyword">new</span> <span class="title class_">Gson</span>();  </span><br><span class="line"> <span class="comment">/** </span></span><br><span class="line"><span class="comment">  * 由集合类型的实体类 </span></span><br><span class="line"><span class="comment">  * 转换成Json类型  </span></span><br><span class="line"><span class="comment">  * **/</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testToJSON</span><span class="params">()</span>&#123;     </span><br><span class="line">        List&lt;Person&gt; list=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();      </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">2</span>;i++)&#123;  </span><br><span class="line">         Person p=<span class="keyword">new</span> <span class="title class_">Person</span>(i, <span class="string">&quot;散仙&quot;</span>+i, <span class="string">&quot;北京市&quot;</span>+i, <span class="string">&quot;54152541@qq.com&quot;</span>, <span class="number">500.0</span>);  </span><br><span class="line">            list.add(p);  </span><br><span class="line">        &#125;  </span><br><span class="line">        String json=g.toJson(list);  </span><br><span class="line">        System.out.println(json);          </span><br><span class="line">    &#125;      </span><br><span class="line">    <span class="comment">/** </span></span><br><span class="line"><span class="comment">     * 由json转换为实体类 </span></span><br><span class="line"><span class="comment">     * */</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testOneBeanFromJSON</span><span class="params">()</span>&#123;  </span><br><span class="line">        <span class="comment">/** </span></span><br><span class="line"><span class="comment">         * 转换一个Java Bean的时候 </span></span><br><span class="line"><span class="comment">         * 记住不能使用[],只有在使用集合的时候才可以使用  </span></span><br><span class="line"><span class="comment">         * 如上图贴的那个异常就是由此原因造成的，另外 </span></span><br><span class="line"><span class="comment">         * 格式要规范，中间不能出现空格字符 </span></span><br><span class="line"><span class="comment">         *  </span></span><br><span class="line"><span class="comment">         * **/</span>  </span><br><span class="line">        String jsonBean=<span class="string">&quot;[&#123;\&quot;id\&quot;:0,\&quot;name\&quot;:\&quot;散仙0\&quot;,\&quot;address\&quot;:\&quot;北京市0\&quot;,\&quot;email\&quot;:\&quot;54152541@qq.com\&quot;,\&quot;money\&quot;:500.0&#125;]&quot;</span>;  </span><br><span class="line">         Person p=g.fromJson(jsonBean, Person.class);  </span><br><span class="line">         System.out.println(p);  </span><br><span class="line">   </span><br><span class="line">    &#125;  </span><br><span class="line">      </span><br><span class="line">    <span class="comment">/** </span></span><br><span class="line"><span class="comment">     * 由json转换为实体类集合 </span></span><br><span class="line"><span class="comment">     *  </span></span><br><span class="line"><span class="comment">     * */</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testListBeanFromJSON</span><span class="params">()</span>&#123;    </span><br><span class="line">         <span class="comment">/** </span></span><br><span class="line"><span class="comment">          * 转换一个集合 的实体Bean </span></span><br><span class="line"><span class="comment">          * 注意前面加上[]方括号，代表一个数组 </span></span><br><span class="line"><span class="comment">          * **/</span>   </span><br><span class="line">         String  jsonBeanList=<span class="string">&quot;[&#123;\&quot;id\&quot;:0,\&quot;name\&quot;:\&quot;散仙0\&quot;,\&quot;address\&quot;:\&quot;北京市0\&quot;,\&quot;email\&quot;:\&quot;54152541@qq.com\&quot;,\&quot;money\&quot;:500.0&#125;,&#123;\&quot;id\&quot;:1,\&quot;name\&quot;:\&quot;散仙1\&quot;,\&quot;address\&quot;:\&quot;北京市1\&quot;,\&quot;email\&quot;:\&quot;54152541@qq.com\&quot;,\&quot;money\&quot;:500.0&#125;]&quot;</span>;  </span><br><span class="line">           </span><br><span class="line">         List&lt;Person&gt; lists=g.fromJson(jsonBeanList,<span class="keyword">new</span>   <span class="title class_">TypeToken</span>&lt;List&lt;Person&gt;&gt;()&#123;&#125;.getType());  </span><br><span class="line">         System.out.println(<span class="string">&quot;反序列之后&quot;</span>);  </span><br><span class="line">         <span class="keyword">for</span>(Person pp:lists)&#123;  </span><br><span class="line">               </span><br><span class="line">             System.out.println(pp);  </span><br><span class="line">         &#125;  </span><br><span class="line">    &#125;     </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;        </span><br><span class="line">         testListBeanFromJSON();<span class="comment">//测试集合反序列化  </span></span><br><span class="line">         testOneBeanFromJSON();<span class="comment">//测试单个实体类反序列化  </span></span><br><span class="line">         <span class="comment">//testToJSON();//测试序列化            </span></span><br><span class="line">    &#125;   </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">testListBeanFromJSON()  方法:  </span><br><span class="line">反序列之后  </span><br><span class="line">编号：0  名字:散仙0   地址:北京市0   E-mail:54152541@qq.com  钱:500.0  </span><br><span class="line">编号：1  名字:散仙1   地址:北京市1   E-mail:54152541@qq.com  钱:500.0  </span><br><span class="line">testOneBeanFromJSON()  方法:  </span><br><span class="line">编号：0  名字:散仙0   地址:北京市0   E-mail:54152541@qq.com  钱:500.0  </span><br></pre></td></tr></table></figure>
+
+<p>实体类Person:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.entity;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * 实体类 </span></span><br><span class="line"><span class="comment"> * **/</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;  </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> id;  </span><br><span class="line">    <span class="keyword">private</span> String name;  </span><br><span class="line">    <span class="keyword">private</span> String address;  </span><br><span class="line">    <span class="keyword">private</span> String email;  </span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> money;  </span><br><span class="line">      </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub  </span></span><br><span class="line">        <span class="keyword">return</span>  <span class="string">&quot;编号：&quot;</span>+id+<span class="string">&quot;  名字:&quot;</span>+name+<span class="string">&quot;   地址:&quot;</span>+address+<span class="string">&quot;   E-mail:&quot;</span>+email+<span class="string">&quot;  钱:&quot;</span>+money;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="comment">// TODO Auto-generated constructor stub  </span></span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(<span class="type">int</span> id, String name, String address, String email,  </span></span><br><span class="line"><span class="params">            <span class="type">double</span> money)</span> &#123;  </span><br><span class="line">        <span class="built_in">super</span>();  </span><br><span class="line">        <span class="built_in">this</span>.id = id;  </span><br><span class="line">        <span class="built_in">this</span>.name = name;  </span><br><span class="line">        <span class="built_in">this</span>.address = address;  </span><br><span class="line">        <span class="built_in">this</span>.email = email;  </span><br><span class="line">        <span class="built_in">this</span>.money = money;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getId</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> id;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setId</span><span class="params">(<span class="type">int</span> id)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.id = id;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> name;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.name = name;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAddress</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> address;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAddress</span><span class="params">(String address)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.address = address;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getEmail</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> email;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEmail</span><span class="params">(String email)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.email = email;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">getMoney</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> money;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMoney</span><span class="params">(<span class="type">double</span> money)</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.money = money;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2018011544.htm">https://m.is-local.org/post/2018011544.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Json/">🏷️ Json</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018011544.htm">SASS是什么</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018011444.htm">日志组件slf4j介绍及配置详解</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>jQuery使用技巧 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">jQuery使用技巧</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 22, 2016&nbsp;&nbsp;11:54:55</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/jQuery/">jQuery</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/fhdIXZuDiRG8cg7.png"></p>
+<h3 id="禁用页面的右键菜单"><a href="#禁用页面的右键菜单" class="headerlink" title="禁用页面的右键菜单"></a>禁用页面的右键菜单</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;  </span><br><span class="line">  $(<span class="variable language_">document</span>).<span class="title function_">bind</span>(<span class="string">&quot;contextmenu&quot;</span>,<span class="keyword">function</span>(<span class="params">e</span>)&#123;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">  &#125;);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h3 id="新窗口打开页面"><a href="#新窗口打开页面" class="headerlink" title="新窗口打开页面"></a>新窗口打开页面</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.google.com&quot;</span>&gt;</span>google_新窗口<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.google.com&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;external&quot;</span>&gt;</span>google_新窗口<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;demo1.html&quot;</span>&gt;</span>当前窗口<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  $(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;a[href^=&quot;http://&quot;]&#x27;</span>).<span class="title function_">attr</span>(<span class="string">&quot;target&quot;</span>,<span class="string">&quot;_blank&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="输入框文字获取和失去焦点【推荐】"><a href="#输入框文字获取和失去焦点【推荐】" class="headerlink" title="输入框文字获取和失去焦点【推荐】"></a><font color='#099'>输入框文字获取和失去焦点【推荐】</font></h3><!-- more -->
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">class</span>=<span class="string">&quot;text1&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;  </span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&quot;input.text1&quot;</span>).<span class="title function_">val</span>(<span class="string">&quot;Enter your search text here.&quot;</span>);  </span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">textFill</span>( $(<span class="string">&#x27;input.text1&#x27;</span>) );  </span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">textFill</span>(<span class="params">input</span>)&#123; <span class="comment">//input focus text function  </span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> originalvalue = input.<span class="title function_">val</span>();  </span></span><br><span class="line"><span class="language-javascript">  input.<span class="title function_">focus</span>( <span class="keyword">function</span>(<span class="params"></span>)&#123;  </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span>( $.<span class="title function_">trim</span>(input.<span class="title function_">val</span>()) == originalvalue )&#123;</span></span><br><span class="line"><span class="language-javascript">      input.<span class="title function_">val</span>(<span class="string">&#x27;&#x27;</span>); </span></span><br><span class="line"><span class="language-javascript">    &#125;  </span></span><br><span class="line"><span class="language-javascript">  &#125;).<span class="title function_">blur</span>( <span class="keyword">function</span>(<span class="params"></span>)&#123;  </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span>( $.<span class="title function_">trim</span>(input.<span class="title function_">val</span>()) == <span class="string">&#x27;&#x27;</span> )&#123; </span></span><br><span class="line"><span class="language-javascript">      input.<span class="title function_">val</span>(originalvalue); </span></span><br><span class="line"><span class="language-javascript">    &#125;  </span></span><br><span class="line"><span class="language-javascript">  &#125;);  </span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="返回头部滑动动画"><a href="#返回头部滑动动画" class="headerlink" title="返回头部滑动动画"></a>返回头部滑动动画</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">jQuery.<span class="property">fn</span>.<span class="property">scrollTo</span> = <span class="keyword">function</span>(<span class="params">speed</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">var</span> targetOffset = $(<span class="variable language_">this</span>).<span class="title function_">offset</span>().<span class="property">top</span>;</span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&#x27;html,body&#x27;</span>).<span class="title function_">stop</span>().<span class="title function_">animate</span>(&#123;<span class="attr">scrollTop</span>: targetOffset&#125;, speed);</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="variable language_">this</span>;</span></span><br><span class="line"><span class="language-javascript">&#125;; </span></span><br><span class="line"><span class="language-javascript"><span class="comment">// use</span></span></span><br><span class="line"><span class="language-javascript">$(<span class="string">&quot;#goheader&quot;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&quot;body&quot;</span>).<span class="title function_">scrollTo</span>(<span class="number">500</span>);</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line"><span class="language-javascript">&#125;); </span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="获取鼠标位置"><a href="#获取鼠标位置" class="headerlink" title="获取鼠标位置"></a>获取鼠标位置</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;XY&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">$(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">  $(<span class="variable language_">document</span>).<span class="title function_">mousemove</span>(<span class="keyword">function</span>(<span class="params">e</span>)&#123;  </span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;#XY&#x27;</span>).<span class="title function_">html</span>(<span class="string">&quot;X : &quot;</span> + e.<span class="property">pageX</span> + <span class="string">&quot; | Y : &quot;</span> + e.<span class="property">pageY</span>);  </span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭所有-jQuery-动画效果"><a href="#关闭所有-jQuery-动画效果" class="headerlink" title="关闭所有 jQuery 动画效果"></a>关闭所有 jQuery 动画效果</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jQuery.<span class="property">fx</span>.<span class="property">off</span> = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="检测鼠标的右键和左键"><a href="#检测鼠标的右键和左键" class="headerlink" title="检测鼠标的右键和左键"></a>检测鼠标的右键和左键</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&#x27;#box&#x27;</span>).<span class="title function_">mousedown</span>(<span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">  <span class="title function_">alert</span>(e.<span class="property">which</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="回车提交表单"><a href="#回车提交表单" class="headerlink" title="回车提交表单"></a>回车提交表单</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="string">&#x27;input&#x27;</span>).<span class="title function_">keyup</span>(<span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(e.<span class="property">which</span> == <span class="string">&#x27;13&#x27;</span>) &#123;</span><br><span class="line">      <span class="title function_">alert</span>(<span class="string">&#x27;回车提交&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="切换复选框"><a href="#切换复选框" class="headerlink" title="切换复选框"></a>切换复选框</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tog = <span class="literal">false</span>;</span><br><span class="line">$(<span class="string">&#x27;button&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="string">&quot;input[type=checkbox]&quot;</span>).<span class="title function_">attr</span>(<span class="string">&quot;checked&quot;</span>,!tog);</span><br><span class="line">  tog = !tog;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-siblings-来选择同辈元素"><a href="#使用-siblings-来选择同辈元素" class="headerlink" title="使用 siblings() 来选择同辈元素"></a>使用 siblings() 来选择同辈元素</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//不这样做</span></span><br><span class="line">$(<span class="string">&#x27;#nav li&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  $(<span class="string">&#x27;#nav li&#x27;</span>).<span class="title function_">removeClass</span>(<span class="string">&#x27;active&#x27;</span>);</span><br><span class="line">  $(<span class="variable language_">this</span>).<span class="title function_">addClass</span>(<span class="string">&#x27;active&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//替代做法是</span></span><br><span class="line">$(<span class="string">&#x27;#nav li&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  $(<span class="variable language_">this</span>).<span class="title function_">addClass</span>(<span class="string">&#x27;active&#x27;</span>).<span class="title function_">siblings</span>().<span class="title function_">removeClass</span>(<span class="string">&#x27;active&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="为任何与选择器相匹配的元素绑定事件"><a href="#为任何与选择器相匹配的元素绑定事件" class="headerlink" title="为任何与选择器相匹配的元素绑定事件"></a>为任何与选择器相匹配的元素绑定事件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">&quot;table&quot;</span>).<span class="title function_">on</span>(<span class="string">&quot;click&quot;</span>,<span class="string">&quot;td&quot;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123; </span><br><span class="line">  $(<span class="variable language_">this</span>).<span class="title function_">toggleClass</span>(<span class="string">&quot;hover&quot;</span>); </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-的使用"><a href="#proxy-的使用" class="headerlink" title="$.proxy 的使用"></a>$.proxy 的使用</h3><p>使用回调方法的缺点之一是当执行类库中的方法后，上下文对象被设置到另外一个元素，比如，执行下面代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-id">#panel</span> &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">width</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">height</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">background-color</span>: <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span>&gt;</span>Close<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&#x27;#panel&#x27;</span>).<span class="title function_">fadeIn</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;#panel button&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">      $(<span class="variable language_">this</span>).<span class="title function_">fadeOut</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>你将遇到问题，button 元素会消失，而不是 panel 元素。可以使用 <code>$.proxy</code> 方法解决这个问题，代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-id">#panel</span> &#123;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">width</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">height</span>: <span class="number">300px</span>;</span></span><br><span class="line"><span class="language-css">      <span class="attribute">background-color</span>: <span class="number">#ccc</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span>&gt;</span>Close<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&#x27;#panel&#x27;</span>).<span class="title function_">fadeIn</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;#panel button&#x27;</span>).<span class="title function_">click</span>($.<span class="title function_">proxy</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">      $(<span class="variable language_">this</span>).<span class="title function_">fadeOut</span>();</span></span><br><span class="line"><span class="language-javascript">    &#125;,<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样才正确执行。</p>
+<h3 id="限制-Text-Area-域中的字符的个数"><a href="#限制-Text-Area-域中的字符的个数" class="headerlink" title="限制 Text-Area 域中的字符的个数"></a>限制 Text-Area 域中的字符的个数</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">textarea</span> <span class="attr">id</span>=<span class="string">&quot;mytextarea&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    jQuery.<span class="property">fn</span>.<span class="property">maxLength</span> = <span class="keyword">function</span>(<span class="params">max</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> type = <span class="variable language_">this</span>.<span class="property">tagName</span>.<span class="title function_">toLowerCase</span>();</span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">var</span> inputType = <span class="variable language_">this</span>.<span class="property">type</span>? <span class="variable language_">this</span>.<span class="property">type</span>.<span class="title function_">toLowerCase</span>() : <span class="literal">null</span>;</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span>(type == <span class="string">&quot;input&quot;</span> &amp;&amp; inputType == <span class="string">&quot;text&quot;</span> || inputType == <span class="string">&quot;password&quot;</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">              <span class="comment">//应用标准的maxLength</span></span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">this</span>.<span class="property">maxLength</span> = max;</span></span><br><span class="line"><span class="language-javascript">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(type == <span class="string">&quot;textarea&quot;</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">this</span>.<span class="property">onkeypress</span> = <span class="keyword">function</span>(<span class="params">e</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> ob = e || event;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> keyCode = ob.<span class="property">keyCode</span>;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> hasSelection = <span class="variable language_">document</span>.<span class="property">selection</span>? <span class="variable language_">document</span>.<span class="property">selection</span>.<span class="title function_">createRange</span>().<span class="property">text</span>.<span class="property">length</span> &gt; <span class="number">0</span> : <span class="variable language_">this</span>.<span class="property">selectionStart</span> != <span class="variable language_">this</span>.<span class="property">selectionEnd</span>;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">return</span> !(<span class="variable language_">this</span>.<span class="property">value</span>.<span class="property">length</span> &gt;= max &amp;&amp; (keyCode &gt; <span class="number">50</span> || keyCode == <span class="number">32</span> || keyCode == <span class="number">0</span> || keyCode == <span class="number">13</span>) &amp;&amp; !ob.<span class="property">ctrlKey</span> &amp;&amp; !ob.<span class="property">altKey</span> &amp;&amp; !hasSelection);</span></span><br><span class="line"><span class="language-javascript">              &#125;;</span></span><br><span class="line"><span class="language-javascript">              <span class="variable language_">this</span>.<span class="property">onkeyup</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">if</span>(<span class="variable language_">this</span>.<span class="property">value</span>.<span class="property">length</span> &gt; max)&#123;</span></span><br><span class="line"><span class="language-javascript">                  <span class="variable language_">this</span>.<span class="property">value</span> = <span class="variable language_">this</span>.<span class="property">value</span>.<span class="title function_">substring</span>(<span class="number">0</span>,max);</span></span><br><span class="line"><span class="language-javascript">                &#125;</span></span><br><span class="line"><span class="language-javascript">              &#125;;</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;);</span></span><br><span class="line"><span class="language-javascript">    &#125;;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//use</span></span></span><br><span class="line"><span class="language-javascript">    $(<span class="string">&#x27;#mytextarea&#x27;</span>).<span class="title function_">maxLength</span>(<span class="number">10</span>);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="解析-json-数据时报-parseError-错误"><a href="#解析-json-数据时报-parseError-错误" class="headerlink" title="解析 json 数据时报 parseError 错误"></a>解析 json 数据时报 parseError 错误</h3><p>jQuery 在 1.4 版本后，采用了更为严格的 json 解析方式，即所有内容都必须要有双引号，如果升级 jQuery 版本后，ajax 加载 json 报错，有可能就是这个原因。比如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.4之前版本，key没引号，这样没问题</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  key<span class="punctuation">:</span><span class="string">&quot;coco&quot;</span><span class="punctuation">,</span></span><br><span class="line">  status<span class="punctuation">:</span><span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>但升级成jQuery1.4后，都必须加上双引号，格式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;key&quot;</span><span class="punctuation">:</span><span class="string">&quot;coco&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="从元素中除去-HTML"><a href="#从元素中除去-HTML" class="headerlink" title="从元素中除去 HTML"></a>从元素中除去 HTML</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">(<span class="keyword">function</span>(<span class="params">$</span>) &#123; </span></span><br><span class="line"><span class="language-javascript">$.fn.<span class="property">stripHtml</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123; </span></span><br><span class="line"><span class="language-javascript">　<span class="keyword">var</span> regexp = <span class="regexp">/&lt;(&quot;[^&quot;]*&quot;|&#x27;[^&#x27;]*&#x27;|[^&#x27;&quot;&gt;])*&gt;/gi</span>; </span></span><br><span class="line"><span class="language-javascript">　<span class="variable language_">this</span>.<span class="title function_">each</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123; </span></span><br><span class="line"><span class="language-javascript">  　$(<span class="variable language_">this</span>).<span class="title function_">html</span>( $(<span class="variable language_">this</span>).<span class="title function_">html</span>().<span class="title function_">replace</span>(regexp,<span class="string">&#x27;&#x27;</span>) ); </span></span><br><span class="line"><span class="language-javascript">　&#125;);</span></span><br><span class="line"><span class="language-javascript">　<span class="keyword">return</span> $(<span class="variable language_">this</span>); </span></span><br><span class="line"><span class="language-javascript">&#125; </span></span><br><span class="line"><span class="language-javascript">&#125;)(jQuery); </span></span><br><span class="line"><span class="language-javascript"><span class="comment">//用法： </span></span></span><br><span class="line"><span class="language-javascript">$(<span class="string">&#x27;div&#x27;</span>).<span class="title function_">stripHtml</span>(); </span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="扩展-String-对象的方法"><a href="#扩展-String-对象的方法" class="headerlink" title="扩展 String 对象的方法"></a>扩展 String 对象的方法</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">button</span> &gt;</span>check<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  $.<span class="title function_">extend</span>(<span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>, &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isPositiveInteger</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^[1-9]\d*$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isInteger</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^\d+$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isNumber</span>: <span class="keyword">function</span>(<span class="params">value, element</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^-?(?:\d+|\d&#123;1,3&#125;(?:,\d&#123;3&#125;)+)(?:\.\d+)?$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">trim</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/(^\s*)|(\s*$)|\r|\n/g</span>, <span class="string">&quot;&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">trans</span>:<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="regexp">/&amp;lt;/g</span>, <span class="string">&#x27;&lt;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&amp;gt;/g</span>,<span class="string">&#x27;&gt;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/&amp;quot;/g</span>, <span class="string">&#x27;&quot;&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">replaceAll</span>:<span class="keyword">function</span>(<span class="params">os, ns</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">replace</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(os,<span class="string">&quot;gm&quot;</span>),ns);</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">skipChar</span>:<span class="keyword">function</span>(<span class="params">ch</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (!<span class="variable language_">this</span> || <span class="variable language_">this</span>.<span class="property">length</span>===<span class="number">0</span>) &#123;<span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>;&#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="title function_">charAt</span>(<span class="number">0</span>)===ch) &#123;<span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">substring</span>(<span class="number">1</span>).<span class="title function_">skipChar</span>(ch);&#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isValidPwd</span>:<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^([_]|[a-zA-Z0-9])&#123;6,32&#125;$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>)); </span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isValidMail</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span>(<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>.<span class="title function_">trim</span>()));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isSpaces</span>:<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="variable language_">this</span>.<span class="property">length</span>; i+=<span class="number">1</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> ch = <span class="variable language_">this</span>.<span class="title function_">charAt</span>(i);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span> (ch!=<span class="string">&#x27; &#x27;</span>&amp;&amp; ch!=<span class="string">&quot;\n&quot;</span> &amp;&amp; ch!=<span class="string">&quot;\t&quot;</span> &amp;&amp; ch!=<span class="string">&quot;\r&quot;</span>) &#123;<span class="keyword">return</span> <span class="literal">false</span>;&#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isPhone</span>:<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/(^([0-9]&#123;3,4&#125;[-])?\d&#123;3,8&#125;(-\d&#123;1,6&#125;)?$)|(^\([0-9]&#123;3,4&#125;\)\d&#123;3,8&#125;(\(\d&#123;1,6&#125;\))?$)|(^\d&#123;3,8&#125;$)/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isUrl</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="regexp">/^[a-zA-z]+:\/\/([a-zA-Z0-9\-\.]+)([-\w .\/?%&amp;=:]*)$/</span>).<span class="title function_">test</span>(<span class="variable language_">this</span>));</span></span><br><span class="line"><span class="language-javascript">  &#125;,</span></span><br><span class="line"><span class="language-javascript">  <span class="attr">isExternalUrl</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">isUrl</span>() &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">indexOf</span>(<span class="string">&quot;://&quot;</span>+<span class="variable language_">document</span>.<span class="property">domain</span>) == -<span class="number">1</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  $(<span class="string">&quot;button&quot;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">alert</span>(   $(<span class="string">&quot;input&quot;</span>).<span class="title function_">val</span>().<span class="title function_">isInteger</span>()  );</span></span><br><span class="line"><span class="language-javascript">  &#125;);</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2016111154.htm">https://m.is-local.org/post/2016111154.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/JavaScript/">🏷️ JavaScript</a>
+                    
+                        <a href="/tags/jQuery/">🏷️ jQuery</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017071728.htm">hexo next主题集成gitment评论系统</a>
+            
+            
+            <a class="next" rel="next" href="/post/2016101325.htm">Git学习总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

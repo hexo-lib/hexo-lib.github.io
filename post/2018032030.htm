@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>前端CDNJS国内加速服务 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">前端CDNJS国内加速服务</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 17, 2018&nbsp;&nbsp;20:30:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/jQuery/">jQuery</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/15/WI2n6gVGxZKytzA.jpg"></p>
+<p>前端 CDNJS 库及 Google Fonts、Ajax 和 Gravatar 国内加速服务</p>
+<span id="more"></span>
+
+<p>由于某些众所周知的原因，好多开源的 JS 库采用的国外 CDN 托管方式在国内访问速度不如人意。所以我们特意制作了这个公益项目，托管了 CDNJS 的所有开源 JS 库以及反代了 Google Fonts、Ajax 和 Gravatar，并且全部支持 http 和 https</p>
+<h2 id="1、CDNJS-开源-JS-库"><a href="#1、CDNJS-开源-JS-库" class="headerlink" title="1、CDNJS 开源 JS 库"></a>1、CDNJS 开源 JS 库</h2><p>我们采用的方法是每天定时同步 CDNJS 的 <a target="_blank" rel="noopener" href="https://github.com/cdnjs/cdnjs">Github</a></p>
+<p>所有的 JS&#x2F;CSS 库可以在这儿找到您需要的链接</p>
+<p><a target="_blank" rel="noopener" href="https://cdnjs.loli.net/ajax/libs/">https://cdnjs.loli.net/ajax/libs/</a></p>
+<p>如果您使用 <a target="_blank" rel="noopener" href="https://cdnjs.com/">cdnjs.com</a> 只需要替换 <code>cdnjs.cloudflare.com</code> 为 <code>cdnjs.loli.net</code> 即可，如</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>CDNJS 的 API 开发文档请摸<a target="_blank" rel="noopener" href="https://cdnjs.com/api">这里</a></p>
+<h2 id="2、Google-Fonts"><a href="#2、Google-Fonts" class="headerlink" title="2、Google Fonts"></a>2、Google Fonts</h2><p>我们采用的方法是万能的 Nginx 反代 + 关键词替换</p>
+<p>使用的时候，您只需要替换 <code>fonts.googleapis.com</code> 为 <code>fonts.loli.net</code> 即可，如</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link <span class="attribute">href</span>=<span class="string">&#x27;https://fonts.googleapis.com/css?family=Open+Sans&#x27;</span> <span class="attribute">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link <span class="attribute">href</span>=<span class="string">&#x27;https://fonts.loli.net/css?family=Open+Sans&#x27;</span> <span class="attribute">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要 <a target="_blank" rel="noopener" href="https://material.io/icons/">Material icons</a> ，把</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link <span class="attribute">href</span>=<span class="string">&#x27;https://fonts.googleapis.com/icon?family=Material+Icons&#x27;</span> <span class="attribute">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link <span class="attribute">href</span>=<span class="string">&#x27;https://fonts.loli.net/icon?family=Material+Icons&#x27;</span> <span class="attribute">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要 <a target="_blank" rel="noopener" href="https://fonts.google.com/earlyaccess">Early Access</a>，把</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span> url(<span class="string">https://fonts.googleapis.com/earlyaccess/notosanskannada.css</span>); </span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span> url(<span class="string">https://fonts.loli.net/earlyaccess/notosanskannada.css</span>); </span><br></pre></td></tr></table></figure>
+
+<p>如果需要下载单个字体，您只需要把 <code>fonts.gstatic.com</code> 替换成 <code>gstatic.loli.net</code> 或 <code>themes.googleusercontent.com</code> 替换成 <code>themes.loli.net</code> 即可</p>
+<p>比如</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>fonts.gstatic.com<span class="regexp">/s/</span>opensans<span class="regexp">/v14/</span>K88pR3goAWT7BTt32Z01mxJtnKITppOI_IvcXXDNrsc.woff2</span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//g</span>static.loli.net<span class="regexp">/s/</span>opensans<span class="regexp">/v14/</span>K88pR3goAWT7BTt32Z01mxJtnKITppOI_IvcXXDNrsc.woff2</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>themes.googleusercontent.com<span class="regexp">/static/</span>fonts<span class="regexp">/anonymouspro/</span>v3/Zhfjj_gat3waL4JSju74E-V_5zh5b-_HiooIRUBwn1A.ttf</span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>themes.loli.net<span class="regexp">/static/</span>fonts<span class="regexp">/anonymouspro/</span>v3/Zhfjj_gat3waL4JSju74E-V_5zh5b-_HiooIRUBwn1A.ttf</span><br></pre></td></tr></table></figure>
+
+<p>Google Fonts 的 API 文档请摸<a target="_blank" rel="noopener" href="https://developers.google.com/fonts/docs/getting_started">这里</a></p>
+<h2 id="3、Google-前端公共库"><a href="#3、Google-前端公共库" class="headerlink" title="3、Google 前端公共库"></a>3、Google 前端公共库</h2><p>方法同上，直接替换 <code>ajax.googleapis.com</code> 为 <code>ajax.loli.net</code> 即可，如</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&#x27;text/javascript&#x27;</span> <span class="attr">src</span>=<span class="string">&#x27;https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&#x27;text/javascript&#x27;</span> <span class="attr">src</span>=<span class="string">&#x27;https://ajax.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Google 前端库 API 开发文档摸<a target="_blank" rel="noopener" href="https://developers.google.com/speed/libraries/">这儿</a></p>
+<h2 id="4、Gravatar-头像"><a href="#4、Gravatar-头像" class="headerlink" title="4、Gravatar 头像"></a>4、Gravatar 头像</h2><p>方法还是同上，直接替换 <code>*.gravatar.com</code> 为 <code>gravatar.loli.net</code> 即可，如</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>secure.gravatar.com<span class="regexp">/avatar/</span><span class="number">8406</span>d089bc81b664a2610b8d214c1428</span><br></pre></td></tr></table></figure>
+
+<p>替换成</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//g</span>ravatar.loli.net<span class="regexp">/avatar/</span><span class="number">8406</span>d089bc81b664a2610b8d214c1428</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、赞助商"><a href="#5、赞助商" class="headerlink" title="5、赞助商"></a>5、赞助商</h2><p>国内外 CDN， GeoDNS、域名等基础服务均由 <a target="_blank" rel="noopener" href="https://xtom.com/">xTom</a>赞助 SSL 证书由 <a target="_blank" rel="noopener" href="https://ssl.do/">SSL.DO</a>赞助</p>
+<h2 id="6、旧域名替换"><a href="#6、旧域名替换" class="headerlink" title="6、旧域名替换"></a>6、旧域名替换</h2><p>由于更换了赞助商，并且因为最新的国内域名备案政策，旧的域名均采用 301 跳转形式</p>
+<p><code>cdn.css.net</code> 跳转到本文</p>
+<p><code>cdn.css.net/libs/</code> 和 <code>cdnjs.cat.net/ajax/libs/</code> 跳转到 <code>cdnjs.loli.net/ajax/libs/</code></p>
+<p><code>cdn.css.net/fonts/</code> 和 <code>fonts.cat.net</code> 和 <code>fonts.css.network</code> 跳转到 <code>fonts.loli.net</code></p>
+<p><code>cdn.css.net/ajax/</code> 和 <code>ajax.cat.net</code> 和 <code>ajax.css.network</code> 跳转到 <code>ajax.loli.net</code></p>
+<p><code>cdn.css.net/avatar/</code> 和 <code>gravatar.cat.net</code> 和 <code>gravatar.css.network</code> 跳转到 <code>gravatar.loli.net</code></p>
+<p>另外由于 <a target="_blank" rel="noopener" href="https://github.com/jsdelivr/jsdelivr">jsdelivr</a> 已不再提供 Github 同步，并且这货自己也有网宿的国内 CDN ，所以</p>
+<p><code>cdn.css.net/files/</code> 跳转到 <code>cdn.jsdelivr.net</code> 并且不再提供 jsdelivr 的国内加速服务</p>
+<p>所有国内加速服务的域名列表如下，您只需要修改程序里的原域名即可</p>
+<table>
+<thead>
+<tr>
+<th>原域名</th>
+<th>加速域名</th>
+<th>制作方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cdnjs.cloudflare.com</td>
+<td>cdnjs.loli.net</td>
+<td>每日同步 Github</td>
+</tr>
+<tr>
+<td>ajax.googleapis.com</td>
+<td>ajax.loli.net</td>
+<td>Nginx 反代</td>
+</tr>
+<tr>
+<td>fonts.googleapis.com</td>
+<td>fonts.loli.net</td>
+<td>Nginx 反代</td>
+</tr>
+<tr>
+<td>fonts.gstatic.com</td>
+<td>gstatic.loli.net</td>
+<td>Nginx 反代</td>
+</tr>
+<tr>
+<td>themes.googleusercontent.com</td>
+<td>themes.loli.net</td>
+<td>Nginx 反代</td>
+</tr>
+<tr>
+<td>secure.gravatar.com</td>
+<td>gravatar.loli.net</td>
+<td>Nginx 反代</td>
+</tr>
+</tbody></table>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2018032030.htm">https://m.is-local.org/post/2018032030.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/jQuery/">🏷️ jQuery</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2018032030.htm">Java basic knowledge</a>
+            
+            
+            <a class="next" rel="next" href="/post/2018031644.htm">Github搜索技巧</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

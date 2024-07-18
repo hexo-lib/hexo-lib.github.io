@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>hexo next主题集成gitment评论系统 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">hexo next主题集成gitment评论系统</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 24, 2017&nbsp;&nbsp;17:28:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/hexo/">hexo</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0041.jpg" alt="image"></p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>本文介绍hexo next主题(5.1.2)集成giment评论系统的过程。所谓gitment就是把评论放到github的issues系统里，评论支持md，比较适合程序员.</p>
+<span id="more"></span>
+<h3 id="一-注册OAuth-Application"><a href="#一-注册OAuth-Application" class="headerlink" title="一.注册OAuth Application"></a>一.注册OAuth Application</h3><p>点击<a target="_blank" rel="noopener" href="https://github.com/settings/applications/new%E6%B3%A8%E5%86%8C%EF%BC%8C%E6%B3%A8%E6%84%8FAuthorization">https://github.com/settings/applications/new注册，注意Authorization</a> callback URL填自己的网站url<a target="_blank" rel="noopener" href="http://yangq.me/.%E8%AE%B0%E4%B8%8BClient">http://yangq.me/.记下Client</a> ID和Client Secret.</p>
+<h3 id="二-修改themes-next-config-yml"><a href="#二-修改themes-next-config-yml" class="headerlink" title="二.修改themes&#x2F;next&#x2F;_config.yml"></a>二.修改themes&#x2F;next&#x2F;_config.yml</h3><h4 id="在config-yml中添加"><a href="#在config-yml中添加" class="headerlink" title="在config.yml中添加:"></a>在config.yml中添加:</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Gitment</span><br><span class="line"># Introduction: https://imsun.net/posts/gitment-introduction/</span><br><span class="line">gitment:</span><br><span class="line">  enable: true</span><br><span class="line">  githubID: yourid</span><br><span class="line">  repo: yourrepo</span><br><span class="line">  ClientID: yourid</span><br><span class="line">  ClientSecret: yoursecret</span><br><span class="line">  lazy: true</span><br></pre></td></tr></table></figure>
+
+<p>注意:格式要正确，该空格的一定要空格。所有的yourXXX都换成自己的.</p>
+<h4 id="在主题的en-yml增加"><a href="#在主题的en-yml增加" class="headerlink" title="在主题的en.yml增加:"></a>在主题的en.yml增加:</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitmentbutton: Show comments from Gitment</span><br></pre></td></tr></table></figure>
+<h4 id="zh-Hans-yml增加"><a href="#zh-Hans-yml增加" class="headerlink" title="zh-Hans.yml增加:"></a>zh-Hans.yml增加:</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitmentbutton: 显示 Gitment 评论</span><br></pre></td></tr></table></figure>
+
+<h3 id="三-修改主题layout-partials-comments-swig"><a href="#三-修改主题layout-partials-comments-swig" class="headerlink" title="三.修改主题layout&#x2F;_partials&#x2F;comments.swig"></a>三.修改主题layout&#x2F;_partials&#x2F;comments.swig</h3><p>找到这个文件里的这两行:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% elseif theme.valine.appidand theme.valine.appkey %&#125;      </span><br><span class="line">&quot;vcomments&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面是最后一个elseif分支，在下面加一个elseif分支:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% elseif theme.gitment.enable %&#125;</span><br><span class="line">      &#123;% if theme.gitment.lazy %&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">onclick</span>=<span class="string">&quot;ShowGitment()&quot;</span> <span class="attr">id</span>=<span class="string">&quot;gitment-display-button&quot;</span>&gt;</span>&#123;&#123;  __(&#x27;gitmentbutton&#x27;) &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;gitment-container&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      &#123;% else %&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;gitment-container&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      &#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加完之后下面的内容是原来的，保持不变:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% endif %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="四-增加gitment-swig"><a href="#四-增加gitment-swig" class="headerlink" title="四.增加gitment.swig"></a>四.增加gitment.swig</h3><h4 id="在主题下layout-third-party-comments-目录下中添加文件gitment-swig："><a href="#在主题下layout-third-party-comments-目录下中添加文件gitment-swig：" class="headerlink" title="在主题下layout&#x2F;_third-party&#x2F;comments&#x2F;目录下中添加文件gitment.swig："></a>在主题下layout&#x2F;_third-party&#x2F;comments&#x2F;目录下中添加文件gitment.swig：</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.gitment.enable %&#125;</span><br><span class="line">   &#123;% set owner = theme.gitment.githubID %&#125;</span><br><span class="line">   &#123;% set repo = theme.gitment.repo %&#125;</span><br><span class="line">   &#123;% set cid = theme.gitment.ClientID %&#125;</span><br><span class="line">   &#123;% set cs = theme.gitment.ClientSecret %&#125;</span><br><span class="line">   <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://imsun.github.io/gitment/style/default.css&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://imsun.github.io/gitment/dist/gitment.browser.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">   &#123;% if not theme.gitment.lazy %&#125;</span><br><span class="line">       <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">           var gitment = new Gitment(&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">               id: window.location.pathname, </span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">               owner: &#x27;</span><span class="template-variable">&#123;&#123;<span class="name">owner</span>&#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">               repo: &#x27;</span><span class="template-variable">&#123;&#123;<span class="name">repo</span>&#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">               oauth: &#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">                   client_id: &#x27;</span><span class="template-variable">&#123;&#123;<span class="name">cid</span>&#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">                   client_secret: &#x27;</span><span class="template-variable">&#123;&#123;<span class="name">cs</span>&#125;&#125;</span><span class="language-xml">&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">               &#125;&#125;);</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">           gitment.render(&#x27;gitment-container&#x27;);</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">       </span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">   &#123;% else %&#125;</span><br><span class="line">       <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">           <span class="keyword">function</span> <span class="title function_">ShowGitment</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">               <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;gitment-display-button&quot;</span>).<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;none&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">               <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;gitment-container&quot;</span>).<span class="property">style</span>.<span class="property">display</span> = <span class="string">&quot;block&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">               <span class="keyword">var</span> gitment = <span class="keyword">new</span> <span class="title class_">Gitment</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">                   <span class="attr">id</span>: <span class="variable language_">document</span>.<span class="property">location</span>.<span class="property">href</span>, </span></span><br><span class="line"><span class="language-javascript">                   <span class="attr">owner</span>: <span class="string">&#x27;&#123;&#123;owner&#125;&#125;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                   <span class="attr">repo</span>: <span class="string">&#x27;&#123;&#123;repo&#125;&#125;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                   <span class="attr">oauth</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">                       <span class="attr">client_id</span>: <span class="string">&#x27;&#123;&#123;cid&#125;&#125;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                       <span class="attr">client_secret</span>: <span class="string">&#x27;&#123;&#123;cs&#125;&#125;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                   &#125;&#125;);</span></span><br><span class="line"><span class="language-javascript">               gitment.<span class="title function_">render</span>(<span class="string">&#x27;gitment-container&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">           &#125;</span></span><br><span class="line"><span class="language-javascript">       </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">   &#123;% endif %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在主题下layout-third-party-comments-index-swig文件中引入gitment-swig文件："><a href="#在主题下layout-third-party-comments-index-swig文件中引入gitment-swig文件：" class="headerlink" title="在主题下layout&#x2F;_third-party&#x2F;comments&#x2F;index.swig文件中引入gitment.swig文件："></a>在主题下layout&#x2F;_third-party&#x2F;comments&#x2F;index.swig文件中引入gitment.swig文件：</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% include&#x27;gitment.swig&#x27; %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="五-添加gitment-styl"><a href="#五-添加gitment-styl" class="headerlink" title="五.添加gitment.styl"></a>五.添加gitment.styl</h3><p>在主题下source&#x2F;css&#x2F;_common&#x2F;components&#x2F;third-party&#x2F;目录下添加gitment.styl文件，设置button的样式：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#gitment-display-button</span>&#123;</span><br><span class="line">     <span class="attribute">display</span>: inline-block;</span><br><span class="line">     <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">15px</span>;</span><br><span class="line">     <span class="attribute">color</span>: <span class="number">#0a9caf</span>;</span><br><span class="line">     <span class="attribute">cursor</span>: pointer;</span><br><span class="line">     <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">     <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#0a9caf</span>;</span><br><span class="line">     <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="selector-id">#gitment-display-button</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">     <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">     <span class="attribute">background</span>: <span class="number">#0a9caf</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在主题下source&#x2F;css&#x2F;_common&#x2F;components&#x2F;third-party&#x2F;third-party.styl文件中引入相应的CSS样式即可:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span>&quot;gitment&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>这样就ok了！</p>
+<h5 id="易错点"><a href="#易错点" class="headerlink" title="易错点"></a>易错点</h5><p>修改themes&#x2F;next&#x2F;_config.yml这个文件时，格式要正确。另外，repo是你要想创建issues的仓库，完全可以跟博文所放的仓库不一个。id就写自己的github用户名就可以，这个用户名跟repo必须匹配。<br>gitment可能不支持链接地址里有中文，所以安装gitment前一定要参考前文把链接持久化搞成全是英文的。<br>同一篇文章需要初始化comment两次的问题，是因为<a target="_blank" rel="noopener" href="http://xxx.com/post/ab9bb85a.html%E5%92%8C%E7%82%B9%E5%87%BB%E9%98%85%E8%AF%BB%E5%85%A8%E6%96%87%E8%BF%9B%E5%8E%BB%E7%9A%84%E9%93%BE%E6%8E%A5http://xxx.com/post/ab9bb85a.html#more%E5%AF%B9issues%E6%9D%A5%E8%AF%B4%E6%98%AF%E4%B8%8D%E5%90%8C%E7%9A%84%EF%BC%8C%E6%89%80%E4%BB%A5%E5%88%9B%E5%BB%BA%E4%B8%A4%E6%AC%A1%E3%80%82%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%E5%B0%B1%E6%98%AFgitment.swig%E9%87%8Cid%E5%BC%84%E6%88%90window.location.pathname%E8%80%8C%E4%B8%8D%E6%98%AFdocument.location.href%E3%80%82">http://xxx.com/post/ab9bb85a.html和点击阅读全文进去的链接http://xxx.com/post/ab9bb85a.html#more对issues来说是不同的，所以创建两次。解决方法就是gitment.swig里id弄成window.location.pathname而不是document.location.href。</a><br>初始化评论后，可以到github里自己放issues的仓库查看issues是否创建成功，有时候浏览器可能会有缓存依然提示你初始化评论。一般过个两分钟就显示正常了。<br>参考文档</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/10134c474991">主要参考文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://meesong.github.io/StaticBlog/2017/NexT+Gitment/">一种相对简略的配置方式</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/imsun/gitment/issues">作者issue</a></li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017071728.htm">https://m.is-local.org/post/2017071728.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/hexo-next/">🏷️ hexo next</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017081728.htm">hexo 常用命令</a>
+            
+            
+            <a class="next" rel="next" href="/post/2016111154.htm">jQuery使用技巧</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

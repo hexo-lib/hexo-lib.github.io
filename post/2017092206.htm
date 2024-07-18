@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>FreeMarker自定义TemplateDirectiveModel(二) | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">FreeMarker自定义TemplateDirectiveModel(二)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 7, 2017&nbsp;&nbsp;22:06:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java/">Java</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="http://ovi3ob9p4.bkt.clouddn.com/TIETU/CT0032.jpg" alt="image"></p>
+<p>FreeMarker是一个用Java语言编写的模板引擎，它基于模板来生成文本输出。FreeMarker与Web容器无关，即在Web运行时，它并不知道Servlet或HTTP。它不仅可以用作表现层的实现技术，而且还可以用于生成XML，JSP或Java 等。</p>
+<span id="more"></span>
+
+<p>​	摘要: 采用的是freemarker版本 2.3.21 采用 BeansWrapperBuilder替代DEFAULT_WRAPPER 的方式。</p>
+<ul>
+<li>自定义标签需要实现TemplateDirectiveModel这个接口中的execute方法  实例代码如下</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserListDirective</span> <span class="keyword">implements</span> <span class="title class_">TemplateDirectiveModel</span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> UserDAO  userDao;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Environment env, Map params, TemplateModel[] loopVars,</span></span><br><span class="line"><span class="params">			TemplateDirectiveBody body)</span> </span><br><span class="line">                      <span class="keyword">throws</span> TemplateException, IOException &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> params.get(<span class="string">&quot;name&quot;</span>).toString();</span><br><span class="line">		List&lt;User&gt; userlist = userDao.findByProperty(<span class="string">&quot;name&quot;</span>, name);</span><br><span class="line"></span><br><span class="line">		env.setVariable(<span class="string">&quot;userList&quot;</span>, getBeansWrapper().wrap(userlist));</span><br><span class="line">		body.render(env.getOut());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> BeansWrapper <span class="title function_">getBeansWrapper</span><span class="params">()</span>&#123;</span><br><span class="line">		<span class="type">BeansWrapper</span> <span class="variable">beansWrapper</span> <span class="operator">=</span> </span><br><span class="line">                         <span class="keyword">new</span> <span class="title class_">BeansWrapperBuilder</span>(Configuration.VERSION_2_3_21).build();</span><br><span class="line">		<span class="keyword">return</span> beansWrapper;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置 UserListDirective 到spring  bean xml中</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;userListDirective&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.action.directive.UserListDirective&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将spring bean 设置到freemarkerConfig全局变量中去。</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;freemarkerConfig2&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;templateLoaderPath&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freemarkerVariables&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">map</span> &gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;userListDirective&quot;</span> <span class="attr">value</span>=<span class="string">&quot;userListTag&quot;</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">map</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freemarkerSettings&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">props</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;template_update_delay&quot;</span>&gt;</span>0<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;defaultEncoding&quot;</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;url_escaping_charset&quot;</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;locale&quot;</span>&gt;</span>zh_CN<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;boolean_format&quot;</span>&gt;</span>true,false<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;datetime_format&quot;</span>&gt;</span>yyyy-MM-dd HH:mm:ss<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;date_format&quot;</span>&gt;</span>yyyy-MM-dd<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;time_format&quot;</span>&gt;</span>HH:mm:ss<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;number_format&quot;</span>&gt;</span>0.######<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;whitespace_stripping&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">props</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ftl文件中的访问方式</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;@userListTag name=&quot;zhangsan&quot;&gt;</span><br><span class="line">    &lt;#if userList?? &amp;&amp; userList?size gt 0&gt;</span><br><span class="line">        &lt;#list userList as user&gt;</span><br><span class="line">            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&quot;</span>&gt;</span>$&#123;user.name&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">        &lt;/#list&gt;</span><br><span class="line">    &lt;/#if&gt; </span><br><span class="line">&lt;/@userListTag&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>freemarker 遍历 map</li>
+</ul>
+<p>第一种方式（2.3.21版本之前好像可以用）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list testMap?keys as testKey&gt;  </span><br><span class="line">    &lt; option value=&quot;$&#123;testKey&#125;&quot; &gt;  </span><br><span class="line">        $&#123;testMap.get(testKey)&#125;  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">option</span>&gt;</span>  </span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#list testMap.keySet() as testKey&gt;  </span><br><span class="line">    &lt; option value=&quot;$&#123;testKey&#125;&quot; &gt;  </span><br><span class="line">        $&#123;testMap.get(testKey)&#125;  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">option</span>&gt;</span>  </span><br><span class="line">&lt;/#list&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>附摘：</li>
+</ul>
+<p>在采用FreeMarker做前台视图模板的情况下，我们可以通过&lt;#include&gt;标签和自定义宏来解决很多重复性工作。</p>
+<p>一个简单的FreeMarker宏：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;#macro sayHello name=&quot;&quot;&gt;</span><br><span class="line">    hello $&#123;name&#125;</span><br><span class="line">&lt;/#macro&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过如下的形式调用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;@sayHello name=&quot;shannon&quot; /&gt;  </span><br></pre></td></tr></table></figure>
+
+<p>​	不过这种在模板页中定义的宏能力有限。【1】假设，我们很多页面都要输出一个热门排行框，而排行数据需要从controller层动态获取，我们可以用这种宏来完成所有的展示工作，但前提是相应的controller和接口中层需要预先将这些排行数据放到model中去，因此对于后端来说这也是一个重复性的工作。那么有没有一种方式可以让后端也脱离这种重复工作呢？答案是肯定的，这也是写这篇博客的目的。</p>
+<p>​	在一个偶然的机会发现jeecms项目中用到了这种方式，于是借鉴了一番。</p>
+<p>​	FreeMarker不仅可以在前端的模板页中定义宏，还可以通过扩展其接口在后端实现宏，这有什么好处呢？这种方式就好比让你的模板页具备了从前端再次回到后端的能力。这样我们就能很好的解决【1】处的假设，我们无需在各个controller的各个接口中去重复的向model中添加所需的排行数据，而是当FreeMarker渲染模板页时遇到相应的宏它可以回到后端去调用相应的方法取到所需的数据。例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> freemarker.core.Environment;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.ObjectWrapper;</span><br><span class="line"><span class="keyword">import</span> freemarker.template.TemplateDirectiveModel;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * FreeMarker自定义宏</span></span><br><span class="line"><span class="comment"> * 获取App下载排行列表</span></span><br><span class="line"><span class="comment"> * 参数包括 length（列表长度） mtypeCode(主类型代码) typeCode（小类型代码） rankMode（排行模式1、2、3）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> shannon</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FMAppRankDirective</span> <span class="keyword">implements</span> <span class="title class_">TemplateDirectiveModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource(name = &quot;appRankService&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> AppRankService appRankService;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(Environment env, Map params, TemplateModel[] loopVars,</span></span><br><span class="line"><span class="params">            TemplateDirectiveBody body)</span> <span class="keyword">throws</span> TemplateException, IOException &#123;</span><br><span class="line">        <span class="comment">//DirectiveUtils是借用jeecms项目中的工具类，主要是因为它集成了一些异常处理功能，</span></span><br><span class="line">        <span class="comment">//其实完全可以不用它，params是个Map，自己通过key取值就可以了，做一下空值判断</span></span><br><span class="line">        <span class="type">Integer</span> <span class="variable">length</span> <span class="operator">=</span> DirectiveUtils.getInt(<span class="string">&quot;length&quot;</span>, params);</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">mtypeCode</span> <span class="operator">=</span> DirectiveUtils.getInt(<span class="string">&quot;mtypeCode&quot;</span>, params);</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">typeCode</span> <span class="operator">=</span> DirectiveUtils.getInt(<span class="string">&quot;typeCode&quot;</span>, params);</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">rankMode</span> <span class="operator">=</span> DirectiveUtils.getInt(<span class="string">&quot;rankMode&quot;</span>, params);</span><br><span class="line">        ArrayList&lt;App&gt; rankList = appRankService.getRankList(length, mtypeCode, typeCode, rankMode);</span><br><span class="line">        </span><br><span class="line">        env.setVariable(<span class="string">&quot;appRankList&quot;</span>, ObjectWrapper.DEFAULT_WRAPPER.wrap(rankList));</span><br><span class="line">        <span class="keyword">if</span> (body != <span class="literal">null</span>) &#123;</span><br><span class="line">            body.render(env.getOut());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	通过实现FreeMarker的TemplateDirectiveModel就在后端实现了一个自定义的宏，这个宏的功能很简单，只是根据给定的参数将排行数据“appRankList”放到model中去，然后模板页中就可以使用这个变量了。</p>
+<p>FreeMarker的配置参数中需要将这个宏加入进去。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;appRankDirective&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.shannon.example.rank.util.FMAppRankDirective&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;freemarkerConfigurer&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer&quot;</span>&gt;</span></span><br><span class="line">	……其他配置略……</span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;freemarkerVariables&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">map</span>&gt;</span></span><br><span class="line">			……其他配置略……</span><br><span class="line">			<span class="tag">&lt;<span class="name">entry</span> <span class="attr">key</span>=<span class="string">&quot;appRankDirective&quot;</span> <span class="attr">value-ref</span>=<span class="string">&quot;appRankDirective&quot;</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">map</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在模板页中使用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;#-- 应用下载排行框，title为该框的标题，length为排行列表长度，mtypeCode为主类型代码，typeCode为小类型代码，rankMode为排行方式 </span><br><span class="line">1为总下载量，2为月下载量，3为昨日增长下载量</span><br><span class="line">--&gt;</span><br><span class="line">&lt;#macro appRankBox title=&quot;&quot; length=10 mtypeCode=1 typeCode=-1 rankMode=1&gt;</span><br><span class="line">      &lt;@appRankDirective length=length mtypeCode=mtypeCode typeCode=typeCode rankMode=rankMode /&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">&quot;box-title&quot;</span>&gt;</span>$&#123;title&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;row-list&quot;</span>&gt;</span></span><br><span class="line">        &lt;#list appRankList as item&gt;</span><br><span class="line">        ……详细输出内容略……</span><br><span class="line">        &lt;/#list&gt;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">&lt;/#macro&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	这里我在模板页中又定义了一个宏，负责内容及样式的输出，因为模板页中的宏比较直观，让后端的宏只负责拿数据。其他页面直接使用“appRankBox”就可以了，然后由它来调用后端的“appRankDirective”宏来拿数据。</p>
+<p>这样，controller就从重复工作中脱身了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017092206.htm">https://m.is-local.org/post/2017092206.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/freemarker/">🏷️ freemarker</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017090915.htm">Request Mapping 基础用法</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017091936.htm">FreeMarker自定义TemplateDirectiveModel(一)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

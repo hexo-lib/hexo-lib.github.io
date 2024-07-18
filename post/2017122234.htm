@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Tommas">
+
+
+    <meta name="subtitle" content="Tommas Blog">
+
+
+    <meta name="description" content="Keep quiet time for time">
+
+
+
+<title>Java Listener实现在线统计人数和总访问量 | Tommas&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/images/favicon-32x32-next.png">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+    
+<script src="/js/search.js"></script>
+
+    <script type="text/javascript">
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+        var path = "/" + search_path;
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        click_time=0;
+    </script>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Tommas&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+                   <a class="menu-item" onclick="$('#search-page').show(); $('#local-search-input')[0].focus();">Search</a>
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Tommas&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                    <a class="menu-item" href="/index">Site</a>
+                
+                    <a class="menu-item" href="/links">Links</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+
+            <div class="main">
+        <div style="z-index: 1000; position: fixed; background-color: rgba(0, 0, 0, 0.8);
+        top: 0; bottom: 0; left: 0; right: 0; padding: 0 max(50% - 375px,5px); display: none;" id="search-page"
+        onclick="if (Date.now()-click_time>=10) { this.style.display='none'; } quitting=1; ">
+    <input id="local-search-input" style="height: 24px; position: relative; top: 24px; font-size: 16px;
+        width: calc(100% - 50px); color: white; background-color: initial; padding: 12px 23px; border-radius: 5px; border: 2px solid #bbb; outline: 0;"
+        onclick="click_time=Date.now()">
+    <div id="local-search-result" style="width: 100%; position: relative; top: 24px;
+        height: calc(100% - 105px);" onclick="click_time=Date.now()"></div>
+</div>
+
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Java Listener实现在线统计人数和总访问量</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Tommas</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">December 13, 2017&nbsp;&nbsp;22:34:36</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Java/">Java</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><img src="https://s2.loli.net/2023/04/16/XDgYZ2RMLxIl7Vd.jpg"></p>
+<p>监听器用于监听web应用中某些对象、信息的创建、销毁、增加，修改，删除等动作的发生，然后作出相应的响应处理。当范围对象的状态发生变化的时候，服务器自动调用监听器对象中的方法。常用于统计在线人数和在线用户，系统加载时进行信息初始化，统计网站的访问量等等。<br> <span id="more"></span><br>    分类：</p>
+<pre><code>按监听的对象划分，可以分为
+</code></pre>
+<p>ServletContext对象监听器<br>HttpSession对象监听器<br>ServletRequest对象监听器</p>
+<pre><code>按监听的事件划分
+</code></pre>
+<p>对象自身的创建和销毁的监听器<br>对象中属性的创建和消除的监听器<br>session中的某个对象的状态变化的监听器</p>
+<pre><code>示例：用监听器统计网站在线人数
+
+原理：每当有一个访问连接到服务器时，服务器就会创建一个session来管理会话。那么我们就可以通过统计session的数量来获得当前在线人数。
+</code></pre>
+<!--more-->
+<p>监听器应用一般统计在线人数,闲着没事，写个笔记，我们项目中是这样做的</p>
+<p>首先定义一个servlet 这个servelt 在服务器启动时，就会调用，初始化：</p>
+<h2 id="实现累计访问量的一个方法"><a href="#实现累计访问量的一个方法" class="headerlink" title="实现累计访问量的一个方法"></a>实现累计访问量的一个方法</h2><h3 id="1-web-xml的配置"><a href="#1-web-xml的配置" class="headerlink" title="1.web.xml的配置"></a>1.web.xml的配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- added by li&#x27;n for 登陆页面自动读取访问数  on 2013-04-15  the beginning --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>VisitCounts<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.sysware.framework.login.VisitCounts<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>0<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- added by li&#x27;n for 登陆页面自动读取访问数 on 2013-04-15  the end --&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="２-项目登录页面可以获取访问本项目的总人数（init方法）"><a href="#２-项目登录页面可以获取访问本项目的总人数（init方法）" class="headerlink" title="２.项目登录页面可以获取访问本项目的总人数（init方法）"></a>２.项目登录页面可以获取访问本项目的总人数（init方法）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sysware.framework.login;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> li&#x27;n on 系统工程部</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2013-04-15 17:00</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VisitCounts</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span>&#123;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">6737156348721467846L</span>;</span><br><span class="line">    <span class="comment">//累计访问量</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">counts</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setCounts</span><span class="params">(<span class="type">int</span> counts)</span> &#123;</span><br><span class="line">        VisitCounts.counts = counts;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 历史访问量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCounts</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> counts;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 服务器启动时读取文件中的历史访问量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//获取visitCount.txt的文件路径</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">p</span> <span class="operator">=</span> <span class="built_in">this</span>.getClass().getClassLoader().getResource(<span class="string">&quot;&quot;</span>).getPath();</span><br><span class="line">        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(p+File.separator +<span class="string">&quot;visitCount.txt&quot;</span>);</span><br><span class="line">         </span><br><span class="line">        <span class="comment">//读取文件中的数字，即系统的历史访问量</span></span><br><span class="line">        <span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">            readFile(file);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                file.createNewFile();</span><br><span class="line">                readFile(file);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取文件file中的访问量数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;static-access&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">readFile</span><span class="params">(File file)</span>&#123;</span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">tempString</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                reader = <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">FileReader</span>(file));</span><br><span class="line">                    <span class="keyword">while</span>((tempString = reader.readLine()) != <span class="literal">null</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        VisitCounts.counts = Integer.parseInt(tempString);</span><br><span class="line">                        System.out.println();</span><br><span class="line">                        <span class="built_in">this</span>.setCounts(counts);</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">         </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line"> </span><br><span class="line">     </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="３-在用户登录时，数量加１并用流写到文件里面（doLogin方法里面处理）"><a href="#３-在用户登录时，数量加１并用流写到文件里面（doLogin方法里面处理）" class="headerlink" title="３.在用户登录时，数量加１并用流写到文件里面（doLogin方法里面处理）"></a>３.在用户登录时，数量加１并用流写到文件里面（doLogin方法里面处理）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(loginInfo.isSuccess())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//added by li&#x27;n for 访问量统计 on 2013-04-19 the beginning</span></span><br><span class="line">            <span class="comment">//登录成功，访问量加1</span></span><br><span class="line">            VisitCounts.setCounts(VisitCounts.counts  + <span class="number">1</span>);</span><br><span class="line">            <span class="comment">//将访问量更新到文件visitCount.txt</span></span><br><span class="line">            writeFile();</span><br><span class="line">            <span class="comment">//added by li&#x27;n for 访问量统计 on 2013-04-19 the end</span></span><br><span class="line">        &#125;&lt;br&gt;<span class="comment">/**&lt;br&gt;     * 将访问量更新到文件visitCount.txt&lt;br&gt;     * <span class="doctag">@return</span>  历史访问量&lt;br&gt;     * <span class="doctag">@author</span> li&#x27;n on 系统工程部&lt;br&gt;     * <span class="doctag">@since</span> 2013-04-19 &lt;br&gt;     */</span>&lt;br&gt;    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">writeFile</span><span class="params">()</span>&#123;&lt;br&gt;        &lt;br&gt;        <span class="type">FileWriter</span> <span class="variable">filewrite</span> <span class="operator">=</span> <span class="literal">null</span>;&lt;br&gt;        <span class="keyword">try</span> &#123;&lt;br&gt;            &lt;br&gt;            <span class="comment">//获得文件路径&lt;br&gt;            filewrite = new FileWriter(this.getClass().getClassLoader().getResource(&quot;&quot;).getPath()+File.separator +&quot;visitCount.txt&quot;);&lt;br&gt;            &lt;br&gt;            //将访问量写入文件&lt;br&gt;            int o = VisitCounts.counts;&lt;br&gt;            filewrite.write(o + &quot;\r\n&quot;);&lt;br&gt;            filewrite.flush();&lt;br&gt;            filewrite.close();&lt;br&gt;        &#125; catch (Exception e) &#123;&lt;br&gt;            e.printStackTrace();&lt;br&gt;        &#125;&lt;br&gt;&lt;br&gt;    &#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>以上，是实现累计访问量的一个方法；</p>
+<p>下面说说实现在线人数，这个就要用到监听器的方式</p>
+<h2 id="实现在线人数"><a href="#实现在线人数" class="headerlink" title="实现在线人数"></a>实现在线人数</h2><h3 id="首先还是在-web-xml中配置你所写的监听器"><a href="#首先还是在-web-xml中配置你所写的监听器" class="headerlink" title="首先还是在　web.xml中配置你所写的监听器"></a>首先还是在　web.xml中配置你所写的监听器</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 在线用户session监听器 --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">listener</span>&gt;</span>         </span><br><span class="line">       <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>com.sysware.framework.login.OnlineSessionListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="２-监听器类"><a href="#２-监听器类" class="headerlink" title="２.监听器类"></a>２.监听器类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sysware.framework.login;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSessionAttributeListener;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSessionBindingEvent;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> com.sysware.framework.commons.SystemConstants;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 在线session监听器</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> : 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 2012-5-21下午08:46:02</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@team</span> : 系统管理</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : liuxj</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OnlineSessionListener</span> <span class="keyword">implements</span> <span class="title class_">HttpSessionAttributeListener</span> &#123;</span><br><span class="line">     </span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attributeAdded</span><span class="params">(HttpSessionBindingEvent event)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (SystemConstants.SESSION_KEY.equals(event.getName())) &#123;</span><br><span class="line">            OnlineUserContext.getInstance().addSession(event.getSession());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attributeRemoved</span><span class="params">(HttpSessionBindingEvent event)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (SystemConstants.SESSION_KEY.equals(event.getName())) &#123;</span><br><span class="line">            OnlineUserContext.getInstance().removeSession(event.getSession());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attributeReplaced</span><span class="params">(HttpSessionBindingEvent event)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (SystemConstants.SESSION_KEY.equals(event.getName())) &#123;</span><br><span class="line">            OnlineUserContext.getInstance().replaceSession(event.getSession());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sysware.framework.login;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Map.Entry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sysware.framework.commons.SystemConstants;</span><br><span class="line"><span class="keyword">import</span> com.sysware.framework.eobs.commons.ObjectCloneUtils;</span><br><span class="line"><span class="keyword">import</span> com.sysware.utils.SyswareUtil;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * copyright : Sysware Technology Co., Ltd</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 在线用户信息上下文</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> : 1.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> : 2012-5-21下午08:31:07</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@team</span> : 系统管理</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> : liuxj</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OnlineUserContext</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> OnlineUserContext onlineUserContext;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用户在线信息</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, HttpSession&gt; onlineUserMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">OnlineUserContext</span><span class="params">()</span> &#123;</span><br><span class="line">           onlineUserMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, HttpSession&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取在线用户上下文实例</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-23:下午05:47:55</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 在线用户上下文实例</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> OnlineUserContext <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> onlineUserContext == <span class="literal">null</span> ? onlineUserContext = <span class="keyword">new</span> <span class="title class_">OnlineUserContext</span>()</span><br><span class="line">                : onlineUserContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加入session触发</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:02:26</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> session</span></span><br><span class="line"><span class="comment">     *            session对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">addSession</span><span class="params">(HttpSession session)</span> &#123;</span><br><span class="line">        </span><br><span class="line">        onlineUserMap.put(session.getId(), session);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 移除Session</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:02:56</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> session</span></span><br><span class="line"><span class="comment">     *            session对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">removeSession</span><span class="params">(HttpSession session)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (onlineUserMap.containsKey(session.getId())) &#123;</span><br><span class="line">            onlineUserMap.remove(session.getId());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 替换Session</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:03:18</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> session</span></span><br><span class="line"><span class="comment">     *            session对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">replaceSession</span><span class="params">(HttpSession session)</span> &#123;</span><br><span class="line">        addSession(session);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据用户ID判断是否登录</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2013-1-28:下午02:01:31</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userId</span></span><br><span class="line"><span class="comment">     *            用户ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true已经登录|false未登录</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isLogged</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        List&lt;OnlineUserInfo&gt; list = getOnlineUserInfoList();</span><br><span class="line">        <span class="keyword">for</span> (OnlineUserInfo info : list) &#123;</span><br><span class="line">            <span class="keyword">if</span> (info.isLogged() &amp;&amp; info.getUserId().equals(userId)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据sessionId获取session</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-12-17:下午01:06:11</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sessionId    sessionId</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>    session</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> HttpSession <span class="title function_">getSession</span><span class="params">(String sessionId)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> onlineUserMap.containsKey(sessionId) ? onlineUserMap.get(sessionId) : <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据sessionId移除session</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-12-17:下午01:05:39</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sessionId    sessionId</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeSession</span><span class="params">(String sessionId)</span> &#123;</span><br><span class="line">        <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> getSession(sessionId);</span><br><span class="line">        <span class="keyword">if</span>(!SyswareUtil.isEmpty(session)) &#123;</span><br><span class="line">            session.invalidate();</span><br><span class="line">            session = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当前登录操作用户数量</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:20:54</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 登录操作用户数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getLoginUserCount</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        List&lt;OnlineUserInfo&gt; list = getOnlineUserInfoList();</span><br><span class="line">        <span class="keyword">for</span>(OnlineUserInfo info : list) &#123;</span><br><span class="line">            <span class="keyword">if</span>(info.isLogged()) &#123;</span><br><span class="line">                num ++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当前未登录的操作用户数量</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:21:14</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 未登录的操作用户数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getNoLoginUserCount</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        List&lt;OnlineUserInfo&gt; list = getOnlineUserInfoList();</span><br><span class="line">        <span class="keyword">for</span>(OnlineUserInfo info : list) &#123;</span><br><span class="line">            <span class="keyword">if</span>(!info.isLogged()) &#123;</span><br><span class="line">                num ++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当前操作用户总数</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:22:16</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 操作用户总数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getOperatorCount</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> getOnlineUserInfoList().size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当前操作用户列表</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-22:上午10:11:39</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 操作用户列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> List&lt;OnlineUserInfo&gt; <span class="title function_">getOnlineUserInfoList</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;OnlineUserInfo&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;OnlineUserInfo&gt;();</span><br><span class="line">        Iterator&lt;Entry&lt;String, HttpSession&gt;&gt; iterator = onlineUserMap</span><br><span class="line">                .entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            Entry&lt;String, HttpSession&gt; entry = iterator.next();</span><br><span class="line">            <span class="type">OnlineUserInfo</span> <span class="variable">info</span> <span class="operator">=</span> ObjectCloneUtils.clone(getOnlineUserInfo(entry.getKey()));</span><br><span class="line">            info.setSessionId(entry.getKey());</span><br><span class="line">            list.add(info);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取在线用户信息</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> : 2012-5-21:下午09:14:01</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sessionId</span></span><br><span class="line"><span class="comment">     *            session的ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 在线用户信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> OnlineUserInfo <span class="title function_">getOnlineUserInfo</span><span class="params">(String sessionId)</span> &#123;</span><br><span class="line">        <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> getSession(sessionId);</span><br><span class="line">        <span class="keyword">return</span> SyswareUtil.isEmpty(session) ? <span class="literal">null</span> : (Operator) session.getAttribute(SystemConstants.SESSION_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面的方法，一个是在线统计人数，一个是实现总访问量，自己项目中运用的，做个笔记。</p>
+<h3 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;visit&quot;</span>&gt;</span>当前访问数：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;nowVisitCount&quot;</span> <span class="attr">style</span>=<span class="string">&quot;color:#5374B1;&quot;</span>&gt;</span>&lt;%=OnlineUserContext.getInstance().getLoginUserCount()  %&gt;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;count&quot;</span>&gt;</span>累计访问数：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;historyVisitCount&quot;</span> <span class="attr">style</span>=<span class="string">&quot;color:#5374B1;&quot;</span>&gt;</span>&lt;%=new LoginServiceImpl().getCounts()%&gt;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Tommas</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://m.is-local.org/post/2017122234.htm">https://m.is-local.org/post/2017122234.htm</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>© 2024 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Java/">🏷️ Java</a>
+                    
+                        <a href="/tags/Listener/">🏷️ Listener</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/post/2017121334.htm">java 获取音视频文件的大小、以及播放时长</a>
+            
+            
+            <a class="next" rel="next" href="/post/2017122034.htm">北方的空地</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+      <span>© 2024 Tommas</span> 
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
