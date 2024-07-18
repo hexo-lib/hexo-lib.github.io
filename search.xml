@@ -522,7 +522,7 @@
 <p>  Markdown 会转成：</p>
   <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;<span class="symbol">&amp;#x6D;</span><span class="symbol">&amp;#x61;</span>i<span class="symbol">&amp;#x6C;</span><span class="symbol">&amp;#x74;</span><span class="symbol">&amp;#x6F;</span>:<span class="symbol">&amp;#x61;</span><span class="symbol">&amp;#x64;</span><span class="symbol">&amp;#x64;</span><span class="symbol">&amp;#x72;</span><span class="symbol">&amp;#x65;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="symbol">&amp;#115;</span><span class="symbol">&amp;#115;</span><span class="symbol">&amp;#64;</span><span class="symbol">&amp;#101;</span><span class="symbol">&amp;#120;</span><span class="symbol">&amp;#x61;</span><span class="symbol">&amp;#109;</span><span class="symbol">&amp;#x70;</span><span class="symbol">&amp;#x6C;</span>e<span class="symbol">&amp;#x2E;</span><span class="symbol">&amp;#99;</span><span class="symbol">&amp;#111;</span></span></span></span><br><span class="line"><span class="string"><span class="tag"><span class="symbol">&amp;#109;</span>&quot;</span>&gt;</span><span class="symbol">&amp;#x61;</span><span class="symbol">&amp;#x64;</span><span class="symbol">&amp;#x64;</span><span class="symbol">&amp;#x72;</span><span class="symbol">&amp;#x65;</span><span class="symbol">&amp;#115;</span><span class="symbol">&amp;#115;</span><span class="symbol">&amp;#64;</span><span class="symbol">&amp;#101;</span><span class="symbol">&amp;#120;</span><span class="symbol">&amp;#x61;</span></span><br><span class="line"><span class="symbol">&amp;#109;</span><span class="symbol">&amp;#x70;</span><span class="symbol">&amp;#x6C;</span>e<span class="symbol">&amp;#x2E;</span><span class="symbol">&amp;#99;</span><span class="symbol">&amp;#111;</span><span class="symbol">&amp;#109;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#100;&#100;&#x72;&#x65;&#115;&#115;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#109;">&#97;&#100;&#100;&#x72;&#x65;&#115;&#115;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#109;</a>」链接。</p>
+<p>  在浏览器里面，这段字串（其实是 <code>&lt;a href=&quot;mailto:address@example.com&quot;&gt;address@example.com&lt;/a&gt;</code>）会变成一个可以点击的「<a href="mailto:&#97;&#100;&#100;&#114;&#x65;&#115;&#115;&#64;&#101;&#x78;&#x61;&#x6d;&#112;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#97;&#100;&#100;&#114;&#x65;&#115;&#115;&#64;&#101;&#x78;&#x61;&#x6d;&#112;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;</a>」链接。</p>
 <p>  （这种作法虽然可以糊弄不少的机器人，但并不能全部挡下来，不过总比什么都不做好些。不管怎样，公开你的信箱终究会引来广告信件的。）</p>
 <h3 id="反斜杠"><a href="#反斜杠" class="headerlink" title="反斜杠"></a>反斜杠</h3><p>  Markdown 可以利用反斜杠来插入一些在语法中有其它意义的符号，例如：如果你想要用星号加在文字旁边的方式来做出强调效果（但不用 <code>&lt;em&gt;</code> 标签），你可以在星号的前面加上反斜杠：</p>
   <figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line">\*literal asterisks\*</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -1850,186 +1850,6 @@
       </tags>
   </entry>
   <entry>
-    <title>YAML脚本学习笔记</title>
-    <url>/post/2017121234.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/16/pWn3RYiD86aGONA.png"></p>
-<p>YAML是“另一种标记语言”的外语缩写；但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。<br>它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
-<span id="more"></span>
-<p>诞生<br>YAML参考了其他多种语言，包括：XML、C语言、Python、Perl以及电子邮件格式RFC2822。<br>Clark Evans在2001年5月在首次发表了这种语言，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者。<br>命名<br>YAML是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。<br>在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言），<br>功能<br>YAML的语法和其他高阶语言类似，并且可以简单表达清单、散列表，标量等资料形态、。<br>它使用空白符号缩排和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种设定档、倾印除错内容、文件大纲（例如：许多电子邮件标题格式和YAML非常接近）。<br>尽管它比较适合用来表达阶层式（hierarchical model）的数据结构，不过也有精致的语法可以表示关联性（relational model）的资料。<br>由于YAML使用空白字符和分行来分隔资料，使的他特别适合用grep、Python、Perl、Ruby操作。<br>其让人最容易上手的特色是巧妙避开各种封闭符号，如：引号、各种括号等，这些符号在嵌套结构中会变得复杂而难以辨认。</p>
-<h1 id="YAML预研文档"><a href="#YAML预研文档" class="headerlink" title="YAML预研文档"></a>YAML预研文档</h1><h2 id="YAML概要"><a href="#YAML概要" class="headerlink" title="YAML概要"></a>YAML概要</h2><p><a href="http://yaml.org/">YAML</a>是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写，早先YAML的意思其实是：”Yet Another Markup Language”（另外一种置标语言），但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名，YAML的官方定义很简单，即<strong>一种人性化的数据格式定义语言</strong>，其主要功能用途类似于XML或JSON，YAML使用空白字符和分行来分隔数据，且巧妙避开各种封闭符号，如：引号、括号等，以避免这些符号在复杂层次结构中变得难以辨认。YAML的语法与高阶语言类似，可以很简单地表述<em>序列（java中的list）、杂凑表（java中的map）、标量（java中的基本类型等）</em>数据结构，它重点强调可阅读性。</p>
-<h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
-<blockquote>
-<p><strong>优势:</strong></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>YAML的可读性好</li>
-<li>YAML和脚本语言的交互性好</li>
-<li>YAML使用实现语言的数据类型</li>
-<li>YAML有一个一致的信息模型</li>
-<li>YAML易于实现</li>
-</ul>
-</blockquote>
-<p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
-<blockquote>
-<ul>
-<li>YAML可以基于流来处理</li>
-<li>YAML表达能力强，扩展性好</li>
-</ul>
-</blockquote>
-<p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。</p>
-<hr>
-<h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
-<h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
-<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
-<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
-<h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
-<h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
-<ul>
-<li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
-<li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
-<li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
-<li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
-<li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
-<li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
-<li>字串一般不使用引号，但必要的时候可以用引号框住</li>
-<li>使用双引号表示字串时，可用倒斜线（<kbd>&lt;/kbd>）进行特殊字符转义</li>
-<li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>></kbd>）两种方式</li>
-<li>在单一档案中，可用连续三个连字号（<kbd>---</kbd>）区分多个档案</li>
-<li>可选择性的连续三个点号（<kbd>...</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
-<li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&</kbd>）</li>
-<li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
-</ul>
-</blockquote>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">receipt:</span>     <span class="string">Oz-Ware</span> <span class="string">Purchase</span> <span class="string">Invoice</span></span><br><span class="line"><span class="attr">date:</span>        <span class="number">2007-08-06</span></span><br><span class="line"><span class="attr">customer:</span></span><br><span class="line">    <span class="attr">given:</span>   <span class="string">Dorothy</span></span><br><span class="line">    <span class="attr">family:</span>  <span class="string">Gale</span></span><br><span class="line"><span class="attr">items:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">part_no:</span>   <span class="string">A4786</span></span><br><span class="line">      <span class="attr">descrip:</span>   <span class="string">Water</span> <span class="string">Bucket</span> <span class="string">(Filled)</span></span><br><span class="line">      <span class="attr">price:</span>     <span class="number">1.47</span></span><br><span class="line">      <span class="attr">quantity:</span>  <span class="number">4</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">part_no:</span>   <span class="string">E1628</span></span><br><span class="line">      <span class="attr">descrip:</span>   <span class="string">High</span> <span class="string">Heeled</span> <span class="string">&quot;Ruby&quot;</span> <span class="string">Slippers</span> </span><br><span class="line">      <span class="attr">price:</span>     <span class="number">100.27</span></span><br><span class="line">      <span class="attr">quantity:</span>  <span class="number">1</span></span><br><span class="line"><span class="attr">bill-to:</span>  <span class="meta">&amp;id001</span></span><br><span class="line">    <span class="attr">street:</span> <span class="string">| </span></span><br><span class="line"><span class="string">            123 Tornado Alley</span></span><br><span class="line"><span class="string">            Suite 16</span></span><br><span class="line"><span class="string"></span>    <span class="attr">city:</span>   <span class="string">East</span> <span class="string">Westville</span></span><br><span class="line">    <span class="attr">state:</span>  <span class="string">KS</span></span><br><span class="line"><span class="attr">ship-to:</span>  <span class="string">*id001</span>   </span><br><span class="line"><span class="attr">specialDelivery:</span>  <span class="string">&gt;</span></span><br><span class="line"><span class="string">    Follow the Yellow Brick</span></span><br><span class="line"><span class="string">    Road to the Emerald City.</span></span><br><span class="line"><span class="string">    Pay no attention to the </span></span><br><span class="line"><span class="string">    man behind the curtain.</span></span><br><span class="line"><span class="string"></span><span class="string">...</span></span><br></pre></td></tr></table></figure>
-<p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
-<h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：</p>
-<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">name</span><span class="punctuation">:</span> <span class="string">John Smith</span></span><br><span class="line"><span class="attribute">age</span><span class="punctuation">:</span> <span class="string">37</span></span><br><span class="line"><span class="attribute">children</span><span class="punctuation">:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: Jimmy Smith</span></span><br><span class="line">      <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">15</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: Jenny Smith</span></span><br><span class="line">      <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">12</span></span><br><span class="line"><span class="attribute">spouse</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">name</span><span class="punctuation">:</span> <span class="string">Jane Smith</span></span><br><span class="line">    <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">25</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：</p>
-</blockquote>
-<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Person sponse;</span><br><span class="line">    <span class="keyword">private</span> Person[] children;</span><br><span class="line">    <span class="comment">// setXXX, getXXX方法略.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在我们使用java装配一个Jone：</p>
-<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Person</span> john = new Person();</span><br><span class="line"><span class="attribute">john</span>.setAge(<span class="number">37</span>);</span><br><span class="line"><span class="attribute">john</span>.setName(<span class="string">&quot;John Smith&quot;</span>);</span><br><span class="line"><span class="attribute">Person</span> sponse = new Person();</span><br><span class="line"><span class="attribute">sponse</span>.setName(<span class="string">&quot;Jane Smith&quot;</span>);</span><br><span class="line"><span class="attribute">sponse</span>.setAge(<span class="number">25</span>);</span><br><span class="line"><span class="attribute">john</span>.setSponse(sponse);</span><br><span class="line"><span class="attribute">Person</span>[] children = &#123;new Person(), new Person()&#125;;</span><br><span class="line"><span class="attribute">children</span>[<span class="number">0</span>].setName(<span class="string">&quot;Jimmy Smith&quot;</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">0</span>].setAge(<span class="number">15</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">1</span>].setName(<span class="string">&quot;Jenny Smith&quot;</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">1</span>].setAge(<span class="number">12</span>);</span><br><span class="line"><span class="attribute">john</span>.setChildren(children);</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
-<blockquote>
-<ul>
-<li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
-<li>支持YAML的所有类型</li>
-<li>支持UTF-8&#x2F;UTF-16的输入和输出</li>
-<li>提供了本地java对象的序列化和反序列化的高层API</li>
-<li>提供相对合理的错误提示信息</li>
-</ul>
-</blockquote>
-<p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：</p>
-<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">DumperOptions options <span class="operator">=</span> new DumperOptions()<span class="comment">;</span></span><br><span class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)<span class="comment">;</span></span><br><span class="line">Yaml yaml <span class="operator">=</span> new Yaml(options)<span class="comment">;</span></span><br><span class="line">//Yaml yaml <span class="operator">=</span> new Yaml()<span class="comment">;</span></span><br><span class="line">String dump <span class="operator">=</span> yaml.dump(john)<span class="comment">;</span></span><br><span class="line">System.out.println(dump)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p>内容如下：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="type">!!Person</span></span><br><span class="line"><span class="attr">age:</span> <span class="number">37</span></span><br><span class="line"><span class="attr">children:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jimmy</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">age:</span> <span class="number">12</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jenny</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">John</span> <span class="string">Smith</span></span><br><span class="line"><span class="attr">sponse:</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">25</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jane</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br></pre></td></tr></table></figure>
-<p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：</p>
-<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml();</span><br><span class="line"><span class="keyword">Object</span> <span class="keyword">load</span> = yaml.<span class="keyword">load</span>(<span class="built_in">new</span> FileInputStream(<span class="built_in">new</span> File(&quot;jhon.yaml&quot;)));</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(<span class="keyword">load</span>.getClass());</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dump(<span class="keyword">load</span>));</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml(<span class="keyword">options</span>);</span><br><span class="line">Person person = yaml.loadAs(inputStream, Person.<span class="keyword">class</span>);</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(person.getSponse().getChildren().length);</span><br></pre></td></tr></table></figure>
-<p>如果一个yaml文件中有多个文档，由<kbd>---</kbd>分割，解析如下：</p>
-<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml();</span><br><span class="line">        <span class="type">int</span> counter = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">Object</span> data : yaml.loadAll(<span class="keyword">input</span>)) &#123;</span><br><span class="line">            <span class="keyword">System</span>.<span class="keyword">out</span>.println(data);</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-<p>保存一个Map对象：</p>
-<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; data = <span class="keyword">new</span> HashMap&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt;();</span><br><span class="line">        data.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Silenthand Olleander&quot;</span>);</span><br><span class="line">        data.put(<span class="string">&quot;race&quot;</span>, <span class="string">&quot;Human&quot;</span>);</span><br><span class="line">        data.put(<span class="string">&quot;traits&quot;</span>, <span class="keyword">new</span> <span class="built_in">String</span>[] &#123; <span class="string">&quot;ONE_HAND&quot;</span>, <span class="string">&quot;ONE_EYE&quot;</span> &#125;);</span><br><span class="line">        Yaml yaml = <span class="keyword">new</span> Yaml();</span><br><span class="line">        <span class="built_in">String</span> output = yaml.dump(data);</span><br><span class="line">        System.out.println(output);</span><br><span class="line">    <span class="comment">// or</span></span><br><span class="line">    StringWriter writer = <span class="keyword">new</span> StringWriter();</span><br><span class="line">    yaml.dump(data, writer);</span><br><span class="line">    System.out.println(writer.toString());</span><br></pre></td></tr></table></figure>
-<p>将多个文档dump出到同一个yaml文件中去：</p>
-<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">List&lt;<span class="type">Integer</span>&gt; docs = <span class="built_in">new</span> LinkedList&lt;<span class="type">Integer</span>&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">        docs.<span class="keyword">add</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    DumperOptions <span class="keyword">options</span> = <span class="built_in">new</span> DumperOptions();</span><br><span class="line">    //<span class="keyword">options</span>.setCanonical(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">options</span>.explicitStart(<span class="keyword">true</span>);</span><br><span class="line">    Yaml yaml = <span class="built_in">new</span> Yaml(<span class="keyword">options</span>);</span><br><span class="line">    <span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dump(docs));</span><br><span class="line">    <span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dumpAll(docs.iterator()));</span><br></pre></td></tr></table></figure>
-<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line"><span class="comment">--- [1, 2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--- 1</span></span><br><span class="line"><span class="comment">--- 2</span></span><br><span class="line"><span class="comment">--- 3</span></span><br></pre></td></tr></table></figure>
-<p>YAML与java类型对照表：</p>
-<table>
-<thead>
-<tr>
-<th>YAML</th>
-<th>JAVA</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>!null</td>
-<td>null</td>
-</tr>
-<tr>
-<td>!!bool</td>
-<td>Boolean</td>
-</tr>
-<tr>
-<td>!!int</td>
-<td>Integer, Long, BigInteger</td>
-</tr>
-<tr>
-<td>!!float</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>!!binary</td>
-<td>String</td>
-</tr>
-<tr>
-<td>!!timestamp</td>
-<td>java.util.Date, java.sql.Date, java.sql.Timestamp</td>
-</tr>
-<tr>
-<td>!!omap, !!pairs</td>
-<td>List of Object[]</td>
-</tr>
-<tr>
-<td>!!set</td>
-<td>Set</td>
-</tr>
-<tr>
-<td>!!str</td>
-<td>String</td>
-</tr>
-<tr>
-<td>!!seq</td>
-<td>List</td>
-</tr>
-<tr>
-<td>!!map</td>
-<td>Map</td>
-</tr>
-</tbody></table>
-<p>集合的默认实现是：</p>
-<blockquote>
-<ul>
-<li>List:  ArrayList</li>
-<li>Map:  LinkedHashMap</li>
-</ul>
-</blockquote>
-<h3 id="使用JYaml实现"><a href="#使用JYaml实现" class="headerlink" title="使用JYaml实现"></a>使用JYaml实现</h3><p>JYaml（<strong>最新版本是2007年的，可以考虑放弃了</strong>），使用JYaml把Jone “Dump” 出来：</p>
-<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="keyword">File</span> dumpfile = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="string">&quot;John_dump.yaml&quot;</span>);</span><br><span class="line">Yaml.<span class="keyword">dump</span>(john, dumpfile);</span><br></pre></td></tr></table></figure>
-<p>下面我们看看John_dump.yaml是什么样子：</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">--- !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">age: <span class="number">37</span></span><br><span class="line">children: !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span><span class="selector-attr">[]</span></span><br><span class="line">  - !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">    age: <span class="number">15</span></span><br><span class="line">    name: Jimmy Smith</span><br><span class="line">  - !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">    age: <span class="number">12</span></span><br><span class="line">    name: Jenny Smith</span><br><span class="line">name: John Smith</span><br><span class="line">sponse: !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">  age: <span class="number">25</span></span><br><span class="line">  name: Jane Smith</span><br></pre></td></tr></table></figure>
-<p>其中!yaml.test.internal.Person是一些类型的信息。load的时候需要用。<br>现在用JYaml把Jone_dump.yaml load进来：</p>
-<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Person</span> john2 = (<span class="keyword">Person</span>) Yaml.loadType(dumpfile, <span class="keyword">Person</span>.class);</span><br></pre></td></tr></table></figure>
-<p>还可以用下面的代码dump出没有类型信息的John.yaml：</p>
-<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">Yaml.<span class="keyword">dump</span>(john,dumpfile, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-<p>我们再来看看JYaml对流处理的支持，为简便起见，我们只是把同一个john写10次：</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line"> YamlEncoder enc = new YamlEncoder(<span class="name">new</span> FileOutputStream(<span class="name">dumpfile</span>))<span class="comment">;</span></span><br><span class="line"> for(<span class="name">int</span> i=0<span class="comment">; i&lt;10; i++)&#123;</span></span><br><span class="line">     john.setAge(<span class="number">37</span>+i)<span class="comment">;</span></span><br><span class="line">     enc.writeObject(<span class="name">john</span>)<span class="comment">;</span></span><br><span class="line">     enc.flush()<span class="comment">;</span></span><br><span class="line"> &#125;</span><br><span class="line">enc.close()<span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p>下面再把这十个对象一个一个读出来（注意while循环退出的方式）：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">YamlDecoder</span> <span class="variable">dec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">YamlDecoder</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(dumpfile));</span><br><span class="line"><span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> <span class="number">37</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        john = (Person) dec.readObject();</span><br><span class="line">        assertEquals(age, john.getAge());</span><br><span class="line">        age++;</span><br><span class="line">    &#125;<span class="keyword">catch</span>(EOFException eofe)&#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><h4 id="多行缩进"><a href="#多行缩进" class="headerlink" title="多行缩进"></a>多行缩进</h4><p>数据结构可以用类似大纲的缩排方式呈现，结构通过缩进来表示，连续的项目通过减号“-”来表示，map结构里面的key&#x2F;value对用冒号“:”来分隔。样例如下：</p>
-<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">house</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">family</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">name</span><span class="punctuation">:</span> <span class="string">Doe</span></span><br><span class="line">    <span class="attribute">parents</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">John</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Jane</span></span><br><span class="line">    <span class="attribute">children</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Paul</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Mark</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Simone</span></span><br><span class="line">  <span class="attribute">address</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">number</span><span class="punctuation">:</span> <span class="string">34</span></span><br><span class="line">    <span class="attribute">street</span><span class="punctuation">:</span> <span class="string">Main Street</span></span><br><span class="line">    <span class="attribute">city</span><span class="punctuation">:</span> <span class="string">Nowheretown</span></span><br><span class="line">    <span class="attribute">zipcode</span><span class="punctuation">:</span> <span class="string">12345</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>字串不一定要用双引号标识；</p>
-<p>在缩排中空白字符的数目并不是非常重要，只要相同阶层的元素左侧对齐就可以了（不过不能使用TAB字符）；</p>
-<p>允许在文件中加入选择性的空行，以增加可读性；</p>
-<p>在一个档案中，可同时包含多个文件，并用“——”分隔；</p>
-<p>选择性的符号“…”可以用来表示档案结尾（在利用串流的通讯中，这非常有用，可以在不关闭串流的情况下，发送结束讯号）。</p>
-<h4 id="单行缩写"><a href="#单行缩写" class="headerlink" title="单行缩写"></a>单行缩写</h4><p>YAML也有用来描述好几行相同结构的数据的缩写语法，数组用’[]’包括起来，hash用’{}’来包括。因此，上面的这个YAML能够缩写成这样:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">house:</span></span><br><span class="line">  <span class="attr">family:</span> &#123; <span class="attr">name:</span> <span class="string">Doe</span>, <span class="attr">parents:</span> [<span class="string">John</span>, <span class="string">Jane</span>], <span class="attr">children:</span> [<span class="string">Paul</span>, <span class="string">Mark</span>, <span class="string">Simone</span>] &#125;</span><br><span class="line">  <span class="attr">address:</span> &#123; <span class="attr">number:</span> <span class="number">34</span>, <span class="attr">street:</span> <span class="string">Main</span> <span class="string">Street</span>, <span class="attr">city:</span> <span class="string">Nowheretown</span>, <span class="attr">zipcode:</span> <span class="number">12345</span> &#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>xml</category>
-      </categories>
-      <tags>
-        <tag>yml</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Primavera P6数据字典</title>
     <url>/post/2024071545.htm</url>
     <content><![CDATA[<p><img src="https://s2.loli.net/2024/07/16/oIrgqku97UPhK5w.jpg"></p>
@@ -3156,6 +2976,186 @@
       </tags>
   </entry>
   <entry>
+    <title>YAML脚本学习笔记</title>
+    <url>/post/2017121234.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2023/04/16/pWn3RYiD86aGONA.png"></p>
+<p>YAML是“另一种标记语言”的外语缩写；但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。<br>它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
+<span id="more"></span>
+<p>诞生<br>YAML参考了其他多种语言，包括：XML、C语言、Python、Perl以及电子邮件格式RFC2822。<br>Clark Evans在2001年5月在首次发表了这种语言，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者。<br>命名<br>YAML是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。<br>在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言），<br>功能<br>YAML的语法和其他高阶语言类似，并且可以简单表达清单、散列表，标量等资料形态、。<br>它使用空白符号缩排和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种设定档、倾印除错内容、文件大纲（例如：许多电子邮件标题格式和YAML非常接近）。<br>尽管它比较适合用来表达阶层式（hierarchical model）的数据结构，不过也有精致的语法可以表示关联性（relational model）的资料。<br>由于YAML使用空白字符和分行来分隔资料，使的他特别适合用grep、Python、Perl、Ruby操作。<br>其让人最容易上手的特色是巧妙避开各种封闭符号，如：引号、各种括号等，这些符号在嵌套结构中会变得复杂而难以辨认。</p>
+<h1 id="YAML预研文档"><a href="#YAML预研文档" class="headerlink" title="YAML预研文档"></a>YAML预研文档</h1><h2 id="YAML概要"><a href="#YAML概要" class="headerlink" title="YAML概要"></a>YAML概要</h2><p><a href="http://yaml.org/">YAML</a>是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写，早先YAML的意思其实是：”Yet Another Markup Language”（另外一种置标语言），但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名，YAML的官方定义很简单，即<strong>一种人性化的数据格式定义语言</strong>，其主要功能用途类似于XML或JSON，YAML使用空白字符和分行来分隔数据，且巧妙避开各种封闭符号，如：引号、括号等，以避免这些符号在复杂层次结构中变得难以辨认。YAML的语法与高阶语言类似，可以很简单地表述<em>序列（java中的list）、杂凑表（java中的map）、标量（java中的基本类型等）</em>数据结构，它重点强调可阅读性。</p>
+<h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
+<blockquote>
+<p><strong>优势:</strong></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>YAML的可读性好</li>
+<li>YAML和脚本语言的交互性好</li>
+<li>YAML使用实现语言的数据类型</li>
+<li>YAML有一个一致的信息模型</li>
+<li>YAML易于实现</li>
+</ul>
+</blockquote>
+<p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
+<blockquote>
+<ul>
+<li>YAML可以基于流来处理</li>
+<li>YAML表达能力强，扩展性好</li>
+</ul>
+</blockquote>
+<p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。</p>
+<hr>
+<h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
+<h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
+<h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
+<h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
+<ul>
+<li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
+<li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
+<li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
+<li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
+<li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
+<li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
+<li>字串一般不使用引号，但必要的时候可以用引号框住</li>
+<li>使用双引号表示字串时，可用倒斜线（<kbd>&lt;/kbd>）进行特殊字符转义</li>
+<li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>></kbd>）两种方式</li>
+<li>在单一档案中，可用连续三个连字号（<kbd>---</kbd>）区分多个档案</li>
+<li>可选择性的连续三个点号（<kbd>...</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
+<li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&</kbd>）</li>
+<li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
+</ul>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">receipt:</span>     <span class="string">Oz-Ware</span> <span class="string">Purchase</span> <span class="string">Invoice</span></span><br><span class="line"><span class="attr">date:</span>        <span class="number">2007-08-06</span></span><br><span class="line"><span class="attr">customer:</span></span><br><span class="line">    <span class="attr">given:</span>   <span class="string">Dorothy</span></span><br><span class="line">    <span class="attr">family:</span>  <span class="string">Gale</span></span><br><span class="line"><span class="attr">items:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">part_no:</span>   <span class="string">A4786</span></span><br><span class="line">      <span class="attr">descrip:</span>   <span class="string">Water</span> <span class="string">Bucket</span> <span class="string">(Filled)</span></span><br><span class="line">      <span class="attr">price:</span>     <span class="number">1.47</span></span><br><span class="line">      <span class="attr">quantity:</span>  <span class="number">4</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">part_no:</span>   <span class="string">E1628</span></span><br><span class="line">      <span class="attr">descrip:</span>   <span class="string">High</span> <span class="string">Heeled</span> <span class="string">&quot;Ruby&quot;</span> <span class="string">Slippers</span> </span><br><span class="line">      <span class="attr">price:</span>     <span class="number">100.27</span></span><br><span class="line">      <span class="attr">quantity:</span>  <span class="number">1</span></span><br><span class="line"><span class="attr">bill-to:</span>  <span class="meta">&amp;id001</span></span><br><span class="line">    <span class="attr">street:</span> <span class="string">| </span></span><br><span class="line"><span class="string">            123 Tornado Alley</span></span><br><span class="line"><span class="string">            Suite 16</span></span><br><span class="line"><span class="string"></span>    <span class="attr">city:</span>   <span class="string">East</span> <span class="string">Westville</span></span><br><span class="line">    <span class="attr">state:</span>  <span class="string">KS</span></span><br><span class="line"><span class="attr">ship-to:</span>  <span class="string">*id001</span>   </span><br><span class="line"><span class="attr">specialDelivery:</span>  <span class="string">&gt;</span></span><br><span class="line"><span class="string">    Follow the Yellow Brick</span></span><br><span class="line"><span class="string">    Road to the Emerald City.</span></span><br><span class="line"><span class="string">    Pay no attention to the </span></span><br><span class="line"><span class="string">    man behind the curtain.</span></span><br><span class="line"><span class="string"></span><span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
+<h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：</p>
+<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">name</span><span class="punctuation">:</span> <span class="string">John Smith</span></span><br><span class="line"><span class="attribute">age</span><span class="punctuation">:</span> <span class="string">37</span></span><br><span class="line"><span class="attribute">children</span><span class="punctuation">:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: Jimmy Smith</span></span><br><span class="line">      <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">15</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: Jenny Smith</span></span><br><span class="line">      <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">12</span></span><br><span class="line"><span class="attribute">spouse</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">name</span><span class="punctuation">:</span> <span class="string">Jane Smith</span></span><br><span class="line">    <span class="attribute">age</span><span class="punctuation">:</span> <span class="string">25</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：</p>
+</blockquote>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="symbol">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> Person sponse;</span><br><span class="line">    <span class="keyword">private</span> Person[] children;</span><br><span class="line">    <span class="comment">// setXXX, getXXX方法略.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们使用java装配一个Jone：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">Person</span> john = new Person();</span><br><span class="line"><span class="attribute">john</span>.setAge(<span class="number">37</span>);</span><br><span class="line"><span class="attribute">john</span>.setName(<span class="string">&quot;John Smith&quot;</span>);</span><br><span class="line"><span class="attribute">Person</span> sponse = new Person();</span><br><span class="line"><span class="attribute">sponse</span>.setName(<span class="string">&quot;Jane Smith&quot;</span>);</span><br><span class="line"><span class="attribute">sponse</span>.setAge(<span class="number">25</span>);</span><br><span class="line"><span class="attribute">john</span>.setSponse(sponse);</span><br><span class="line"><span class="attribute">Person</span>[] children = &#123;new Person(), new Person()&#125;;</span><br><span class="line"><span class="attribute">children</span>[<span class="number">0</span>].setName(<span class="string">&quot;Jimmy Smith&quot;</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">0</span>].setAge(<span class="number">15</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">1</span>].setName(<span class="string">&quot;Jenny Smith&quot;</span>);</span><br><span class="line"><span class="attribute">children</span>[<span class="number">1</span>].setAge(<span class="number">12</span>);</span><br><span class="line"><span class="attribute">john</span>.setChildren(children);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
+<blockquote>
+<ul>
+<li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
+<li>支持YAML的所有类型</li>
+<li>支持UTF-8&#x2F;UTF-16的输入和输出</li>
+<li>提供了本地java对象的序列化和反序列化的高层API</li>
+<li>提供相对合理的错误提示信息</li>
+</ul>
+</blockquote>
+<p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：</p>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><span class="line">DumperOptions options <span class="operator">=</span> new DumperOptions()<span class="comment">;</span></span><br><span class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)<span class="comment">;</span></span><br><span class="line">Yaml yaml <span class="operator">=</span> new Yaml(options)<span class="comment">;</span></span><br><span class="line">//Yaml yaml <span class="operator">=</span> new Yaml()<span class="comment">;</span></span><br><span class="line">String dump <span class="operator">=</span> yaml.dump(john)<span class="comment">;</span></span><br><span class="line">System.out.println(dump)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="type">!!Person</span></span><br><span class="line"><span class="attr">age:</span> <span class="number">37</span></span><br><span class="line"><span class="attr">children:</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jimmy</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">age:</span> <span class="number">12</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jenny</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">John</span> <span class="string">Smith</span></span><br><span class="line"><span class="attr">sponse:</span></span><br><span class="line">  <span class="attr">age:</span> <span class="number">25</span></span><br><span class="line">  <span class="attr">children:</span> <span class="literal">null</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">Jane</span> <span class="string">Smith</span></span><br><span class="line">  <span class="attr">sponse:</span> <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+<p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml();</span><br><span class="line"><span class="keyword">Object</span> <span class="keyword">load</span> = yaml.<span class="keyword">load</span>(<span class="built_in">new</span> FileInputStream(<span class="built_in">new</span> File(&quot;jhon.yaml&quot;)));</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(<span class="keyword">load</span>.getClass());</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dump(<span class="keyword">load</span>));</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml(<span class="keyword">options</span>);</span><br><span class="line">Person person = yaml.loadAs(inputStream, Person.<span class="keyword">class</span>);</span><br><span class="line"><span class="keyword">System</span>.<span class="keyword">out</span>.println(person.getSponse().getChildren().length);</span><br></pre></td></tr></table></figure>
+<p>如果一个yaml文件中有多个文档，由<kbd>---</kbd>分割，解析如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">Yaml yaml = <span class="built_in">new</span> Yaml();</span><br><span class="line">        <span class="type">int</span> counter = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">Object</span> data : yaml.loadAll(<span class="keyword">input</span>)) &#123;</span><br><span class="line">            <span class="keyword">System</span>.<span class="keyword">out</span>.println(data);</span><br><span class="line">            counter++;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>保存一个Map对象：</p>
+<figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt; data = <span class="keyword">new</span> HashMap&lt;<span class="built_in">String</span>, <span class="built_in">Object</span>&gt;();</span><br><span class="line">        data.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Silenthand Olleander&quot;</span>);</span><br><span class="line">        data.put(<span class="string">&quot;race&quot;</span>, <span class="string">&quot;Human&quot;</span>);</span><br><span class="line">        data.put(<span class="string">&quot;traits&quot;</span>, <span class="keyword">new</span> <span class="built_in">String</span>[] &#123; <span class="string">&quot;ONE_HAND&quot;</span>, <span class="string">&quot;ONE_EYE&quot;</span> &#125;);</span><br><span class="line">        Yaml yaml = <span class="keyword">new</span> Yaml();</span><br><span class="line">        <span class="built_in">String</span> output = yaml.dump(data);</span><br><span class="line">        System.out.println(output);</span><br><span class="line">    <span class="comment">// or</span></span><br><span class="line">    StringWriter writer = <span class="keyword">new</span> StringWriter();</span><br><span class="line">    yaml.dump(data, writer);</span><br><span class="line">    System.out.println(writer.toString());</span><br></pre></td></tr></table></figure>
+<p>将多个文档dump出到同一个yaml文件中去：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line">List&lt;<span class="type">Integer</span>&gt; docs = <span class="built_in">new</span> LinkedList&lt;<span class="type">Integer</span>&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">        docs.<span class="keyword">add</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    DumperOptions <span class="keyword">options</span> = <span class="built_in">new</span> DumperOptions();</span><br><span class="line">    //<span class="keyword">options</span>.setCanonical(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">options</span>.explicitStart(<span class="keyword">true</span>);</span><br><span class="line">    Yaml yaml = <span class="built_in">new</span> Yaml(<span class="keyword">options</span>);</span><br><span class="line">    <span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dump(docs));</span><br><span class="line">    <span class="keyword">System</span>.<span class="keyword">out</span>.println(yaml.dumpAll(docs.iterator()));</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line"><span class="comment">--- [1, 2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--- 1</span></span><br><span class="line"><span class="comment">--- 2</span></span><br><span class="line"><span class="comment">--- 3</span></span><br></pre></td></tr></table></figure>
+<p>YAML与java类型对照表：</p>
+<table>
+<thead>
+<tr>
+<th>YAML</th>
+<th>JAVA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>!null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>!!bool</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>!!int</td>
+<td>Integer, Long, BigInteger</td>
+</tr>
+<tr>
+<td>!!float</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>!!binary</td>
+<td>String</td>
+</tr>
+<tr>
+<td>!!timestamp</td>
+<td>java.util.Date, java.sql.Date, java.sql.Timestamp</td>
+</tr>
+<tr>
+<td>!!omap, !!pairs</td>
+<td>List of Object[]</td>
+</tr>
+<tr>
+<td>!!set</td>
+<td>Set</td>
+</tr>
+<tr>
+<td>!!str</td>
+<td>String</td>
+</tr>
+<tr>
+<td>!!seq</td>
+<td>List</td>
+</tr>
+<tr>
+<td>!!map</td>
+<td>Map</td>
+</tr>
+</tbody></table>
+<p>集合的默认实现是：</p>
+<blockquote>
+<ul>
+<li>List:  ArrayList</li>
+<li>Map:  LinkedHashMap</li>
+</ul>
+</blockquote>
+<h3 id="使用JYaml实现"><a href="#使用JYaml实现" class="headerlink" title="使用JYaml实现"></a>使用JYaml实现</h3><p>JYaml（<strong>最新版本是2007年的，可以考虑放弃了</strong>），使用JYaml把Jone “Dump” 出来：</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="keyword">File</span> dumpfile = <span class="keyword">new</span> <span class="keyword">File</span>(<span class="string">&quot;John_dump.yaml&quot;</span>);</span><br><span class="line">Yaml.<span class="keyword">dump</span>(john, dumpfile);</span><br></pre></td></tr></table></figure>
+<p>下面我们看看John_dump.yaml是什么样子：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">--- !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">age: <span class="number">37</span></span><br><span class="line">children: !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span><span class="selector-attr">[]</span></span><br><span class="line">  - !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">    age: <span class="number">15</span></span><br><span class="line">    name: Jimmy Smith</span><br><span class="line">  - !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">    age: <span class="number">12</span></span><br><span class="line">    name: Jenny Smith</span><br><span class="line">name: John Smith</span><br><span class="line">sponse: !yaml<span class="selector-class">.test</span><span class="selector-class">.internal</span><span class="selector-class">.Person</span></span><br><span class="line">  age: <span class="number">25</span></span><br><span class="line">  name: Jane Smith</span><br></pre></td></tr></table></figure>
+<p>其中!yaml.test.internal.Person是一些类型的信息。load的时候需要用。<br>现在用JYaml把Jone_dump.yaml load进来：</p>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Person</span> john2 = (<span class="keyword">Person</span>) Yaml.loadType(dumpfile, <span class="keyword">Person</span>.class);</span><br></pre></td></tr></table></figure>
+<p>还可以用下面的代码dump出没有类型信息的John.yaml：</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">Yaml.<span class="keyword">dump</span>(john,dumpfile, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+<p>我们再来看看JYaml对流处理的支持，为简便起见，我们只是把同一个john写10次：</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line"> YamlEncoder enc = new YamlEncoder(<span class="name">new</span> FileOutputStream(<span class="name">dumpfile</span>))<span class="comment">;</span></span><br><span class="line"> for(<span class="name">int</span> i=0<span class="comment">; i&lt;10; i++)&#123;</span></span><br><span class="line">     john.setAge(<span class="number">37</span>+i)<span class="comment">;</span></span><br><span class="line">     enc.writeObject(<span class="name">john</span>)<span class="comment">;</span></span><br><span class="line">     enc.flush()<span class="comment">;</span></span><br><span class="line"> &#125;</span><br><span class="line">enc.close()<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>下面再把这十个对象一个一个读出来（注意while循环退出的方式）：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">YamlDecoder</span> <span class="variable">dec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">YamlDecoder</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(dumpfile));</span><br><span class="line"><span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> <span class="number">37</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        john = (Person) dec.readObject();</span><br><span class="line">        assertEquals(age, john.getAge());</span><br><span class="line">        age++;</span><br><span class="line">    &#125;<span class="keyword">catch</span>(EOFException eofe)&#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><h4 id="多行缩进"><a href="#多行缩进" class="headerlink" title="多行缩进"></a>多行缩进</h4><p>数据结构可以用类似大纲的缩排方式呈现，结构通过缩进来表示，连续的项目通过减号“-”来表示，map结构里面的key&#x2F;value对用冒号“:”来分隔。样例如下：</p>
+<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">house</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">family</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">name</span><span class="punctuation">:</span> <span class="string">Doe</span></span><br><span class="line">    <span class="attribute">parents</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">John</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Jane</span></span><br><span class="line">    <span class="attribute">children</span><span class="punctuation">:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Paul</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Mark</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">Simone</span></span><br><span class="line">  <span class="attribute">address</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">number</span><span class="punctuation">:</span> <span class="string">34</span></span><br><span class="line">    <span class="attribute">street</span><span class="punctuation">:</span> <span class="string">Main Street</span></span><br><span class="line">    <span class="attribute">city</span><span class="punctuation">:</span> <span class="string">Nowheretown</span></span><br><span class="line">    <span class="attribute">zipcode</span><span class="punctuation">:</span> <span class="string">12345</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>字串不一定要用双引号标识；</p>
+<p>在缩排中空白字符的数目并不是非常重要，只要相同阶层的元素左侧对齐就可以了（不过不能使用TAB字符）；</p>
+<p>允许在文件中加入选择性的空行，以增加可读性；</p>
+<p>在一个档案中，可同时包含多个文件，并用“——”分隔；</p>
+<p>选择性的符号“…”可以用来表示档案结尾（在利用串流的通讯中，这非常有用，可以在不关闭串流的情况下，发送结束讯号）。</p>
+<h4 id="单行缩写"><a href="#单行缩写" class="headerlink" title="单行缩写"></a>单行缩写</h4><p>YAML也有用来描述好几行相同结构的数据的缩写语法，数组用’[]’包括起来，hash用’{}’来包括。因此，上面的这个YAML能够缩写成这样:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">house:</span></span><br><span class="line">  <span class="attr">family:</span> &#123; <span class="attr">name:</span> <span class="string">Doe</span>, <span class="attr">parents:</span> [<span class="string">John</span>, <span class="string">Jane</span>], <span class="attr">children:</span> [<span class="string">Paul</span>, <span class="string">Mark</span>, <span class="string">Simone</span>] &#125;</span><br><span class="line">  <span class="attr">address:</span> &#123; <span class="attr">number:</span> <span class="number">34</span>, <span class="attr">street:</span> <span class="string">Main</span> <span class="string">Street</span>, <span class="attr">city:</span> <span class="string">Nowheretown</span>, <span class="attr">zipcode:</span> <span class="number">12345</span> &#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>xml</category>
+      </categories>
+      <tags>
+        <tag>yml</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一个人应该活得是自己并且干净</title>
     <url>/post/2024050000.htm</url>
     <content><![CDATA[<p>人的生命里有一种能量，它使你不安宁。说它是欲望也行，幻想也行，妄想也行，总之它不可能停下来，它需要一个表达形式。这个形式可能是革命，也可能是爱情；可能是搬一块石头，也可能是写一首诗。只要这个形式和生命力里的这个能量吻合了，就有了一个完美的过程。</p>
@@ -3315,231 +3315,6 @@
       </categories>
       <tags>
         <tag>Think</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人生的价值</title>
-    <url>/post/2024011405.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/T9EHyFmdaMnQZI4.jpg"></p>
-<p>按基督教的说法，人生一世是考验。人死了，好人的灵魂升天。不好不坏又好又坏的人，灵魂受到了该当的惩罚，或得到充分的净化之后，例如经过炼狱里的烧炼，也能升天。大凶大恶、十恶不赦的下地狱，永远在地狱里烧。我认为这种考验不公平。</p>
-<span id="more"></span>
-
-<p>人生在世，遭遇不同，天赋不同。有人生在富裕的家里，又天生性情和顺，生活幸运，做一个好人很现成。若处境贫困，生性顽劣，生活艰苦，堕落比较容易。若说考验，就该像入学考试一样，同等的学历，同样的题目，这才公平合理。</p>
-<p>佛家轮回之说，说来也有道理。考验一次不够，再来一次。但因果之说，也使我困惑，因因果果，第一个因是什么呢？人生一世，难免不受人之恩，或有惠于人，又造成新的因果，报来报去，没完没了。而且没良心的人，受惠于人，只说是前生欠我。轻率的人，想做坏事，只说反正来生受罚，且图眼前便宜。至于上刀山、下油锅等等酷刑，都是难为肉体的。</p>
-<p>当然，各种宗教的各种说法，我都不甚理解。但是，我尊重一切宗教。不过，宗教讲的是来世，我只是愚昧而又渺小的人，不能探索来世的事，我只求知道，我们在这个世界上，生活了一辈子，能有什么价值。</p>
-<p>天地生人，人为万物之灵。神明的大自然，着重的该是人，不是物；不是人类创造的文明，而是创造人类文明的人。只有人类能懂得修炼自己，要求自身完善，这也该是人生的目的吧！</p>
-<p>一代又一代的人，从生到死，辛辛苦苦、忙忙碌碌，到头来只成了一批又一批的尸体，人生一世，还说得到什么价值呢？</p>
-<p>匹夫匹妇，各有品德，为人一世，都有或多或少的修养。俗证：“公修公得，婆修婆得，不修不得。”“得”就是得到的功德，有多少功德就有多少价值。修来的功德不在肉体上而在灵魂上。</p>
-<p>其实，信仰是感性的，不是纯由理性推断出来的。人类天生对大自然有敬畏之心。统治者只是借人类对神明的敬畏，顺水推舟，因势利导，为宗教定下了隆重的仪式。虔信宗教的，不限于愚夫愚妇。大智大慧的人、大哲学家、大科学家、大文学家等信仰上帝的虔诚，远胜于愚夫愚妇。</p>
-<p>一个人有了信仰，对人生才能有正确的价值观。佛家说人生如空花影，一切成空。佛家否定一切，唯独对信心肯定又肯定。“若复有人……能生信心……乃至一念生净信者……得如是无量福德……若复有人，于此经中受持，乃至四句偈等，为他人说，其福胜彼……”为什么呢？因为我佛无相，非但看不见，也无从想象。能感悟到佛的存在，需有经久的锻炼。如能把信仰传授于人，就是助人得福，功德无量。</p>
-<p>英国大诗人弥尔顿44岁双目失明，他为自己的失明写了一首十四行诗，大意我撮述如下：他先是怨苦还未过半生，已失去光明，在这个茫茫黑暗世界上，他惟有的才能无从发挥，真是死一般的难受；他虽然一心要为上帝效劳，却是力不从心了。接下，“忍耐之主”立即予以驳斥“上帝既不需要人类的效劳，也不需要他赋予人类的才能。谁最能顺从他的驾御，就是最出色的功劳。上帝是全世界的主宰。千千万万的人，无休无止地听从着他的命令，在陆地上奔波，在海洋里航行。仅仅站着恭候的人，同样也是为上帝服务。这首诗适用于疾病缠身的人。如果他们顺从天意，承受病痛，同样是为上帝服务，同样是功德，因为同样是锻炼灵魂，在苦痛中完善自己。</p>
-<p>佛家爱说人生如空花泡影，一切皆空。佛家否定一切，惟独对信心肯定又肯定。“若复有人……能生信心……乃至一念生净信者……得无量福德……若复有人于此经中受持。乃至四句偈等，为他人说，其福胜彼……”为什么呢？因为我佛无相，非但看不见，也无从想像。能感悟到佛的存在，需有“宿根”“宿慧”，也就是说，需有经久的锻炼。如能把信仰传授于人，就是助人得福，功德无量。</p>
-<p>基督教颂扬信、望、爱三德。有了信仰，相信灵魂不死，就有永生的希望。有了信仰，上帝在他心里，上帝是慈悲的，心上有上帝，就能博爱众庶。</p>
-<p>苏格拉底坚信灵魂不灭，坚信绝对的真、善、美、公正等道德概念。他坚持自己的信念，宁愿饮鸩就义，不肯苟且偷生。因信念而选择死亡，历史上这是第一宗，被称为仅次于基督之死。</p>
-<p>苏格拉底到死很从容，而耶稣基督却是承受了血肉之躯所能承受的最大痛苦。他不能再忍受了，才大叫一声，气绝身亡。我读《圣经》到这一句，曾想，他大叫一声的时候，是否失去信心了？但我立即明白，大叫一声是表示他已忍无可忍了，他也随即气绝身亡。为什么他是救世主呢？并不因为他能变戏法似的把水变成酒，把一块面包变成无数面包，也并不因为他能治病救人，而是因为他证实了人是多么了不起，多么伟大，虽然是血肉之躯，能为了信仰而承受这么大的痛苦。他证实了人生是有意义的，有价值的。耶稣基督是最伟大的人，百分之百的克制了肉体。他也立即由人而成神了。</p>
-<p>我站在人生边上，向后看，是要探索人生的价值。人活一辈子，锻炼了一辈子，总会有或多或少的成绩。能有成绩，就不是虚生此世了。向前看呢，再往前去就离开人世了。灵魂既然不死，就和灵魂自称的“我”，还在一处呢。</p>
-<p>这个世界好比一座大熔炉，烧炼出一批又一批品质不同而且和原先的品质也不相同的灵魂。有关这些灵魂的问题，我能知道什么？我只能胡思乱想罢了。我无从问起，也无从回答。孔子曰“未知生，焉知死”，“不知为不知”，我的自问自答，只可以到此为止了。</p>
-]]></content>
-      <categories>
-        <category>Famous</category>
-      </categories>
-      <tags>
-        <tag>Famous</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>人生的意义</title>
-    <url>/post/2024070405.htm</url>
-    <content><![CDATA[<p>人生到底有什么意义？自打懂事起，我们似乎就像一个陀螺一样，不停地转，很忙很累，也不能闲着，闯过一关又一关，关关难过关关过。本想着努力就能成功，却不知人生也有很多意外。</p>
-<p>本想着能够靠自己实现家财万贯，却不知能健康平淡地活着就已经是难得。人生总是充满着无常，能平安到老就已经是很大的福气了。尽管如此努力，最终大家还是都逃不过死亡的命局。</p>
-<p>既然所有的生命最终都要消亡，那人活着的意义是什么？既然钱财名利最终都是身外之物，生不带来、死不带去，那我们如此奔波，又有什么价值？人到底为了什么而活？怎样活才能更有意义？</p>
-<p>相信这个问题，大家也反反复复思虑良久。其实从客观来说，生命本没有意义，我们来的时候是不得不来，走的时候是不得不走。人活着，就是完成生命生老病死的客观过程。这个过程，你如何走、如何经过，由你自己把握。人和其它动物一样，凡有生命，最终都逃不过死亡。</p>
-<p>人要想活得明白，首先就要解决生死之根本。生死看破了、看淡了，那么这个世间的诸多问题都不值得你烦忧。如果不能把生死问题堪破，那任由你一生无忧，命终时仍过不了死亡大关，仍会害怕、恐惧。其实人这一生，就是去去就来，每个人都有自己存在的价值和使命，“任务”完成了，也就该走了。</p>
-<p>人来到这个世界，本就不是来享受的，人生百般滋味，你要笑着面对。既然无法逃避，只能勇敢面对。人生真正的价值与意义，众说纷纭，没有标准答案，一个人一个活法，一个人一个看法，你觉得值得，就是最好的意义。生活没有完美，这短暂的一生怎么活，怎么走，看你自己。每个人都有属于自己的精彩，人生是不可复制的，每个人都是独一无二。</p>
-<p>从狭义上来说，很多人会认为，人活着就是传宗接代、繁衍生命，承担该承担的责任，赡养父母、教育孩子子，努力挣钱、养家糊口，平凡一生。</p>
-<p>也有人比较特立独行，他们爱思考，有自己的想法和活法，不拘泥于世俗的眼光，活出自我，去享受生活、热爱生活。他们觉得来到这个世界，应该是看花怎么开、水怎么流，应该活得潇洒自在。</p>
-<p>也有人认为，世间一切享乐都是短暂的，人真正应该增长的是自己的智慧，当烦恼来袭时，有足够的能力和智慧去破除它。人这一生，苦乐参半，既然来了，就好好走过。该经历的苦难不必逃避，该走的路要坚持走，有山穷水尽，也会有柳暗花明。</p>
-<p>所有的滋味都尝遍了，才不辜负人间走这一遭。有人说，害怕自己变老。我想说的是，人也不是突然就变老了，虽然年龄在增长，皮肤在衰老，但随之增长的是人生的阅历与感悟。真正衰老的不是那些冰冷的数字，而是你的心。若你心境足够豁达和强大，人世间的苦难便会少多半。</p>
-<p>人活着，就是去经历、去感受，好好演好自己人生的剧本。别患得患失，别过度消耗自己，万物的来去都有它的时间，如果留不住，不如大方放手。别后悔，这短暂的一生，我们最终都会失去，错了不要紧，你永远有回头的机会。别害怕，努力追寻属于自己的光。</p>
-<p>不必羡慕别人身上的光，其实谁都不容易，谁家都是一地鸡毛。生活就是这样，曲折连着曲折，不如意事十有八九，可与人言无二三，努力熬着就是了。人生如茶，有苦涩、有回甘。人生如粥，越熬越清甜，越熬越浓郁。再苦再难，总有尽头。只要身体健康，不必急着追赶钱财，慢慢来。</p>
-<p>别拼命追求富贵，没有足够的福德，你根本承受不了。再多物质，不过一日三餐，不过房屋一间。欲望过多，都是负担。一切都是浮云，都不值得贪着。人这一生，有事做、有人爱，平安健康，就是最大的财富，好好路过、平淡无虞，人生不过如此。</p>
-<p>红尘看破了，不过是浮沉；美丽看破了，不过是皮囊；生命看破了，不过是无常。人生没有什么不可放下，珍惜当下，别想太多。缘来缘去，自有定数。</p>
-]]></content>
-      <categories>
-        <category>idea</category>
-      </categories>
-      <tags>
-        <tag>idea</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>余生，愿你活出自己的精彩</title>
-    <url>/post/2024050000.htm</url>
-    <content><![CDATA[<p>　　曾几何时，为了让自己显得合群，选择去做自己不喜欢的事；为了讨好喜欢的人，一次次地委屈自己；甚至，为了陌生人的一个眼神，就陷入了深深的自我怀疑。<br>　　可是，这样小心翼翼的你，一定很累吧。你以为照顾了所有人的想法，就能得到他们的喜欢；你以为逼着自己合群，就能真的合群。直到后来才发现，在日复一日对自己的为难中，你逐渐弄丢了真实的自己。</p>
-<span id="more"></span>
-
-<p>　　殊不知，人生在世，最不值得的事情，就是在别人的眼光中，迷失自己。其实，正如世界上没有十全十美的人，你也同样无法做到让每个人满意。<br>　　有一句话说：“世上没有不快乐的人，只有不肯让自己快乐的心。”<br>　　如果一段关系让你变得卑微，你可以选择抽身离去；如果一个人总是让你悲伤哭泣，你要学会放手。<br>　　始终相信，每个人最初的样子，都是最美好的。真正喜欢你的人，会喜欢你原来的样子；真正爱你的人，从来不需要你的委曲求全。<br>　　后半生，请把身上的枷锁，全部解除。去做喜欢的事，去聆听自己内心的声音。你会发现，这世上没有什么事情比活出自己更加幸福。<br>　　要相信，真实的自己亦是一道风景线。你若盛开，清风自来。愿你此生尽兴，不负韶华。</p>
-]]></content>
-      <categories>
-        <category>Think</category>
-      </categories>
-      <tags>
-        <tag>Think</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>你为什么活得那么累</title>
-    <url>/post/2022012300.htm</url>
-    <content><![CDATA[<blockquote>
-<p>当今社会，不管男人还是女人，当官的还是老百姓，有钱的还是没钱的，朋友一见面都会抱怨几句，“活得累”几乎成了这个时代的“口头禅”。</p>
-</blockquote>
-<p>有人将中国人太累的原因归结为以下几种：<strong>太看重位子，总想着票子，倒腾着房子，放不下架子，撕不开面子，眷顾着孩子。</strong>人们的“累”真是由这些原因造成的吗?累的背后还有怎样的社会根源、文化根源？</p>
-<p><img src="https://s2.loli.net/2024/06/24/mTOM7IcFpn8jGuS.jpg"></p>
-<span id="more"></span>
-
-<p>你过得开心吗？是否常遇到特别堵心的事？你遇到过被欺骗、被冒犯、被欺负的情况吗？总的来说，你对自己的生活状况满意吗？你总体的幸福感又如何？当你认真地回答这些问题时，你已经可以大体上评价你的生活质量，并知道自己是不是跟很多人一样，活得很累。</p>
-<p><strong>中国人活得尤其累，不只是传说或人们日常的感受，更是不争的事实。</strong>根据幸福研究的权威专家、美国密歇根大学社会学教授英格尔哈特最新发布的研究结果，在52个国家进行的持续性调查（平均为17年）中，幸福指数在40个国家中有所增长，只在12个国家中出现了下降。</p>
-<p>总体平均，认为自己“很幸福”的人增加了近7个百分点，但是，<strong>中国台湾和大陆却占据了在此期间幸福感百分数下降最为严重的两个位置，期间中国人的生活满意度也排在负增长的倒数第6位。</strong></p>
-<p>《人民论坛》2010年12月（上）发布的对6235人的调查结果表明，自认为属于弱势群体的网友为73.5%，党政干部、知识分子和白领员工自认为弱势的比例也高达45.1%、55.4%和57.8%。</p>
-<p>笔者2010年12月29日对相关网站调查截取的即时结果为，在2648名参与调查的网友中，90%的选择了认为自己是弱势群体，其中弱势感很强烈和比较强烈的占到84%。</p>
-<p>为什么中国人活这么累？为什么世界多数国家幸福指数增长，而中国反而反向降低且程度进入最底的行列？英格尔哈特教授试图用发展和自由与幸福的联系来分析幸福的强度和变化趋势，但显然难以解释：</p>
-<p><strong>为什么中国人在社会经济和物质生活财富积累大踏步进步，个人选择空间明显扩大而制约相对减少的情况下，幸福感却反而明显下降了。</strong></p>
-<p><img src="https://s2.loli.net/2024/06/24/eAfNZWcDoUQE2bd.jpg"></p>
-<p><strong>活得累的社会根源</strong></p>
-<p><strong>人要想活得从容，需要两个条件，一个是活出自己的价值，一个是能够获得安全感。能够很好地解决这两个问题的，才会成为真正的“幸福者”。</strong></p>
-<p>遗憾的是，在中国现实的社会与文化条件下，要想很好地实现自我价值，其实非常困难，这就正好解释了为什么只有很小比例的人有机会成为“幸福者”。中国人实现自我价值和获得安全感的困难到底在哪里呢？</p>
-<p>人能否感觉到自我价值决定于两方面要素，第一方面的要素是核心和关键，即一个社会作为外部环境怎样判定一个人的价值，这种判定倾向发挥着引导人们怎样评判自我价值的作用。</p>
-<p>长期的封建传统和独特的中国文明史，使中国社会养成了深厚的权威主义价值倾向。也就是说，现实社会倾向于用种种直接或间接、外显或潜隐的方式，从一个人所占据的地位和拥有的资源来判定其价值，而缺乏一般性的文明、平等、尊重、平权和尊严的概念。</p>
-<p>近年来，虽然中央政府在政治、经济、文化等方面制定了一系列政策，采取了一系列措施，为弱势群体提供了有力的制度性支持。但是与强势群体相比，弱势群体的利益诉求还不能得到诸多保障。</p>
-<p><strong>由于这种价值取向的存在，人们从自我意识诞生起，就存在着强烈的需要自我被承认的焦虑感，这种焦虑感驱使人们不断寻找和建立一个又一个可以显示自我价值的标志，特别是具有社会公认价值的金钱和官衔，并不断进行各种社会比较，以期建立自己的相对优势，得到社会环境的价值承认。</strong></p>
-<p><strong>这种从社会权威主义环境价值取向衍生出来的价值追求倾向，又派生出来了简单功利导向的金钱至上主义价值观，即一切都必须还原到金钱，金钱成为了通用价值尺度，一切价值和荣誉，都必须由金钱的强度来衡量。</strong></p>
-<p><strong>为此，金钱成为了压倒一切的追求。本来，追求金钱是人的本性的一部分，但金钱主义使人的这一本性掩盖了本来与之平行的另外一种“人之初，性本善”的本性。</strong></p>
-<p>从中国社会市场经济实施以来频发的环境污染、广泛的食品毒化事件和医疗系统之种种超出想象力的怪象看，很容易发现，<strong>一个社会本该自然存在的人与人之间作为同类的善意，已经广泛而深刻地被金钱追求所击垮。其他同类，褪变成了赚钱的工具。“己所不欲，勿施于人”的祖训，早已被对金钱的欲望所淹没。</strong></p>
-<p>一个社会消除权威主义的最好良方，是取消特权和制约权力，让社会尊重的不再是权力和位置，而是人人都有可能通过自身努力达成的成就和事业。社会在实际运作之中呈现出多重的使人们自我价值得以实现的价值导向，权威主义才能逐步弱化和退出影响的主导地位。</p>
-<p><strong>安全感是一种不用自我警惕和随时准备实施自我保护的放松状态。</strong>当你过马路时汽车给你让道，司机还示意请你先行的时候，你体会的是安全感。而司机看到你要过马路拼命鸣笛和加速，你体会的则是不安全感。平时低头不见抬头见的邻里随时可以委托责任，你体会的是安全感，而你的随身提包或电脑一离开视野就可能被盗，你则体会不安全感。</p>
-<p><strong>每个人都可以从不安全感的提醒中体会到压力和担忧，你的生活伴有长期的和广泛的不安全感时，会随时处于一种防卫状态，心力也不断耗费，活得很累，是这种状态的自然结果。</strong></p>
-<p><img src="https://s2.loli.net/2024/06/24/q5iGELTdpznbC1U.jpg"></p>
-<p><strong>活得累的文化根源</strong></p>
-<p>活得比较累，与其说是外在生活压力过大所致，毋宁说是我们中国人的生活习惯追求使然。再追求，再累，也要更上一层楼。正所谓“没有最好，只有更好”。看来，中国人具有一种不完全自觉地置身于现实生活压力当中的习惯。</p>
-<p>也就是说，中国人的生命旅程似乎注定要面对永远也翻越不完的崇山峻岭，永远也克服不完的艰难险阻。<strong>所以，我们中国人感到活得比较累，不是一时的“累”，而是日积月累的“累”，是一种难以为继的“累”，是一种习惯性的“累”……</strong></p>
-<p><strong>如果我们被权威主义和简单功利主义所诱导，总试图用达成某种经济和地位的方式来确立自己的价值和建立自己的幸福，甚至为此不择手段。那么我们会发现，即便我们达成了我们渴望的成就，一次性的满足之后依然是失落，我们依然无法建立自己所渴求的稳定自信。</strong></p>
-<p><strong>不顾一切成功实现升官发财的人会猛然发现，升官发财远不是人生的全部，只是让我们变换了参照环境，自我的命运，仍然在前途的不确定中风雨飘摇。</strong></p>
-<p>重要的一点，中国人无信仰，欲望无止境，内心浮躁，没有基本共同的价值观念。心中无信仰，精神无依托，内心常常充满困惑，不敢肯定自己，为人言所累。</p>
-<p><strong>大多数人都蹑手蹑脚，战战兢兢，每走一步，说一句话，都要担心别人对自己的评价。或者做的不说，说的不做，努力假装自己很正统，很高尚，常常被迫去做自己不愿意作的事，为面子、为名声，往往也不为自己，更不为他人。</strong></p>
-<p>人生的结果是由历史、文化、环境、社会和自我多方面因素造就的，不以人的意志为转移。无论我们想得到什么，也无论我们的欲望有多强烈，我们最终得到的，不是我们想得到的，而是我们应该得到的。</p>
-<p>个人对自己命运能够做的，是建构让自己的愿望成为现实的被社会公理支持的逻辑，增加让愿望成为事实的理由。</p>
-]]></content>
-      <categories>
-        <category>idea</category>
-      </categories>
-      <tags>
-        <tag>idea</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>勇攀珠峰的背后</title>
-    <url>/post/2022082111.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/23/7lPpERkINCD4T2w.jpg" alt="img"></p>
-<p>　　2022年7月，地大17名青年学生和19名教师组成长江源科考队。科考队奔赴长江源头——地处青藏高原的格拉丹东雪山开展为期10天的科学考察。</p>
-<span id="more"></span>
-
-<p><img src="https://s2.loli.net/2024/06/23/jcdCe23wX4WZtNl.jpg" alt="img"></p>
-<p>　　2022年7月，地大17名青年学生和19名教师组成长江源科考队。地大大学生长江源科考队登山勘测组在格拉丹东大本营开展测量任务。</p>
-<p><img src="https://s2.loli.net/2024/06/23/faVvZUcDhibAGje.jpg" alt="img"></p>
-<p>　　陈刚在攀登途中。</p>
-<p><img src="https://s2.loli.net/2024/06/23/7zZdeCvhY6jiFfN.jpg" alt="img"></p>
-<p>　　2022年4月30日，陈刚等人登顶珠峰。展示“中国加油 武汉加油”字样。</p>
-<p><img src="https://s2.loli.net/2024/06/23/f8nLatFQ4csXPmz.jpg" alt="img"></p>
-<p>　　2022年4月30日，陈刚等人登顶珠峰。展示中国地质大学校旗。</p>
-<p>　　抬头望了一眼隐约可见的珠穆朗玛峰峰顶，陈晨在面罩下呼出了一口气。</p>
-<p>　　她必须非常小心，山脊两侧就是万丈深渊——更何况，在空气含氧量只有平原30%的“死亡地带”，哪怕只是两米落差的跌落，都会让人失去生命。</p>
-<p>　　突然，“噌”的一声，靴底冰爪松动，陈晨的身体失去了平衡，开始向一边倾斜。手本能地挥出，向岩壁抓去，然而与冰面的距离仍在拉开，身体继续向一侧的悬崖跌去……直到身旁的队友猛地伸出手，一把将她拽住。</p>
-<p>　　陈晨清晰地记得10多年前的那一幕。在几轮冲顶后，2012年5月19日上午8时16分，这个时年25岁的姑娘成为中国首位从北坡登顶珠峰的在校女大学生。</p>
-<p>　　“总书记曾勉励我，勇往直前，不断攀上人生新的高峰。”回想起2013年五四青年节座谈会上习近平总书记对自己的嘱托，陈晨至今难以忘怀，还把“中国登山精神”写成了博士毕业论文。</p>
-<p>　　陈晨的成长只是一个缩影。</p>
-<p>　　70年来，中国地质大学（以下简称“地大”）在为国家输送了大批地质人才的同时，培养出6000多名登山健将，被誉为中国登山界的“黄埔军校”。</p>
-<p>　　“登山之于地大，不只是一项事业，更是一笔弥足珍贵的精神财富。”中国地质大学（武汉）校长王焰新院士说，“扎根中国、胸怀天下、勇攀高峰、追求卓越”的攀登精神，已经成为地大人精神谱系的耀眼硬核。</p>
-<p>　　<strong>为祖国勇攀珠峰</strong></p>
-<p>　　9年过去了，回忆起当初扮演陈晨的场景，姜力维心里那种“翻涌的感觉”依然很强烈：“仿佛自己也经历了磨砺和积累，攀上了一座高峰。”</p>
-<p>　　2014年5月4日晚，在“我们的中国梦·五月的鲜花”全国大学生主题文艺活动中，以中国地质大学（武汉）研究生陈晨成功登顶珠峰故事为原型的原创音乐情景剧《攀登》登上了中央电视台的舞台。</p>
-<p>　　28名来自地大的学生演员，为了尽可能真实地还原故事，不管男生女生，“大家都涂着黑黑的粉底、两颊画着两坨粉粉的高原红”。</p>
-<p>　　“从进入演播大厅那一刻起，我们就知道自己的使命是什么。”姜力维说，“要拼尽全力才能不留遗憾，就像陈晨学姐一样。”</p>
-<p>　　在中国地质大学，登山运动有着悠久的传统。</p>
-<p>　　20世纪50年代末，登山运动被学校列入体育必修课。80年代起，地大人经常以班级为单位，全员参加“10公里负重行军”，誓为祖国地质事业练就一双“铁脚板”。时至今日，地大的学生依然有着每天集体出早操，早起床、早锻炼、早学习的习惯。</p>
-<p>　　珠穆朗玛峰是喜马拉雅山脉的主峰，海拔8844.43米，是世界最高峰。鲜为人知的是，“珠峰到底有多高”的疑问，一度困扰着国内科研工作者。</p>
-<p>　　“20世纪60年代，在珠峰海拔高度的问题上，我们一直被国外数据垄断。”海洋学院教授陈刚介绍，那时对于珠峰海拔的测量，国际上有过许多尝试，不同国家有不同的数据，中国一直沿用国外的数据。</p>
-<p>　　体育学院教授董范回忆：“为了应对少数国家的封锁打压，国家综合考虑，要争一口气，决定成立国家登山队，挑战从北坡登顶珠峰。”</p>
-<p>　　从北坡登顶更难。西方登山界曾多次尝试，但均以失败告终，珠峰北坡被认为是“不可逾越的天险”。</p>
-<p>　　1958年，刚从北京地质学院（中国地质大学前身）毕业的王富洲被选进国家登山队。两年后，他成为世界首位从北坡登顶珠峰的登山运动员。</p>
-<p>　　此后，王富洲、李致新、王勇峰、次落、袁复栋等地大人，都曾登顶珠峰，在中国高校中形成了一道独特的攀登风景。</p>
-<p>　　“20世纪80年代初，国家决定培养一批年轻的登山队员，我有幸入选。”1984年8月，董范加入中国登山队。</p>
-<p>　　2012年5月19日，中国地质大学60周年校庆前夕，董范、陈晨、德庆欧珠、次仁旦达师生4人，从北坡登顶珠峰。这是国内高校独立组织的在校大学生登山队首次登顶世界之巅。</p>
-<p>　　董范常说，攀登的过程，是“勇敢者的冒险”。</p>
-<p>　　2015年6月10日凌晨0时30分，在地大登山队准备冲顶北美洲最高峰麦金利峰时，营地气象监测站发出了暴风雪警告——此时，距登顶时间窗口结束只剩4小时，而从营地出发到达顶峰通常需要6-10小时。</p>
-<p>　　得知这支来自中国的登山队决心挑战这一几乎“不可能完成”的任务，营地里其他国家登山队员摇着头说：“你们都是疯子。”</p>
-<p>　　与时间赛跑。5名地大登山队员组成小分队，采取阿尔卑斯式攀登方法（一种轻量化的登山方式，登山者携带少量装备和物资，不架设固定绳索，不借助搬运工和氧气瓶，行动速度快但风险大——记者注），带上5包泡面和轻便的装备，在营地300多双眼睛的注视下出发了。</p>
-<p>　　到达山脊线时，队员何鹏飞感到体力严重不支，快跟不上队伍了。抬头望去，乌云正向山顶汇聚，一场暴风雪即将到来。“不能为了自己登顶的目标，陷队友于危险之中，我必须选择放弃。”</p>
-<p>　　队长董范在对讲机中一遍遍重复着：“只要你能坚持，就一起上，速度放慢。”</p>
-<p>　　不顾队友阻拦，何鹏飞坚定地解下了结组绳上的主锁，决定返回。转过身的那一刻，他“扑通”一下坐在雪坡上，眼泪不自觉地滑落。那天，他在日记里写道：“攀登的意义不止于登顶，有时候，放弃比坚持更重要。”</p>
-<p>　　用时4小时6分钟，地大登山队成功登顶，是当时恶劣天气下唯一登顶的队伍。</p>
-<p>　　何鹏飞的脸上有一块冻伤，那是因为在攀登南极洲最高峰文森峰时，他在即将登顶前拉下面罩和队友说了一句话。回到武汉后的半年里，被冻伤的部位一直没有知觉。直到现在，每当天气变冷，那处旧伤口还会发红。</p>
-<p>　　<strong>登山不仅局限于运动</strong></p>
-<p>　　“陈老师，我很喜欢登山。我想知道，征服一座座高峰的成就感是什么？”海洋学院2020级研究生饶炜博还记得9年前的开学典礼上，与班主任陈刚的第一次对话。</p>
-<p>　　那时，陈刚正在备战第二次珠峰科考的体能测试。前一次，由于突降暴雪等原因，陈刚只上到海拔7500米的营地，未能冲顶。</p>
-<p>　　“当身边再也没有更高的地方，风也会静下来。”望着学生期盼的目光，陈刚语气平和，“外界都关心我能不能登顶，但我更关心的是，能否精确地测到各项数据。”</p>
-<p>　　会场里，测绘专业新生们的神情严肃起来。饶炜博说，“陈老师用实际行动告诉我们，要把科研做在祖国大地上。”</p>
-<p>　　遗憾的是，陈刚的第二次冲顶未能如愿。</p>
-<p>　　2022年4月30日，经过7天攀登，包括陈刚和儿子陈李昊在内的11名中国登山者，在向导的协助下从珠峰北坡登顶，成为2022年首支登顶珠峰的队伍。</p>
-<p>　　距第一次攀登珠峰过去了10年，这一次，50岁的陈刚终于拿到西藏地壳运动监测的珍贵数据，“未经亲手测量的数据，总觉得不踏实，科研工作者就是要到一线去，到现场去。”</p>
-<p>　　在这所攀登者的“黄埔军校”里，登山不仅局限于运动，而始终与地学科考、理论研究紧密结合着。</p>
-<p>　　“路的尽头再向前一步，走别人没走过的路，这就是地大人的基因。”新落成的中国地质大学（武汉）校史馆将这种基因归纳成了8个字：国家需要，地质先行。</p>
-<p>　　从20世纪60年代起，后来成为中国科学院院士、中国地质大学（武汉）校长的殷鸿福及其团队就在石头里寻找蛛丝马迹，通过古生物遗迹来确定地质年代。</p>
-<p>　　1985年，为寻找“金钉子”（一个地质学概念，用以界定不同时代地层的全球标准——记者注），50岁的殷鸿福率队登上海拔4000多米的岷山，因体力不支摔倒在乱石中，一条腿粉碎性骨折，五分之一的骨头没有了。然而，仅经过一年多的医治和锻炼，崇山峻岭间，他又开始不断地穿行。</p>
-<p>　　1986年，殷鸿福根据实地考察推翻了近百年来确定的化石标准，提出将我国浙江煤山剖面作为全球层型剖面和点位。2001年2月，国际地质科学联合会正式确认殷鸿福的提议。2022年10月26日，浙江长兴煤山“金钉子”剖面入选世界地质遗产地名录。殷鸿福把地质历史上最重要的三个“金钉子”之一留在了中国。</p>
-<p>　　1978年起，结合数次科考成果和地学专业特点，中国地质大学先后编写了供地质院校师生使用的野外实践教材、实用教材及视频教材。这些教材填补了我国户外运动专业教材的空白，时至今日仍被广泛使用。</p>
-<p>　　国土安全与所学专业有何关系？怎样发挥专业特长为中国梦的实现贡献力量？这是马克思主义学院副院长孙文沛在《国土安全》第一课中，向台下1000多名同学提出的问题。</p>
-<p>　　《国土安全》是中国地质大学（武汉）新开设的品牌思政选修课。孙文沛介绍，以思政课为平台开展大学生国家安全专题教育，在国内高校尚属首创。该课程由校领导领衔，马克思主义学院主持建设，集合地球科学学院、资源学院、自动化学院等多个特色学科师资力量组建教学团队，通过专题讲授、师生对谈等形式授课。</p>
-<p>　　“原来，地质学与国家资源安全关系如此紧密。”地球科学学院2021级本科生赵芃凯在上完课后，对专业学习有了新认识，“学习地质学不仅要学好理论知识，更要将所学投身于国家事业中，贡献出地大人的力量。”</p>
-<p>　　<strong>指引每位地大人攀登心中的那座“山”</strong></p>
-<p>　　“是那山谷的风，吹动了我们的红旗，是那狂暴的雨，洗刷了我们的帐篷。我们有火焰般的热情，战胜了一切疲劳和寒冷。背起了我们的行装，攀上了层层的山峰……”</p>
-<p>　　1953年12月22日，《勘探队之歌》在《中国青年报》4版刊出，中国地质大学在1990年将它定为校歌。</p>
-<p>　　70年来，这首歌被带到山峦、旷野、沙漠、深海，成为地大人永远的精神标识，指引着每位地大人攀登心中的那座“山”。</p>
-<p>　　“每个人心中都有一座山。”董范认为，现在自己需要攀登的“山”，是让更多的人了解攀登、爱上攀登。</p>
-<p>　　在董范等人的推动下，1998年，地大在全国高校率先开设野外生存体验课，成为首批拥有野外生存教育资源库的大学。2004年，地大成为全国首批开设野外生存通选课的大学。直到现在，课堂常常爆满，一座难求。</p>
-<p>　　从2012年起，地大登山队每年都会在全校选拔一批学生，不限性别、年龄和专业，“身体素质好、攀登意愿强”是主要标准。经过体能考核、技能培训、理论学习，从上百位报名者中挑选出综合实力最优秀的学生加入登山队，准备登山科考。</p>
-<p>　　体育学院2020级硕士研究生李龙敏本科入学时，就常听老师讲起地大登山前辈的故事。2016年，得知登山队要招募一批新队员，他毫不犹豫地报了名。</p>
-<p>　　去年7月，李龙敏作为队员参加第二次长江源大学生科考活动，前往青藏高原上的格拉丹东测绘点，钻取冰芯、测量高层、开展采样。</p>
-<p>　　由于行程安排紧凑，不到两天，团队就从江汉平原到达海拔约5200米的格拉丹东大本营，那一次，李龙敏的高原反应来得“异常猛烈”。适应3天后，症状缓解，李龙敏慢慢恢复适应性拉练，最终完成了任务。</p>
-<p>　　“登山科考是人类的使命，更是与大自然的对话。”多次登山后，李龙敏领悟了敬畏自然、尊重生命的道理，“站上雪山之巅，不代表我们征服了这座高峰，而要感谢大自然接纳了我们，人类必须与自然和谐共生。”</p>
-<p>　　从兴趣社团到专业登山队，以老带新，优中选优，地大逐渐形成了涵盖本、硕、博各年龄层次的登山人才培养模式。无论刚入学的本科新生，还是攀登近10年的博士、教授，“人人都是攀登者”的理念在校园激荡。</p>
-<p>　　2022年，中国地质大学70周年校庆，地大陈华文老师团队共同创作绘本《山河作证》。100幅黑白钢笔素描画稿，再现了学校野外实习与地质科考的故事。</p>
-<p>　　“创作绘本的过程，也是我们被攀登精神洗礼的过程。”学生唐钰君感叹，在数次修改、与登山队师生交流的过程中，自己深入了解了一代代地大人勇攀高峰的故事，“后来再次路过《攀登》雕塑，总觉得它更加高大了。”</p>
-<p>　　攀登无言，山河作证。</p>
-<p>　　中国地质大学（武汉）党委书记黄晓玫表示，踏上新征途，地大将继续发扬攀登精神，推动学校党建思政与事业发展深度融合，努力培养造就一批担当民族复兴重任的新时代“英雄地质队员”，为保障国家能源资源安全、为全面建设社会主义现代化国家作出新贡献。</p>
-]]></content>
-      <categories>
-        <category>think</category>
-      </categories>
-      <tags>
-        <tag>think</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>大家都在笼子里飞</title>
-    <url>/post/2024042135.htm</url>
-    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/L48hGP5ypOS6omk.jpg"></p>
-<p>我以为各种文体均如铁笼，笼着一群群称为“作家”或者“诗人”的呆鸟。大家都在笼子里飞，比着看谁飞得花哨，偶有不慎冲撞了笼子的，还要遭到笑骂呢。有一天，一只九头鸟用力撞了一下笼子，把笼内的空间扩大了，大家就在扩大了的笼子里飞。又有一天，一群九头鸟把笼子冲破了，但它们依然无法飞入蓝天，不过是飞进了一个更大的笼子而已。</p>
-<span id="more"></span>
-
-<p>四言诗、五言诗、七言诗、自由诗、唐传奇、宋话本、元杂剧、明小说。新的文体形成，非朝夕之功，一旦形成，总要稳定很长的时期，总要有它的规范——笼子。九头鸟们不断地冲撞着它扩展着它，但在未冲破笼子之前，总要在笼子里飞。这里边也许有马克思的辩证法吧。</p>
-<p>我们这些独头鸟，能在被九头大师们冲撞得宽阔的散文的笼子里扑弄几下瘦翅膀子就足矣。</p>
-<p>从新开辟的旅游胜地索溪峪山下的“不吹牛皮”饭馆出来，正是正午。山间白气升腾，石路上黄光灼目，不知太阳在哪里。只觉得裸露的肌肤如被针尖刺着，汗水黏黏滞滞地不敢出来，周身似乎涂上了一层黏稠的胶水。往年与家兄见面时，其总是大言湖南之热，吾口虽诺诺，心中其实不以为然。因为从天气预报中知道，长沙的温度比起北京也高不了多少，有时甚至还不如北京高，而我在北京多年，并没有感到北京的夏天有什么难熬的。现在自然是知道了。初到长沙那天中午就知道了。我见到长沙街头的摊贩，一个个无精打采，面如醉蟹，行人都垂头疾走，不及顾盼。搭乘长沙至常德的长途汽车，车过湘江大桥时，见江水混浊如开锅的绿豆汤，几十只白船黑舟死在水上。江面上泛起黏稠的灰黄色光线，全无当年读毛主席诗词名篇《沁园春·长沙》时那种清澈见游鱼、飒飒闻树响、轻清出世傲天下小的感觉。也许是季节不同的关系吧。那边，著名的橘子洲宛如一个耐热不过而剥去绮罗遍身沾汗躺在江上的女人，但愿寒秋来到时，她会用火红的锦绣把自己装扮起来，我应该找一个秋天到湖南的机会。“不吹牛皮”饭馆的老板娘在二两一碗的面条里，加上了足有一两辣椒，唏嘘不止，如咽烈火。出了饭馆，还是觉得五内如炉，流出的汗水似乎都是暗红色的，每一个毛孔都在发烧。新辟之地，道路崎岖，我们要到十里之外地方去乘车，幸好这十里路从一条山峪里穿过，据说山峪里风光秀丽，似天堂景色。喊一声走，大家便一起开步。进峪数百步后，回头望那“不吹牛皮”饭馆，见廊檐下那块火红的大布幔像张牛皮一样地挂着，想起饭馆内壁上挂着的那些“妙手回春”、“华陀在世”之类的锦旗，心中惶然。过了湖南的三条江，走了湖南的三座城，爬了湖南五架山，在落满了黄尘的长途汽车上，见道路两边山峦起伏，树木蓊郁，大自然犹如一匹正在沉睡的猛兽。我觉得湖南尤其是湘西的大自然是有着自己的性格的。这种性格就像染了人血的远古的陶器一样凝重朴拙，荒蛮辉煌。想起多年前，诸多三湘风流子弟，从这里走出去，进入了世界大舞台，在那里叱咤风云，呼风唤雨，翻天覆地，双脚一抖地球都要哆嗦，那股子牛劲儿，真是令人神往。走进了十里画廊，微微有了些风，汗毛见了凉风，根根直立起来。听说这个画廊里有条小河，但久走不到。路的右边有一条河沟，沟里晒着一片片大大小小的鹅卵石。卵石上生着一层白色的碱花，很像在卤水里浸泡过的巨大的鸡蛋。我想，这天河沟也许就是河了。我看到左边的峭壁上有一些泪珠般的细流在滴答。同行者有伸出舌头去接水喝的，我亦仿效。水微咸，浸透了大山的悲哀。初从山上窄不容脚的小路上下来走这平坦的道路，双脚受宠若惊，下意识地高抬低放，从别人的走相上看到了自己，不由齐笑起来。疲乏加上炎热，笑得艰难。然而山峪里的风景的确是美不胜收，一座座山峰突兀壁立，奇形怪状，不可以语言描画。同行中有善比喻者，指东指西，命此山为苍狗，命彼山为美人，我凝视之，觉得都似是而非。其实山就是山，命名多半只有符号的意义，硬要按名循实，并且要敷衍出几个大同小异的故事，几同对大自然的亵渎。</p>
-]]></content>
-      <categories>
-        <category>Famous</category>
-      </categories>
-      <tags>
-        <tag>Famous</tag>
       </tags>
   </entry>
   <entry>
@@ -5544,6 +5319,231 @@
       </categories>
       <tags>
         <tag>Think</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>人生的价值</title>
+    <url>/post/2024011405.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/T9EHyFmdaMnQZI4.jpg"></p>
+<p>按基督教的说法，人生一世是考验。人死了，好人的灵魂升天。不好不坏又好又坏的人，灵魂受到了该当的惩罚，或得到充分的净化之后，例如经过炼狱里的烧炼，也能升天。大凶大恶、十恶不赦的下地狱，永远在地狱里烧。我认为这种考验不公平。</p>
+<span id="more"></span>
+
+<p>人生在世，遭遇不同，天赋不同。有人生在富裕的家里，又天生性情和顺，生活幸运，做一个好人很现成。若处境贫困，生性顽劣，生活艰苦，堕落比较容易。若说考验，就该像入学考试一样，同等的学历，同样的题目，这才公平合理。</p>
+<p>佛家轮回之说，说来也有道理。考验一次不够，再来一次。但因果之说，也使我困惑，因因果果，第一个因是什么呢？人生一世，难免不受人之恩，或有惠于人，又造成新的因果，报来报去，没完没了。而且没良心的人，受惠于人，只说是前生欠我。轻率的人，想做坏事，只说反正来生受罚，且图眼前便宜。至于上刀山、下油锅等等酷刑，都是难为肉体的。</p>
+<p>当然，各种宗教的各种说法，我都不甚理解。但是，我尊重一切宗教。不过，宗教讲的是来世，我只是愚昧而又渺小的人，不能探索来世的事，我只求知道，我们在这个世界上，生活了一辈子，能有什么价值。</p>
+<p>天地生人，人为万物之灵。神明的大自然，着重的该是人，不是物；不是人类创造的文明，而是创造人类文明的人。只有人类能懂得修炼自己，要求自身完善，这也该是人生的目的吧！</p>
+<p>一代又一代的人，从生到死，辛辛苦苦、忙忙碌碌，到头来只成了一批又一批的尸体，人生一世，还说得到什么价值呢？</p>
+<p>匹夫匹妇，各有品德，为人一世，都有或多或少的修养。俗证：“公修公得，婆修婆得，不修不得。”“得”就是得到的功德，有多少功德就有多少价值。修来的功德不在肉体上而在灵魂上。</p>
+<p>其实，信仰是感性的，不是纯由理性推断出来的。人类天生对大自然有敬畏之心。统治者只是借人类对神明的敬畏，顺水推舟，因势利导，为宗教定下了隆重的仪式。虔信宗教的，不限于愚夫愚妇。大智大慧的人、大哲学家、大科学家、大文学家等信仰上帝的虔诚，远胜于愚夫愚妇。</p>
+<p>一个人有了信仰，对人生才能有正确的价值观。佛家说人生如空花影，一切成空。佛家否定一切，唯独对信心肯定又肯定。“若复有人……能生信心……乃至一念生净信者……得如是无量福德……若复有人，于此经中受持，乃至四句偈等，为他人说，其福胜彼……”为什么呢？因为我佛无相，非但看不见，也无从想象。能感悟到佛的存在，需有经久的锻炼。如能把信仰传授于人，就是助人得福，功德无量。</p>
+<p>英国大诗人弥尔顿44岁双目失明，他为自己的失明写了一首十四行诗，大意我撮述如下：他先是怨苦还未过半生，已失去光明，在这个茫茫黑暗世界上，他惟有的才能无从发挥，真是死一般的难受；他虽然一心要为上帝效劳，却是力不从心了。接下，“忍耐之主”立即予以驳斥“上帝既不需要人类的效劳，也不需要他赋予人类的才能。谁最能顺从他的驾御，就是最出色的功劳。上帝是全世界的主宰。千千万万的人，无休无止地听从着他的命令，在陆地上奔波，在海洋里航行。仅仅站着恭候的人，同样也是为上帝服务。这首诗适用于疾病缠身的人。如果他们顺从天意，承受病痛，同样是为上帝服务，同样是功德，因为同样是锻炼灵魂，在苦痛中完善自己。</p>
+<p>佛家爱说人生如空花泡影，一切皆空。佛家否定一切，惟独对信心肯定又肯定。“若复有人……能生信心……乃至一念生净信者……得无量福德……若复有人于此经中受持。乃至四句偈等，为他人说，其福胜彼……”为什么呢？因为我佛无相，非但看不见，也无从想像。能感悟到佛的存在，需有“宿根”“宿慧”，也就是说，需有经久的锻炼。如能把信仰传授于人，就是助人得福，功德无量。</p>
+<p>基督教颂扬信、望、爱三德。有了信仰，相信灵魂不死，就有永生的希望。有了信仰，上帝在他心里，上帝是慈悲的，心上有上帝，就能博爱众庶。</p>
+<p>苏格拉底坚信灵魂不灭，坚信绝对的真、善、美、公正等道德概念。他坚持自己的信念，宁愿饮鸩就义，不肯苟且偷生。因信念而选择死亡，历史上这是第一宗，被称为仅次于基督之死。</p>
+<p>苏格拉底到死很从容，而耶稣基督却是承受了血肉之躯所能承受的最大痛苦。他不能再忍受了，才大叫一声，气绝身亡。我读《圣经》到这一句，曾想，他大叫一声的时候，是否失去信心了？但我立即明白，大叫一声是表示他已忍无可忍了，他也随即气绝身亡。为什么他是救世主呢？并不因为他能变戏法似的把水变成酒，把一块面包变成无数面包，也并不因为他能治病救人，而是因为他证实了人是多么了不起，多么伟大，虽然是血肉之躯，能为了信仰而承受这么大的痛苦。他证实了人生是有意义的，有价值的。耶稣基督是最伟大的人，百分之百的克制了肉体。他也立即由人而成神了。</p>
+<p>我站在人生边上，向后看，是要探索人生的价值。人活一辈子，锻炼了一辈子，总会有或多或少的成绩。能有成绩，就不是虚生此世了。向前看呢，再往前去就离开人世了。灵魂既然不死，就和灵魂自称的“我”，还在一处呢。</p>
+<p>这个世界好比一座大熔炉，烧炼出一批又一批品质不同而且和原先的品质也不相同的灵魂。有关这些灵魂的问题，我能知道什么？我只能胡思乱想罢了。我无从问起，也无从回答。孔子曰“未知生，焉知死”，“不知为不知”，我的自问自答，只可以到此为止了。</p>
+]]></content>
+      <categories>
+        <category>Famous</category>
+      </categories>
+      <tags>
+        <tag>Famous</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>人生的意义</title>
+    <url>/post/2024070405.htm</url>
+    <content><![CDATA[<p>人生到底有什么意义？自打懂事起，我们似乎就像一个陀螺一样，不停地转，很忙很累，也不能闲着，闯过一关又一关，关关难过关关过。本想着努力就能成功，却不知人生也有很多意外。</p>
+<p>本想着能够靠自己实现家财万贯，却不知能健康平淡地活着就已经是难得。人生总是充满着无常，能平安到老就已经是很大的福气了。尽管如此努力，最终大家还是都逃不过死亡的命局。</p>
+<p>既然所有的生命最终都要消亡，那人活着的意义是什么？既然钱财名利最终都是身外之物，生不带来、死不带去，那我们如此奔波，又有什么价值？人到底为了什么而活？怎样活才能更有意义？</p>
+<p>相信这个问题，大家也反反复复思虑良久。其实从客观来说，生命本没有意义，我们来的时候是不得不来，走的时候是不得不走。人活着，就是完成生命生老病死的客观过程。这个过程，你如何走、如何经过，由你自己把握。人和其它动物一样，凡有生命，最终都逃不过死亡。</p>
+<p>人要想活得明白，首先就要解决生死之根本。生死看破了、看淡了，那么这个世间的诸多问题都不值得你烦忧。如果不能把生死问题堪破，那任由你一生无忧，命终时仍过不了死亡大关，仍会害怕、恐惧。其实人这一生，就是去去就来，每个人都有自己存在的价值和使命，“任务”完成了，也就该走了。</p>
+<p>人来到这个世界，本就不是来享受的，人生百般滋味，你要笑着面对。既然无法逃避，只能勇敢面对。人生真正的价值与意义，众说纷纭，没有标准答案，一个人一个活法，一个人一个看法，你觉得值得，就是最好的意义。生活没有完美，这短暂的一生怎么活，怎么走，看你自己。每个人都有属于自己的精彩，人生是不可复制的，每个人都是独一无二。</p>
+<p>从狭义上来说，很多人会认为，人活着就是传宗接代、繁衍生命，承担该承担的责任，赡养父母、教育孩子子，努力挣钱、养家糊口，平凡一生。</p>
+<p>也有人比较特立独行，他们爱思考，有自己的想法和活法，不拘泥于世俗的眼光，活出自我，去享受生活、热爱生活。他们觉得来到这个世界，应该是看花怎么开、水怎么流，应该活得潇洒自在。</p>
+<p>也有人认为，世间一切享乐都是短暂的，人真正应该增长的是自己的智慧，当烦恼来袭时，有足够的能力和智慧去破除它。人这一生，苦乐参半，既然来了，就好好走过。该经历的苦难不必逃避，该走的路要坚持走，有山穷水尽，也会有柳暗花明。</p>
+<p>所有的滋味都尝遍了，才不辜负人间走这一遭。有人说，害怕自己变老。我想说的是，人也不是突然就变老了，虽然年龄在增长，皮肤在衰老，但随之增长的是人生的阅历与感悟。真正衰老的不是那些冰冷的数字，而是你的心。若你心境足够豁达和强大，人世间的苦难便会少多半。</p>
+<p>人活着，就是去经历、去感受，好好演好自己人生的剧本。别患得患失，别过度消耗自己，万物的来去都有它的时间，如果留不住，不如大方放手。别后悔，这短暂的一生，我们最终都会失去，错了不要紧，你永远有回头的机会。别害怕，努力追寻属于自己的光。</p>
+<p>不必羡慕别人身上的光，其实谁都不容易，谁家都是一地鸡毛。生活就是这样，曲折连着曲折，不如意事十有八九，可与人言无二三，努力熬着就是了。人生如茶，有苦涩、有回甘。人生如粥，越熬越清甜，越熬越浓郁。再苦再难，总有尽头。只要身体健康，不必急着追赶钱财，慢慢来。</p>
+<p>别拼命追求富贵，没有足够的福德，你根本承受不了。再多物质，不过一日三餐，不过房屋一间。欲望过多，都是负担。一切都是浮云，都不值得贪着。人这一生，有事做、有人爱，平安健康，就是最大的财富，好好路过、平淡无虞，人生不过如此。</p>
+<p>红尘看破了，不过是浮沉；美丽看破了，不过是皮囊；生命看破了，不过是无常。人生没有什么不可放下，珍惜当下，别想太多。缘来缘去，自有定数。</p>
+]]></content>
+      <categories>
+        <category>idea</category>
+      </categories>
+      <tags>
+        <tag>idea</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>余生，愿你活出自己的精彩</title>
+    <url>/post/2024050000.htm</url>
+    <content><![CDATA[<p>　　曾几何时，为了让自己显得合群，选择去做自己不喜欢的事；为了讨好喜欢的人，一次次地委屈自己；甚至，为了陌生人的一个眼神，就陷入了深深的自我怀疑。<br>　　可是，这样小心翼翼的你，一定很累吧。你以为照顾了所有人的想法，就能得到他们的喜欢；你以为逼着自己合群，就能真的合群。直到后来才发现，在日复一日对自己的为难中，你逐渐弄丢了真实的自己。</p>
+<span id="more"></span>
+
+<p>　　殊不知，人生在世，最不值得的事情，就是在别人的眼光中，迷失自己。其实，正如世界上没有十全十美的人，你也同样无法做到让每个人满意。<br>　　有一句话说：“世上没有不快乐的人，只有不肯让自己快乐的心。”<br>　　如果一段关系让你变得卑微，你可以选择抽身离去；如果一个人总是让你悲伤哭泣，你要学会放手。<br>　　始终相信，每个人最初的样子，都是最美好的。真正喜欢你的人，会喜欢你原来的样子；真正爱你的人，从来不需要你的委曲求全。<br>　　后半生，请把身上的枷锁，全部解除。去做喜欢的事，去聆听自己内心的声音。你会发现，这世上没有什么事情比活出自己更加幸福。<br>　　要相信，真实的自己亦是一道风景线。你若盛开，清风自来。愿你此生尽兴，不负韶华。</p>
+]]></content>
+      <categories>
+        <category>Think</category>
+      </categories>
+      <tags>
+        <tag>Think</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你为什么活得那么累</title>
+    <url>/post/2022012300.htm</url>
+    <content><![CDATA[<blockquote>
+<p>当今社会，不管男人还是女人，当官的还是老百姓，有钱的还是没钱的，朋友一见面都会抱怨几句，“活得累”几乎成了这个时代的“口头禅”。</p>
+</blockquote>
+<p>有人将中国人太累的原因归结为以下几种：<strong>太看重位子，总想着票子，倒腾着房子，放不下架子，撕不开面子，眷顾着孩子。</strong>人们的“累”真是由这些原因造成的吗?累的背后还有怎样的社会根源、文化根源？</p>
+<p><img src="https://s2.loli.net/2024/06/24/mTOM7IcFpn8jGuS.jpg"></p>
+<span id="more"></span>
+
+<p>你过得开心吗？是否常遇到特别堵心的事？你遇到过被欺骗、被冒犯、被欺负的情况吗？总的来说，你对自己的生活状况满意吗？你总体的幸福感又如何？当你认真地回答这些问题时，你已经可以大体上评价你的生活质量，并知道自己是不是跟很多人一样，活得很累。</p>
+<p><strong>中国人活得尤其累，不只是传说或人们日常的感受，更是不争的事实。</strong>根据幸福研究的权威专家、美国密歇根大学社会学教授英格尔哈特最新发布的研究结果，在52个国家进行的持续性调查（平均为17年）中，幸福指数在40个国家中有所增长，只在12个国家中出现了下降。</p>
+<p>总体平均，认为自己“很幸福”的人增加了近7个百分点，但是，<strong>中国台湾和大陆却占据了在此期间幸福感百分数下降最为严重的两个位置，期间中国人的生活满意度也排在负增长的倒数第6位。</strong></p>
+<p>《人民论坛》2010年12月（上）发布的对6235人的调查结果表明，自认为属于弱势群体的网友为73.5%，党政干部、知识分子和白领员工自认为弱势的比例也高达45.1%、55.4%和57.8%。</p>
+<p>笔者2010年12月29日对相关网站调查截取的即时结果为，在2648名参与调查的网友中，90%的选择了认为自己是弱势群体，其中弱势感很强烈和比较强烈的占到84%。</p>
+<p>为什么中国人活这么累？为什么世界多数国家幸福指数增长，而中国反而反向降低且程度进入最底的行列？英格尔哈特教授试图用发展和自由与幸福的联系来分析幸福的强度和变化趋势，但显然难以解释：</p>
+<p><strong>为什么中国人在社会经济和物质生活财富积累大踏步进步，个人选择空间明显扩大而制约相对减少的情况下，幸福感却反而明显下降了。</strong></p>
+<p><img src="https://s2.loli.net/2024/06/24/eAfNZWcDoUQE2bd.jpg"></p>
+<p><strong>活得累的社会根源</strong></p>
+<p><strong>人要想活得从容，需要两个条件，一个是活出自己的价值，一个是能够获得安全感。能够很好地解决这两个问题的，才会成为真正的“幸福者”。</strong></p>
+<p>遗憾的是，在中国现实的社会与文化条件下，要想很好地实现自我价值，其实非常困难，这就正好解释了为什么只有很小比例的人有机会成为“幸福者”。中国人实现自我价值和获得安全感的困难到底在哪里呢？</p>
+<p>人能否感觉到自我价值决定于两方面要素，第一方面的要素是核心和关键，即一个社会作为外部环境怎样判定一个人的价值，这种判定倾向发挥着引导人们怎样评判自我价值的作用。</p>
+<p>长期的封建传统和独特的中国文明史，使中国社会养成了深厚的权威主义价值倾向。也就是说，现实社会倾向于用种种直接或间接、外显或潜隐的方式，从一个人所占据的地位和拥有的资源来判定其价值，而缺乏一般性的文明、平等、尊重、平权和尊严的概念。</p>
+<p>近年来，虽然中央政府在政治、经济、文化等方面制定了一系列政策，采取了一系列措施，为弱势群体提供了有力的制度性支持。但是与强势群体相比，弱势群体的利益诉求还不能得到诸多保障。</p>
+<p><strong>由于这种价值取向的存在，人们从自我意识诞生起，就存在着强烈的需要自我被承认的焦虑感，这种焦虑感驱使人们不断寻找和建立一个又一个可以显示自我价值的标志，特别是具有社会公认价值的金钱和官衔，并不断进行各种社会比较，以期建立自己的相对优势，得到社会环境的价值承认。</strong></p>
+<p><strong>这种从社会权威主义环境价值取向衍生出来的价值追求倾向，又派生出来了简单功利导向的金钱至上主义价值观，即一切都必须还原到金钱，金钱成为了通用价值尺度，一切价值和荣誉，都必须由金钱的强度来衡量。</strong></p>
+<p><strong>为此，金钱成为了压倒一切的追求。本来，追求金钱是人的本性的一部分，但金钱主义使人的这一本性掩盖了本来与之平行的另外一种“人之初，性本善”的本性。</strong></p>
+<p>从中国社会市场经济实施以来频发的环境污染、广泛的食品毒化事件和医疗系统之种种超出想象力的怪象看，很容易发现，<strong>一个社会本该自然存在的人与人之间作为同类的善意，已经广泛而深刻地被金钱追求所击垮。其他同类，褪变成了赚钱的工具。“己所不欲，勿施于人”的祖训，早已被对金钱的欲望所淹没。</strong></p>
+<p>一个社会消除权威主义的最好良方，是取消特权和制约权力，让社会尊重的不再是权力和位置，而是人人都有可能通过自身努力达成的成就和事业。社会在实际运作之中呈现出多重的使人们自我价值得以实现的价值导向，权威主义才能逐步弱化和退出影响的主导地位。</p>
+<p><strong>安全感是一种不用自我警惕和随时准备实施自我保护的放松状态。</strong>当你过马路时汽车给你让道，司机还示意请你先行的时候，你体会的是安全感。而司机看到你要过马路拼命鸣笛和加速，你体会的则是不安全感。平时低头不见抬头见的邻里随时可以委托责任，你体会的是安全感，而你的随身提包或电脑一离开视野就可能被盗，你则体会不安全感。</p>
+<p><strong>每个人都可以从不安全感的提醒中体会到压力和担忧，你的生活伴有长期的和广泛的不安全感时，会随时处于一种防卫状态，心力也不断耗费，活得很累，是这种状态的自然结果。</strong></p>
+<p><img src="https://s2.loli.net/2024/06/24/q5iGELTdpznbC1U.jpg"></p>
+<p><strong>活得累的文化根源</strong></p>
+<p>活得比较累，与其说是外在生活压力过大所致，毋宁说是我们中国人的生活习惯追求使然。再追求，再累，也要更上一层楼。正所谓“没有最好，只有更好”。看来，中国人具有一种不完全自觉地置身于现实生活压力当中的习惯。</p>
+<p>也就是说，中国人的生命旅程似乎注定要面对永远也翻越不完的崇山峻岭，永远也克服不完的艰难险阻。<strong>所以，我们中国人感到活得比较累，不是一时的“累”，而是日积月累的“累”，是一种难以为继的“累”，是一种习惯性的“累”……</strong></p>
+<p><strong>如果我们被权威主义和简单功利主义所诱导，总试图用达成某种经济和地位的方式来确立自己的价值和建立自己的幸福，甚至为此不择手段。那么我们会发现，即便我们达成了我们渴望的成就，一次性的满足之后依然是失落，我们依然无法建立自己所渴求的稳定自信。</strong></p>
+<p><strong>不顾一切成功实现升官发财的人会猛然发现，升官发财远不是人生的全部，只是让我们变换了参照环境，自我的命运，仍然在前途的不确定中风雨飘摇。</strong></p>
+<p>重要的一点，中国人无信仰，欲望无止境，内心浮躁，没有基本共同的价值观念。心中无信仰，精神无依托，内心常常充满困惑，不敢肯定自己，为人言所累。</p>
+<p><strong>大多数人都蹑手蹑脚，战战兢兢，每走一步，说一句话，都要担心别人对自己的评价。或者做的不说，说的不做，努力假装自己很正统，很高尚，常常被迫去做自己不愿意作的事，为面子、为名声，往往也不为自己，更不为他人。</strong></p>
+<p>人生的结果是由历史、文化、环境、社会和自我多方面因素造就的，不以人的意志为转移。无论我们想得到什么，也无论我们的欲望有多强烈，我们最终得到的，不是我们想得到的，而是我们应该得到的。</p>
+<p>个人对自己命运能够做的，是建构让自己的愿望成为现实的被社会公理支持的逻辑，增加让愿望成为事实的理由。</p>
+]]></content>
+      <categories>
+        <category>idea</category>
+      </categories>
+      <tags>
+        <tag>idea</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>勇攀珠峰的背后</title>
+    <url>/post/2022082111.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/23/7lPpERkINCD4T2w.jpg" alt="img"></p>
+<p>　　2022年7月，地大17名青年学生和19名教师组成长江源科考队。科考队奔赴长江源头——地处青藏高原的格拉丹东雪山开展为期10天的科学考察。</p>
+<span id="more"></span>
+
+<p><img src="https://s2.loli.net/2024/06/23/jcdCe23wX4WZtNl.jpg" alt="img"></p>
+<p>　　2022年7月，地大17名青年学生和19名教师组成长江源科考队。地大大学生长江源科考队登山勘测组在格拉丹东大本营开展测量任务。</p>
+<p><img src="https://s2.loli.net/2024/06/23/faVvZUcDhibAGje.jpg" alt="img"></p>
+<p>　　陈刚在攀登途中。</p>
+<p><img src="https://s2.loli.net/2024/06/23/7zZdeCvhY6jiFfN.jpg" alt="img"></p>
+<p>　　2022年4月30日，陈刚等人登顶珠峰。展示“中国加油 武汉加油”字样。</p>
+<p><img src="https://s2.loli.net/2024/06/23/f8nLatFQ4csXPmz.jpg" alt="img"></p>
+<p>　　2022年4月30日，陈刚等人登顶珠峰。展示中国地质大学校旗。</p>
+<p>　　抬头望了一眼隐约可见的珠穆朗玛峰峰顶，陈晨在面罩下呼出了一口气。</p>
+<p>　　她必须非常小心，山脊两侧就是万丈深渊——更何况，在空气含氧量只有平原30%的“死亡地带”，哪怕只是两米落差的跌落，都会让人失去生命。</p>
+<p>　　突然，“噌”的一声，靴底冰爪松动，陈晨的身体失去了平衡，开始向一边倾斜。手本能地挥出，向岩壁抓去，然而与冰面的距离仍在拉开，身体继续向一侧的悬崖跌去……直到身旁的队友猛地伸出手，一把将她拽住。</p>
+<p>　　陈晨清晰地记得10多年前的那一幕。在几轮冲顶后，2012年5月19日上午8时16分，这个时年25岁的姑娘成为中国首位从北坡登顶珠峰的在校女大学生。</p>
+<p>　　“总书记曾勉励我，勇往直前，不断攀上人生新的高峰。”回想起2013年五四青年节座谈会上习近平总书记对自己的嘱托，陈晨至今难以忘怀，还把“中国登山精神”写成了博士毕业论文。</p>
+<p>　　陈晨的成长只是一个缩影。</p>
+<p>　　70年来，中国地质大学（以下简称“地大”）在为国家输送了大批地质人才的同时，培养出6000多名登山健将，被誉为中国登山界的“黄埔军校”。</p>
+<p>　　“登山之于地大，不只是一项事业，更是一笔弥足珍贵的精神财富。”中国地质大学（武汉）校长王焰新院士说，“扎根中国、胸怀天下、勇攀高峰、追求卓越”的攀登精神，已经成为地大人精神谱系的耀眼硬核。</p>
+<p>　　<strong>为祖国勇攀珠峰</strong></p>
+<p>　　9年过去了，回忆起当初扮演陈晨的场景，姜力维心里那种“翻涌的感觉”依然很强烈：“仿佛自己也经历了磨砺和积累，攀上了一座高峰。”</p>
+<p>　　2014年5月4日晚，在“我们的中国梦·五月的鲜花”全国大学生主题文艺活动中，以中国地质大学（武汉）研究生陈晨成功登顶珠峰故事为原型的原创音乐情景剧《攀登》登上了中央电视台的舞台。</p>
+<p>　　28名来自地大的学生演员，为了尽可能真实地还原故事，不管男生女生，“大家都涂着黑黑的粉底、两颊画着两坨粉粉的高原红”。</p>
+<p>　　“从进入演播大厅那一刻起，我们就知道自己的使命是什么。”姜力维说，“要拼尽全力才能不留遗憾，就像陈晨学姐一样。”</p>
+<p>　　在中国地质大学，登山运动有着悠久的传统。</p>
+<p>　　20世纪50年代末，登山运动被学校列入体育必修课。80年代起，地大人经常以班级为单位，全员参加“10公里负重行军”，誓为祖国地质事业练就一双“铁脚板”。时至今日，地大的学生依然有着每天集体出早操，早起床、早锻炼、早学习的习惯。</p>
+<p>　　珠穆朗玛峰是喜马拉雅山脉的主峰，海拔8844.43米，是世界最高峰。鲜为人知的是，“珠峰到底有多高”的疑问，一度困扰着国内科研工作者。</p>
+<p>　　“20世纪60年代，在珠峰海拔高度的问题上，我们一直被国外数据垄断。”海洋学院教授陈刚介绍，那时对于珠峰海拔的测量，国际上有过许多尝试，不同国家有不同的数据，中国一直沿用国外的数据。</p>
+<p>　　体育学院教授董范回忆：“为了应对少数国家的封锁打压，国家综合考虑，要争一口气，决定成立国家登山队，挑战从北坡登顶珠峰。”</p>
+<p>　　从北坡登顶更难。西方登山界曾多次尝试，但均以失败告终，珠峰北坡被认为是“不可逾越的天险”。</p>
+<p>　　1958年，刚从北京地质学院（中国地质大学前身）毕业的王富洲被选进国家登山队。两年后，他成为世界首位从北坡登顶珠峰的登山运动员。</p>
+<p>　　此后，王富洲、李致新、王勇峰、次落、袁复栋等地大人，都曾登顶珠峰，在中国高校中形成了一道独特的攀登风景。</p>
+<p>　　“20世纪80年代初，国家决定培养一批年轻的登山队员，我有幸入选。”1984年8月，董范加入中国登山队。</p>
+<p>　　2012年5月19日，中国地质大学60周年校庆前夕，董范、陈晨、德庆欧珠、次仁旦达师生4人，从北坡登顶珠峰。这是国内高校独立组织的在校大学生登山队首次登顶世界之巅。</p>
+<p>　　董范常说，攀登的过程，是“勇敢者的冒险”。</p>
+<p>　　2015年6月10日凌晨0时30分，在地大登山队准备冲顶北美洲最高峰麦金利峰时，营地气象监测站发出了暴风雪警告——此时，距登顶时间窗口结束只剩4小时，而从营地出发到达顶峰通常需要6-10小时。</p>
+<p>　　得知这支来自中国的登山队决心挑战这一几乎“不可能完成”的任务，营地里其他国家登山队员摇着头说：“你们都是疯子。”</p>
+<p>　　与时间赛跑。5名地大登山队员组成小分队，采取阿尔卑斯式攀登方法（一种轻量化的登山方式，登山者携带少量装备和物资，不架设固定绳索，不借助搬运工和氧气瓶，行动速度快但风险大——记者注），带上5包泡面和轻便的装备，在营地300多双眼睛的注视下出发了。</p>
+<p>　　到达山脊线时，队员何鹏飞感到体力严重不支，快跟不上队伍了。抬头望去，乌云正向山顶汇聚，一场暴风雪即将到来。“不能为了自己登顶的目标，陷队友于危险之中，我必须选择放弃。”</p>
+<p>　　队长董范在对讲机中一遍遍重复着：“只要你能坚持，就一起上，速度放慢。”</p>
+<p>　　不顾队友阻拦，何鹏飞坚定地解下了结组绳上的主锁，决定返回。转过身的那一刻，他“扑通”一下坐在雪坡上，眼泪不自觉地滑落。那天，他在日记里写道：“攀登的意义不止于登顶，有时候，放弃比坚持更重要。”</p>
+<p>　　用时4小时6分钟，地大登山队成功登顶，是当时恶劣天气下唯一登顶的队伍。</p>
+<p>　　何鹏飞的脸上有一块冻伤，那是因为在攀登南极洲最高峰文森峰时，他在即将登顶前拉下面罩和队友说了一句话。回到武汉后的半年里，被冻伤的部位一直没有知觉。直到现在，每当天气变冷，那处旧伤口还会发红。</p>
+<p>　　<strong>登山不仅局限于运动</strong></p>
+<p>　　“陈老师，我很喜欢登山。我想知道，征服一座座高峰的成就感是什么？”海洋学院2020级研究生饶炜博还记得9年前的开学典礼上，与班主任陈刚的第一次对话。</p>
+<p>　　那时，陈刚正在备战第二次珠峰科考的体能测试。前一次，由于突降暴雪等原因，陈刚只上到海拔7500米的营地，未能冲顶。</p>
+<p>　　“当身边再也没有更高的地方，风也会静下来。”望着学生期盼的目光，陈刚语气平和，“外界都关心我能不能登顶，但我更关心的是，能否精确地测到各项数据。”</p>
+<p>　　会场里，测绘专业新生们的神情严肃起来。饶炜博说，“陈老师用实际行动告诉我们，要把科研做在祖国大地上。”</p>
+<p>　　遗憾的是，陈刚的第二次冲顶未能如愿。</p>
+<p>　　2022年4月30日，经过7天攀登，包括陈刚和儿子陈李昊在内的11名中国登山者，在向导的协助下从珠峰北坡登顶，成为2022年首支登顶珠峰的队伍。</p>
+<p>　　距第一次攀登珠峰过去了10年，这一次，50岁的陈刚终于拿到西藏地壳运动监测的珍贵数据，“未经亲手测量的数据，总觉得不踏实，科研工作者就是要到一线去，到现场去。”</p>
+<p>　　在这所攀登者的“黄埔军校”里，登山不仅局限于运动，而始终与地学科考、理论研究紧密结合着。</p>
+<p>　　“路的尽头再向前一步，走别人没走过的路，这就是地大人的基因。”新落成的中国地质大学（武汉）校史馆将这种基因归纳成了8个字：国家需要，地质先行。</p>
+<p>　　从20世纪60年代起，后来成为中国科学院院士、中国地质大学（武汉）校长的殷鸿福及其团队就在石头里寻找蛛丝马迹，通过古生物遗迹来确定地质年代。</p>
+<p>　　1985年，为寻找“金钉子”（一个地质学概念，用以界定不同时代地层的全球标准——记者注），50岁的殷鸿福率队登上海拔4000多米的岷山，因体力不支摔倒在乱石中，一条腿粉碎性骨折，五分之一的骨头没有了。然而，仅经过一年多的医治和锻炼，崇山峻岭间，他又开始不断地穿行。</p>
+<p>　　1986年，殷鸿福根据实地考察推翻了近百年来确定的化石标准，提出将我国浙江煤山剖面作为全球层型剖面和点位。2001年2月，国际地质科学联合会正式确认殷鸿福的提议。2022年10月26日，浙江长兴煤山“金钉子”剖面入选世界地质遗产地名录。殷鸿福把地质历史上最重要的三个“金钉子”之一留在了中国。</p>
+<p>　　1978年起，结合数次科考成果和地学专业特点，中国地质大学先后编写了供地质院校师生使用的野外实践教材、实用教材及视频教材。这些教材填补了我国户外运动专业教材的空白，时至今日仍被广泛使用。</p>
+<p>　　国土安全与所学专业有何关系？怎样发挥专业特长为中国梦的实现贡献力量？这是马克思主义学院副院长孙文沛在《国土安全》第一课中，向台下1000多名同学提出的问题。</p>
+<p>　　《国土安全》是中国地质大学（武汉）新开设的品牌思政选修课。孙文沛介绍，以思政课为平台开展大学生国家安全专题教育，在国内高校尚属首创。该课程由校领导领衔，马克思主义学院主持建设，集合地球科学学院、资源学院、自动化学院等多个特色学科师资力量组建教学团队，通过专题讲授、师生对谈等形式授课。</p>
+<p>　　“原来，地质学与国家资源安全关系如此紧密。”地球科学学院2021级本科生赵芃凯在上完课后，对专业学习有了新认识，“学习地质学不仅要学好理论知识，更要将所学投身于国家事业中，贡献出地大人的力量。”</p>
+<p>　　<strong>指引每位地大人攀登心中的那座“山”</strong></p>
+<p>　　“是那山谷的风，吹动了我们的红旗，是那狂暴的雨，洗刷了我们的帐篷。我们有火焰般的热情，战胜了一切疲劳和寒冷。背起了我们的行装，攀上了层层的山峰……”</p>
+<p>　　1953年12月22日，《勘探队之歌》在《中国青年报》4版刊出，中国地质大学在1990年将它定为校歌。</p>
+<p>　　70年来，这首歌被带到山峦、旷野、沙漠、深海，成为地大人永远的精神标识，指引着每位地大人攀登心中的那座“山”。</p>
+<p>　　“每个人心中都有一座山。”董范认为，现在自己需要攀登的“山”，是让更多的人了解攀登、爱上攀登。</p>
+<p>　　在董范等人的推动下，1998年，地大在全国高校率先开设野外生存体验课，成为首批拥有野外生存教育资源库的大学。2004年，地大成为全国首批开设野外生存通选课的大学。直到现在，课堂常常爆满，一座难求。</p>
+<p>　　从2012年起，地大登山队每年都会在全校选拔一批学生，不限性别、年龄和专业，“身体素质好、攀登意愿强”是主要标准。经过体能考核、技能培训、理论学习，从上百位报名者中挑选出综合实力最优秀的学生加入登山队，准备登山科考。</p>
+<p>　　体育学院2020级硕士研究生李龙敏本科入学时，就常听老师讲起地大登山前辈的故事。2016年，得知登山队要招募一批新队员，他毫不犹豫地报了名。</p>
+<p>　　去年7月，李龙敏作为队员参加第二次长江源大学生科考活动，前往青藏高原上的格拉丹东测绘点，钻取冰芯、测量高层、开展采样。</p>
+<p>　　由于行程安排紧凑，不到两天，团队就从江汉平原到达海拔约5200米的格拉丹东大本营，那一次，李龙敏的高原反应来得“异常猛烈”。适应3天后，症状缓解，李龙敏慢慢恢复适应性拉练，最终完成了任务。</p>
+<p>　　“登山科考是人类的使命，更是与大自然的对话。”多次登山后，李龙敏领悟了敬畏自然、尊重生命的道理，“站上雪山之巅，不代表我们征服了这座高峰，而要感谢大自然接纳了我们，人类必须与自然和谐共生。”</p>
+<p>　　从兴趣社团到专业登山队，以老带新，优中选优，地大逐渐形成了涵盖本、硕、博各年龄层次的登山人才培养模式。无论刚入学的本科新生，还是攀登近10年的博士、教授，“人人都是攀登者”的理念在校园激荡。</p>
+<p>　　2022年，中国地质大学70周年校庆，地大陈华文老师团队共同创作绘本《山河作证》。100幅黑白钢笔素描画稿，再现了学校野外实习与地质科考的故事。</p>
+<p>　　“创作绘本的过程，也是我们被攀登精神洗礼的过程。”学生唐钰君感叹，在数次修改、与登山队师生交流的过程中，自己深入了解了一代代地大人勇攀高峰的故事，“后来再次路过《攀登》雕塑，总觉得它更加高大了。”</p>
+<p>　　攀登无言，山河作证。</p>
+<p>　　中国地质大学（武汉）党委书记黄晓玫表示，踏上新征途，地大将继续发扬攀登精神，推动学校党建思政与事业发展深度融合，努力培养造就一批担当民族复兴重任的新时代“英雄地质队员”，为保障国家能源资源安全、为全面建设社会主义现代化国家作出新贡献。</p>
+]]></content>
+      <categories>
+        <category>think</category>
+      </categories>
+      <tags>
+        <tag>think</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大家都在笼子里飞</title>
+    <url>/post/2024042135.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2024/06/21/L48hGP5ypOS6omk.jpg"></p>
+<p>我以为各种文体均如铁笼，笼着一群群称为“作家”或者“诗人”的呆鸟。大家都在笼子里飞，比着看谁飞得花哨，偶有不慎冲撞了笼子的，还要遭到笑骂呢。有一天，一只九头鸟用力撞了一下笼子，把笼内的空间扩大了，大家就在扩大了的笼子里飞。又有一天，一群九头鸟把笼子冲破了，但它们依然无法飞入蓝天，不过是飞进了一个更大的笼子而已。</p>
+<span id="more"></span>
+
+<p>四言诗、五言诗、七言诗、自由诗、唐传奇、宋话本、元杂剧、明小说。新的文体形成，非朝夕之功，一旦形成，总要稳定很长的时期，总要有它的规范——笼子。九头鸟们不断地冲撞着它扩展着它，但在未冲破笼子之前，总要在笼子里飞。这里边也许有马克思的辩证法吧。</p>
+<p>我们这些独头鸟，能在被九头大师们冲撞得宽阔的散文的笼子里扑弄几下瘦翅膀子就足矣。</p>
+<p>从新开辟的旅游胜地索溪峪山下的“不吹牛皮”饭馆出来，正是正午。山间白气升腾，石路上黄光灼目，不知太阳在哪里。只觉得裸露的肌肤如被针尖刺着，汗水黏黏滞滞地不敢出来，周身似乎涂上了一层黏稠的胶水。往年与家兄见面时，其总是大言湖南之热，吾口虽诺诺，心中其实不以为然。因为从天气预报中知道，长沙的温度比起北京也高不了多少，有时甚至还不如北京高，而我在北京多年，并没有感到北京的夏天有什么难熬的。现在自然是知道了。初到长沙那天中午就知道了。我见到长沙街头的摊贩，一个个无精打采，面如醉蟹，行人都垂头疾走，不及顾盼。搭乘长沙至常德的长途汽车，车过湘江大桥时，见江水混浊如开锅的绿豆汤，几十只白船黑舟死在水上。江面上泛起黏稠的灰黄色光线，全无当年读毛主席诗词名篇《沁园春·长沙》时那种清澈见游鱼、飒飒闻树响、轻清出世傲天下小的感觉。也许是季节不同的关系吧。那边，著名的橘子洲宛如一个耐热不过而剥去绮罗遍身沾汗躺在江上的女人，但愿寒秋来到时，她会用火红的锦绣把自己装扮起来，我应该找一个秋天到湖南的机会。“不吹牛皮”饭馆的老板娘在二两一碗的面条里，加上了足有一两辣椒，唏嘘不止，如咽烈火。出了饭馆，还是觉得五内如炉，流出的汗水似乎都是暗红色的，每一个毛孔都在发烧。新辟之地，道路崎岖，我们要到十里之外地方去乘车，幸好这十里路从一条山峪里穿过，据说山峪里风光秀丽，似天堂景色。喊一声走，大家便一起开步。进峪数百步后，回头望那“不吹牛皮”饭馆，见廊檐下那块火红的大布幔像张牛皮一样地挂着，想起饭馆内壁上挂着的那些“妙手回春”、“华陀在世”之类的锦旗，心中惶然。过了湖南的三条江，走了湖南的三座城，爬了湖南五架山，在落满了黄尘的长途汽车上，见道路两边山峦起伏，树木蓊郁，大自然犹如一匹正在沉睡的猛兽。我觉得湖南尤其是湘西的大自然是有着自己的性格的。这种性格就像染了人血的远古的陶器一样凝重朴拙，荒蛮辉煌。想起多年前，诸多三湘风流子弟，从这里走出去，进入了世界大舞台，在那里叱咤风云，呼风唤雨，翻天覆地，双脚一抖地球都要哆嗦，那股子牛劲儿，真是令人神往。走进了十里画廊，微微有了些风，汗毛见了凉风，根根直立起来。听说这个画廊里有条小河，但久走不到。路的右边有一条河沟，沟里晒着一片片大大小小的鹅卵石。卵石上生着一层白色的碱花，很像在卤水里浸泡过的巨大的鸡蛋。我想，这天河沟也许就是河了。我看到左边的峭壁上有一些泪珠般的细流在滴答。同行者有伸出舌头去接水喝的，我亦仿效。水微咸，浸透了大山的悲哀。初从山上窄不容脚的小路上下来走这平坦的道路，双脚受宠若惊，下意识地高抬低放，从别人的走相上看到了自己，不由齐笑起来。疲乏加上炎热，笑得艰难。然而山峪里的风景的确是美不胜收，一座座山峰突兀壁立，奇形怪状，不可以语言描画。同行中有善比喻者，指东指西，命此山为苍狗，命彼山为美人，我凝视之，觉得都似是而非。其实山就是山，命名多半只有符号的意义，硬要按名循实，并且要敷衍出几个大同小异的故事，几同对大自然的亵渎。</p>
+]]></content>
+      <categories>
+        <category>Famous</category>
+      </categories>
+      <tags>
+        <tag>Famous</tag>
       </tags>
   </entry>
   <entry>
@@ -9067,6 +9067,26 @@
       </categories>
       <tags>
         <tag>Famous</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>生活的一种</title>
+    <url>/post/2019031535.htm</url>
+    <content><![CDATA[<p><img src="https://s2.loli.net/2024/07/18/YOSmMwh1to6sf9B.jpg"></p>
+<p>院再小也要栽柳，柳必垂。晓起推窗，如见仙人曳裙侍立;月升中天，又似仙人临镜梳发。蓬屋常伴仙人，不以门前未留小车辙印而憾。能明灭萤火，能观风行。三月生绒花，数朵过墙头，好静收过路女儿争捉之笑。</p>
+<p>吃酒只备小盅，小盅浅醉，能推开人事、生计、狗咬、索账之恼。能行乐，吟东坡“吾上可陪玉皇大帝，下可陪卑田院乞儿”，以残墙补远山，以水盆盛太阳，敲之熟铜声。能嘿嘿笑，笑到无声时已袒胸睡卧柳下。小儿知趣，待半小时后以唾液蘸其双乳，凉透心臆即醒，自不误了上班。</p>
+<p>出游踏无名山水，省却门票，不看人亦不被人看。脚往哪儿，路往哪儿，喜瞧峋岩勾心斗角，倾听风前鸟叫声硬。云在山头登上山头云却更远了，遂吸清新空气，意尽而归。归来自有文章作，不会与他人同，既可再次意游，又可赚几个稿费。补回那一双龙须草鞋钱。</p>
+<p>读闲杂书，不必规矩，坐也可，站也可，卧也可。偶向墙根，水蚀斑驳，瞥一点而逮形象，即与书中人、物合，愈看愈肖。或听室外黄鹂，莺莺恰恰能辨鸟语。</p>
+<p>与人交，淡，淡至无味，而观知极味人。可邀来者游华山“朽朽桥头”，敢亡命过之将“××到此一游”书于桥那边崖上者，不可近交。不爱惜自己性命焉能爱人?可暗示一女子寄求爱信，立即复函意欲去偷鸡摸狗者不交。接信不复冷若冰霜者亦不交，心没同情岂有真心?门前冷落，恰好，能植竹看风行，能养菊赏瘦，能识雀爪文。七月长夏睡翻身觉，醒来能知“知了”声了之时。</p>
+<p>养生不养猫，猫狐媚。不养蛐蛐儿，蛐蛐儿斗殴残忍。可养蜘蛛，清晨见一丝斜挂檐前不必挑，明日便有纵横交错，复明日则网精美如妇人发罩。出门望天，天有经纬而自检行为，朝露落雨后出日，银珠满缀，齐放光芒，一个太阳生无数太阳。墙角有旧网亦不必扫，让灰尘蒙落，日久绳粗，如老树盘根，可作立体壁画，读传统，读现代，常读常新。</p>
+<p>要日记，就记梦。梦醒夜半，不可睁目，慢慢坐起回忆静伏人睡，梦复续之。梦如前世生活，或行善，或凶杀，或作乐，或受苦，记其迹体验心境以察现实，以我观我而我自知，自知乃于嚣烦尘世则自立。</p>
+<p>出门挂锁，锁宜旧，旧锁能避蟊贼破损门;屋中箱柜可在锁孔插上钥匙，贼来能保全箱柜完好。</p>
+]]></content>
+      <categories>
+        <category>idea</category>
+      </categories>
+      <tags>
+        <tag>idea</tag>
       </tags>
   </entry>
   <entry>
