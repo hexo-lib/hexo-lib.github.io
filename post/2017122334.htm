@@ -326,7 +326,7 @@ IntelliJ IDEA
 <p>此电子表格包含每行的名称和姓氏，以逗号分隔。正如您所看到的，这是Spring处理的一个非常常见的模式。</p>
 <p>接下来，编写一个SQL脚本来创建一个表来存储数据。</p>
 <p><strong>SRC&#x2F;main&#x2F;resources&#x2F;schema-all.sql</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> people IF <span class="keyword">EXISTS</span>;<span class="keyword">CREATE</span> <span class="keyword">TABLE</span> people(person_id <span class="type">BIGINT</span> <span class="keyword">IDENTITY</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">PRIMARY</span> KEY,first_name <span class="type">VARCHAR</span>(<span class="number">20</span>),last_name <span class="type">VARCHAR</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> people IF <span class="keyword">EXISTS</span>;<span class="keyword">CREATE TABLE</span> people(person_id <span class="type">BIGINT</span> <span class="keyword">IDENTITY</span> <span class="keyword">NOT NULL</span> <span class="keyword">PRIMARY KEY</span>,first_name <span class="type">VARCHAR</span>(<span class="number">20</span>),last_name <span class="type">VARCHAR</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <pre><code>Spring Boot模式schema-@@platform@@.sql启动时自动。-all是所有平台的默认设置。
 </code></pre>
 <h3 id="创建一个business类"><a href="#创建一个business类" class="headerlink" title="创建一个business类"></a>创建一个business类</h3><p>现在您已经看到了数据输入和输出的格式，您可以编写代码来表示一行数据.</p>
@@ -455,7 +455,7 @@ IntelliJ IDEA
             </div>
             <footer id="footer" class="footer">
     <div class="copyright">
-      <span>© 2024 Tommas</span> 
+      <span>© 2025 Tommas</span> 
     </div>
 </footer>
 
